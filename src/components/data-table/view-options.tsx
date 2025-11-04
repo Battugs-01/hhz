@@ -10,9 +10,9 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 
-type DataTableViewOptionsProps<TData> = {
+type DataTableViewOptionsProps<TData> = Readonly<{
   table: Table<TData>
-}
+}>
 
 export function DataTableViewOptions<TData>({
   table,
@@ -23,7 +23,7 @@ export function DataTableViewOptions<TData>({
         <Button
           variant='outline'
           size='sm'
-          className='ms-auto hidden h-8 lg:flex'
+          className='ms-auto ml-2 hidden h-8 lg:flex'
         >
           <MixerHorizontalIcon className='size-4' />
           View

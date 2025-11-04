@@ -22,28 +22,29 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
+import { DateRangePicker } from '@/components/date-range-picker'
 import { roles } from '../data/data'
 import { type User } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
-import { usersColumns as columns } from './users-columns'
+import { kycInfoColumns as columns } from './users-columns'
 
 type DataTableProps = {
   data: User[]
+  total?: number
   search: Record<string, unknown>
   navigate: NavigateFn
 }
 
-export function UsersTable({ data, search, navigate }: DataTableProps) {
-  // Local UI-only states
+export function KycInfoTable({
+  data,
+  total,
+  search,
+  navigate,
+}: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
 
-  // Local state management for table (uncomment to use local-only state, not synced with URL)
-  // const [columnFilters, onColumnFiltersChange] = useState<ColumnFiltersState>([])
-  // const [pagination, onPaginationChange] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
-
-  // Synced with URL states (keys/defaults mirror users route search schema)
   const {
     columnFilters,
     onColumnFiltersChange,
@@ -56,14 +57,15 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     pagination: { defaultPage: 1, defaultPageSize: 10 },
     globalFilter: { enabled: false },
     columnFilters: [
-      // username per-column text filter
-      { columnId: 'username', searchKey: 'username', type: 'string' },
+      { columnId: 'email', searchKey: 'email', type: 'string' },
       { columnId: 'status', searchKey: 'status', type: 'array' },
       { columnId: 'role', searchKey: 'role', type: 'array' },
     ],
   })
 
-  // eslint-disable-next-line react-hooks/incompatible-library
+  const pageCount =
+    total && pagination.pageSize ? Math.ceil(total / pagination.pageSize) : -1
+
   const table = useReactTable({
     data,
     columns,
@@ -75,14 +77,15 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
       columnVisibility,
     },
     enableRowSelection: true,
+    manualPagination: true,
+    manualFiltering: true,
+    pageCount,
     onPaginationChange,
     onColumnFiltersChange,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
-    getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -92,6 +95,19 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
     ensurePageInRange(table.getPageCount())
   }, [table, ensurePageInRange])
 
+  const handleDateRangeChange = (range: {
+    start_day?: string
+    end_day?: string
+  }) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        start_day: range.start_day,
+        end_day: range.end_day,
+      }),
+    })
+  }
+
   return (
     <div
       className={cn(
@@ -99,28 +115,39 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
         'flex flex-1 flex-col gap-4'
       )}
     >
-      <DataTableToolbar
-        table={table}
-        searchPlaceholder='Filter users...'
-        searchKey='username'
-        filters={[
-          {
-            columnId: 'status',
-            title: 'Status',
-            options: [
-              { label: 'Active', value: 'active' },
-              { label: 'Inactive', value: 'inactive' },
-              { label: 'Invited', value: 'invited' },
-              { label: 'Suspended', value: 'suspended' },
-            ],
-          },
-          {
-            columnId: 'role',
-            title: 'Role',
-            options: roles.map((role) => ({ ...role })),
-          },
-        ]}
-      />
+      <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+        <DataTableToolbar
+          table={table}
+          searchPlaceholder='Filter users...'
+          searchKey='email'
+          filters={[
+            {
+              columnId: 'status',
+              title: 'Status',
+              options: [
+                { label: 'Active', value: 'active' },
+                { label: 'Inactive', value: 'inactive' },
+                { label: 'Invited', value: 'invited' },
+                { label: 'Suspended', value: 'suspended' },
+              ],
+            },
+            {
+              columnId: 'role',
+              title: 'Role',
+              options: roles.map((role) => ({ ...role })),
+            },
+          ]}
+        />
+        <DateRangePicker
+          value={{
+            start_day: search.start_day as string | undefined,
+            end_day: search.end_day as string | undefined,
+          }}
+          onChange={handleDateRangeChange}
+          placeholder='Filter by date'
+          className='w-[240px]'
+        />
+      </div>
       <div className='overflow-hidden rounded-md border'>
         <Table>
           <TableHeader>

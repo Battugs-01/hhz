@@ -3,11 +3,11 @@ import { cn } from '@/lib/utils'
 import { useSearch } from '@/context/search-provider'
 import { Button } from './ui/button'
 
-type SearchProps = {
+type SearchProps = Readonly<{
   className?: string
   type?: React.HTMLInputTypeAttribute
   placeholder?: string
-}
+}>
 
 export function Search({
   className = '',

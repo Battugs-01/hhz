@@ -1,9 +1,9 @@
 import z from 'zod'
 import { createFileRoute } from '@tanstack/react-router'
-import { Users } from '@/features/users'
-import { roles } from '@/features/users/data/data'
+import { KycInfo } from '@/features/kyc-info'
+import { roles } from '@/features/kyc-info/data/data'
 
-const usersSearchSchema = z.object({
+const kycInfoSearchSchema = z.object({
   page: z.number().optional().catch(1),
   pageSize: z.number().optional().catch(10),
   // Facet filters
@@ -24,9 +24,12 @@ const usersSearchSchema = z.object({
     .catch([]),
   // Per-column text filter (example for username)
   username: z.string().optional().catch(''),
+  // Date range filter
+  start_day: z.string().optional().catch(undefined),
+  end_day: z.string().optional().catch(undefined),
 })
 
-export const Route = createFileRoute('/_authenticated/users/')({
-  validateSearch: usersSearchSchema,
-  component: Users,
+export const Route = createFileRoute('/_authenticated/kyc-info/')({
+  validateSearch: kycInfoSearchSchema,
+  component: KycInfo,
 })

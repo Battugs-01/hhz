@@ -47,21 +47,16 @@ export function UserAuthForm({
   const loginRequest = useRequest(authService.login, {
     manual: true,
     onSuccess: async (data) => {
-      console.log('Login response:', data)
-      console.log('Token:', data.body.token)
-
       // Save token first
       auth.saveToken(data.body.token)
 
       try {
         // Fetch user info with the token
         const userInfo = await authService.getUserInfo(data.body.token)
-        console.log('User info:', userInfo)
 
         // Set user data from the info endpoint
         auth.setUser(userInfo.body)
 
-        console.log('Token saved, user info fetched and set')
         navigate({ to: redirectTo || '/', replace: true })
         toast.success('Амжилттай нэвтэрлээ')
       } catch (error) {
