@@ -28,7 +28,7 @@ const formSchema = z.object({
   password: z
     .string()
     .min(1, 'Please enter your password')
-    .min(7, 'Password must be at least 7 characters long'),
+    .min(6, 'Password must be at least 6 characters long'),
 })
 
 type UserAuthFormProps = Readonly<{
@@ -46,11 +46,28 @@ export function UserAuthForm({
 
   const loginRequest = useRequest(authService.login, {
     manual: true,
-    onSuccess: (data) => {
-      auth.saveToken(data.token)
-      auth.setUser(data.employee)
-      navigate({ to: redirectTo || '/', replace: true })
-      toast.success('Амжилттай нэвтэрлээ')
+    onSuccess: async (data) => {
+      console.log('Login response:', data)
+      console.log('Token:', data.body.token)
+
+      // Save token first
+      auth.saveToken(data.body.token)
+
+      try {
+        // Fetch user info with the token
+        const userInfo = await authService.getUserInfo(data.body.token)
+        console.log('User info:', userInfo)
+
+        // Set user data from the info endpoint
+        auth.setUser(userInfo.body)
+
+        console.log('Token saved, user info fetched and set')
+        navigate({ to: redirectTo || '/', replace: true })
+        toast.success('Амжилттай нэвтэрлээ')
+      } catch (error) {
+        console.error('Failed to fetch user info:', error)
+        toast.error('Хэрэглэгчийн мэдээлэл авч чадсангүй')
+      }
     },
     onError: (err) => {
       toast.error(err.message || 'Алдаа гарлаа')

@@ -6,12 +6,37 @@ export interface LoginCredentials {
 }
 
 export interface LoginResponse {
-  token: string
-  employee: {
-    accountNo: string
+  body: {
+    token: string
+    adminUser: {
+      id: string
+      email: string
+      adminGroupId: string
+      adminGroup: any
+      status: string
+      isEnabled: boolean
+      userCreateDate: string
+      password: string
+      two_factor_enabled: boolean
+      created_at: string
+      updated_at: string
+    }
+  }
+}
+
+export interface UserInfoResponse {
+  body: {
+    id: string
     email: string
-    role: string[]
-    exp: number
+    adminGroupId: string
+    adminGroup: any
+    status: string
+    isEnabled: boolean
+    userCreateDate: string
+    password: string
+    two_factor_enabled: boolean
+    created_at: string
+    updated_at: string
   }
 }
 
@@ -30,6 +55,25 @@ export const authService = {
         .json()
         .catch(() => ({ message: 'Login failed' }))
       throw new Error(error.message || 'Login failed')
+    }
+
+    return response.json()
+  },
+
+  getUserInfo: async (token: string): Promise<UserInfoResponse> => {
+    const response = await fetch(`${API_URL}/auth/info`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      const error = await response
+        .json()
+        .catch(() => ({ message: 'Failed to fetch user info' }))
+      throw new Error(error.message || 'Failed to fetch user info')
     }
 
     return response.json()
