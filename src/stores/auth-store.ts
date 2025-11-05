@@ -1,27 +1,14 @@
+import type { AdminUser } from '@/services/types/auth.types'
 import { create } from 'zustand'
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
+import { getCookie, removeCookie, setCookie } from '@/lib/cookies'
 
 const ACCESS_TOKEN = 'thisisjustarandomstring'
 const USER_INFO = 'user_info'
 
-interface AuthUser {
-  id: string
-  email: string
-  adminGroupId: string
-  adminGroup: any
-  status: string
-  isEnabled: boolean
-  userCreateDate: string
-  password: string
-  two_factor_enabled: boolean
-  created_at: string
-  updated_at: string
-}
-
 interface AuthState {
   auth: {
-    user: AuthUser | null
-    setUser: (user: AuthUser | null) => void
+    user: AdminUser | null
+    setUser: (user: AdminUser | null) => void
     accessToken: string
     setAccessToken: (accessToken: string) => void
     saveToken: (token: string) => void
@@ -32,8 +19,9 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()((set) => {
   const cookieState = getCookie(ACCESS_TOKEN)
+  // Token-ийг cookie-аас унших
   const initToken =
-    cookieState && cookieState !== 'undefined' ? JSON.parse(cookieState) : ''
+    cookieState && cookieState !== 'undefined' ? cookieState : ''
 
   const getUserFromStorage = () => {
     if (typeof window === 'undefined') return null
@@ -61,12 +49,14 @@ export const useAuthStore = create<AuthState>()((set) => {
       accessToken: initToken,
       setAccessToken: (accessToken) =>
         set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
+          // Token-ийг cookie-д хадгална
+          setCookie(ACCESS_TOKEN, accessToken)
           return { ...state, auth: { ...state.auth, accessToken } }
         }),
       saveToken: (token) =>
         set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(token))
+          // Token-ийг cookie болон state-д хадгална
+          setCookie(ACCESS_TOKEN, token)
           return { ...state, auth: { ...state.auth, accessToken: token } }
         }),
       resetAccessToken: () =>

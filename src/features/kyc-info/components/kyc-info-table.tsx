@@ -6,11 +6,10 @@ import {
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { type User } from '@/services'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
 import {
@@ -23,8 +22,7 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { DateRangePicker } from '@/components/date-range-picker'
-import { roles } from '../data/data'
-import { type User } from '../data/schema'
+import { roles } from '../constants'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { kycInfoColumns as columns } from './users-columns'
 

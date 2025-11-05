@@ -1,13 +1,12 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { useRequest } from 'ahooks'
+import { authService } from '@/services'
 import { Loader2, LogIn } from 'lucide-react'
 import { toast } from 'sonner'
-import { IconFacebook, IconGithub } from '@/assets/brand-icons'
 import { useAuthStore } from '@/stores/auth-store'
-import { authService } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -44,28 +43,33 @@ export function UserAuthForm({
   const navigate = useNavigate()
   const { auth } = useAuthStore()
 
-  const loginRequest = useRequest(authService.login, {
-    manual: true,
+  const loginMutation = useMutation({
+    mutationFn: authService.login,
     onSuccess: async (data) => {
       // Save token first
-      auth.saveToken(data.body.token)
+      if (data.body?.token) {
+        auth.saveToken(data.body.token)
 
-      try {
-        // Fetch user info with the token
-        const userInfo = await authService.getUserInfo(data.body.token)
-
-        // Set user data from the info endpoint
-        auth.setUser(userInfo.body)
-
-        navigate({ to: redirectTo || '/', replace: true })
-        toast.success('Амжилттай нэвтэрлээ')
-      } catch (error) {
-        console.error('Failed to fetch user info:', error)
-        toast.error('Хэрэглэгчийн мэдээлэл авч чадсангүй')
+        try {
+          const userInfo = await authService.getUserInfo()
+          if (userInfo.body) {
+            auth.setUser(userInfo.body)
+          }
+          navigate({ to: redirectTo || '/', replace: true })
+          toast.success('Амжилттай нэвтэрлээ')
+        } catch (error) {
+          console.error('Failed to fetch user info:', error)
+          toast.error('Хэрэглэгчийн мэдээлэл авч чадсангүй')
+        }
+      } else {
+        toast.error('Token авах боломжгүй байна')
       }
     },
-    onError: (err) => {
-      toast.error(err.message || 'Алдаа гарлаа')
+    onError: (err: Error) => {
+      // Error message-ийг харуулах
+      const errorMessage = err.message || 'Алдаа гарлаа'
+      toast.error(errorMessage)
+      console.error('Login error:', err)
     },
   })
 
@@ -78,7 +82,7 @@ export function UserAuthForm({
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    loginRequest.run(data)
+    loginMutation.mutate(data)
   }
 
   return (
@@ -120,42 +124,14 @@ export function UserAuthForm({
             </FormItem>
           )}
         />
-        <Button className='mt-2' disabled={loginRequest.loading}>
-          {loginRequest.loading ? (
+        <Button className='mt-2' disabled={loginMutation.isPending}>
+          {loginMutation.isPending ? (
             <Loader2 className='animate-spin' />
           ) : (
             <LogIn />
           )}
           Sign in
         </Button>
-
-        <div className='relative my-2'>
-          <div className='absolute inset-0 flex items-center'>
-            <span className='w-full border-t' />
-          </div>
-          <div className='relative flex justify-center text-xs uppercase'>
-            <span className='bg-background text-muted-foreground px-2'>
-              Or continue with
-            </span>
-          </div>
-        </div>
-
-        <div className='grid grid-cols-2 gap-2'>
-          <Button
-            variant='outline'
-            type='button'
-            disabled={loginRequest.loading}
-          >
-            <IconGithub className='h-4 w-4' /> GitHub
-          </Button>
-          <Button
-            variant='outline'
-            type='button'
-            disabled={loginRequest.loading}
-          >
-            <IconFacebook className='h-4 w-4' /> Facebook
-          </Button>
-        </div>
       </form>
     </Form>
   )

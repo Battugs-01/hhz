@@ -1,7 +1,7 @@
 import z from 'zod'
 import { createFileRoute } from '@tanstack/react-router'
 import { KycInfo } from '@/features/kyc-info'
-import { roles } from '@/features/kyc-info/data/data'
+import { roles } from '@/features/kyc-info/constants'
 
 const kycInfoSearchSchema = z.object({
   page: z.number().optional().catch(1),

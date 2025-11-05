@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
+import { kycService } from '@/services'
 import { toast } from 'sonner'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
@@ -11,7 +12,6 @@ import { KycInfoTable } from './components/kyc-info-table'
 import { UsersDialogs } from './components/users-dialogs'
 import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersProvider } from './components/users-provider'
-import { usersService } from './data/service'
 
 const route = getRouteApi('/_authenticated/kyc-info/')
 
@@ -24,8 +24,10 @@ export function KycInfo() {
     pageSize: search.pageSize || 10,
     query: search.username || '',
   }
+
   const searchAny = search as any
   params.query = searchAny.email ?? searchAny.username ?? ''
+
   if (search.start_day || search.end_day) {
     params.sortDate = {
       start_day: search.start_day || '',
@@ -40,18 +42,18 @@ export function KycInfo() {
   } = useQuery({
     queryKey: ['kyc-info', params],
     queryFn: async () => {
-      const res = await usersService.list(params)
+      const res = await kycService.listUsers(params)
       return {
         items: res?.body?.items || [],
-        total: res?.body?.total,
+        total: res?.body?.total || 0,
       }
     },
   })
 
-  // Show error toast
   if (isError) {
     toast.error(error?.message || 'Failed to load users')
   }
+
   return (
     <UsersProvider>
       <Header fixed>

@@ -1,11 +1,10 @@
 import { type ColumnDef } from '@tanstack/react-table'
+import { type User } from '@/services'
 import dayjs from 'dayjs'
 import { cn } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { DataTableColumnHeader } from '@/components/data-table'
-import { callTypes } from '../data/data'
-import { type User } from '../data/schema'
-import { DataTableRowActions } from './data-table-row-actions'
+import { callTypes } from '../constants'
 
 export const kycInfoColumns: ColumnDef<User>[] = [
   // {

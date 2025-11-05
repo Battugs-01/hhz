@@ -1,11 +1,14 @@
-import { Outlet } from '@tanstack/react-router'
-import { getCookie } from '@/lib/cookies'
-import { cn } from '@/lib/utils'
-import { LayoutProvider } from '@/context/layout-provider'
-import { SearchProvider } from '@/context/search-provider'
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/layout/app-sidebar'
 import { SkipToMain } from '@/components/skip-to-main'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { LayoutProvider } from '@/context/layout-provider'
+import { SearchProvider } from '@/context/search-provider'
+import { getCookie } from '@/lib/cookies'
+import { cn } from '@/lib/utils'
+import { authService } from '@/services'
+import { useAuthStore } from '@/stores/auth-store'
+import { useQuery } from '@tanstack/react-query'
+import { Outlet } from '@tanstack/react-router'
 
 type AuthenticatedLayoutProps = {
   children?: React.ReactNode
@@ -13,6 +16,22 @@ type AuthenticatedLayoutProps = {
 
 export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   const defaultOpen = getCookie('sidebar_state') !== 'false'
+  const { auth } = useAuthStore()
+  useQuery({
+    queryKey: ['user-info'],
+    queryFn: async () => {
+      const info = await authService.getUserInfo()
+      if (info.body) {
+        auth.setUser(info.body)
+      }
+      return info
+    },
+    enabled: !!auth.accessToken,
+    refetchOnWindowFocus: true,
+    staleTime: 5 * 60 * 1000,
+    retry: false,
+  })
+
   return (
     <SearchProvider>
       <LayoutProvider>
