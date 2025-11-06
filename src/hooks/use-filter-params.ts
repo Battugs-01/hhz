@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import dayjs from 'dayjs'
 
 export interface FilterParamsOptions {
@@ -37,7 +38,7 @@ export interface UseFilterParamsReturn {
  * @example
  * const { params, defaultDates, handleDateRangeChange } = useFilterParams(search, {
  *   defaultMonths: 3,
- *   defaultPageSize: 10,
+ *   defaultPageSize: 20,
  *   searchKey: 'email',
  *   navigate
  * })
@@ -48,7 +49,7 @@ export function useFilterParams(
 ): UseFilterParamsReturn {
   const {
     defaultMonths = 3,
-    defaultPageSize = 10,
+    defaultPageSize = 20,
     searchKey = 'email',
     navigate,
   } = options
@@ -63,22 +64,44 @@ export function useFilterParams(
     }
   }
 
-  const defaultDates = getDefaultDates()
+  const defaultDates = useMemo(() => getDefaultDates(), [defaultMonths])
 
-  // Build params
-  const params: FilterParams = {
-    current: (search.page as number) || 1,
-    pageSize: (search.pageSize as number) || defaultPageSize,
-    query: ((search[searchKey] as string) ?? (search.username as string)) || '',
-  }
-
-  // Add date range if needed
-  if (search.start_day || search.end_day || defaultMonths > 0) {
-    params.sortDate = {
-      start_day: (search.start_day as string) || defaultDates.start_day,
-      end_day: (search.end_day as string) || defaultDates.end_day,
+  // Build params with useMemo to ensure it updates when search changes
+  const params: FilterParams = useMemo(() => {
+    const result: FilterParams = {
+      current: (search.page as number) || 1,
+      pageSize: (search.pageSize as number) || defaultPageSize,
+      query: (search[searchKey] as string) || '',
     }
-  }
+
+    // Add date range if provided in URL or if defaultMonths is set
+    if (search.start_day || search.end_day || defaultMonths > 0) {
+      result.sortDate = {
+        start_day: (search.start_day as string) || defaultDates.start_day,
+        end_day: (search.end_day as string) || defaultDates.end_day,
+      }
+    }
+
+    // Add all other search params dynamically
+    Object.keys(search).forEach((key) => {
+      // Skip already handled keys
+      if (
+        !['page', 'pageSize', searchKey, 'start_day', 'end_day'].includes(key)
+      ) {
+        const value = search[key]
+        // Only add non-empty values
+        if (value !== undefined && value !== null && value !== '') {
+          // Skip empty arrays
+          if (Array.isArray(value) && value.length === 0) {
+            return
+          }
+          result[key] = value
+        }
+      }
+    })
+
+    return result
+  }, [search, searchKey, defaultPageSize, defaultMonths, defaultDates])
 
   // Date range change handler
   const handleDateRangeChange = navigate

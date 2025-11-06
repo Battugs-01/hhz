@@ -58,3 +58,26 @@ export function getPageNumbers(currentPage: number, totalPages: number) {
 
   return rangeWithDots
 }
+
+/**
+ * Masks a string or number value by showing first N characters and replacing the rest with asterisks
+ * @param value - The value to mask
+ * @param visibleChars - Number of characters to show (default: 5)
+ * @param maxMaskLength - Maximum number of asterisks to show (default: 10)
+ * @returns Masked string
+ *
+ * Examples:
+ * - maskValue("123456789") → "12345****"
+ * - maskValue("abc", 3) → "abc"
+ * - maskValue(987654321, 3) → "987*******"
+ */
+export function maskValue(
+  value: string | number,
+  visibleChars: number = 5,
+  maxMaskLength: number = 10
+): string {
+  const strValue = String(value)
+  if (strValue.length <= visibleChars) return strValue
+  const maskLength = Math.min(strValue.length - visibleChars, maxMaskLength)
+  return strValue.slice(0, visibleChars) + '*'.repeat(maskLength)
+}

@@ -2,41 +2,53 @@ import { useCallback, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { kycService, type User } from '@/services'
-import { UserPlus } from 'lucide-react'
 import { useFilterParams } from '@/hooks/use-filter-params'
 import { BaseTable, TableHeader } from '@/components/data-table'
 import { DateRangePicker } from '@/components/date-range-picker'
 import { Main } from '@/components/layout/main'
-import { columns } from './columns'
-import { QUERY_KEYS, roles, statusOptions } from './constants'
+import { createColumns } from './columns'
+import { QUERY_KEYS } from './constants'
 import { UserDialogs } from './dialogs'
 
-const route = getRouteApi('/_authenticated/(user-management)/kyc-info/')
+const route = getRouteApi('/_authenticated/(user-management)/user-information/')
 
-export function KycInfo() {
+export function UserInformation() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
   const [createOpen, setCreateOpen] = useState(false)
+
+  const columns = useMemo(() => createColumns({ navigate }), [navigate])
 
   const { params, defaultDates, handleDateRangeChange } = useFilterParams(
     search,
     {
       defaultMonths: 3,
-      defaultPageSize: 10,
+      defaultPageSize: 20,
       searchKey: 'email',
       navigate,
     }
   )
 
   const { data: list, refetch } = useQuery({
-    queryKey: [QUERY_KEYS.KYC_INFO_LIST, params],
+    queryKey: [QUERY_KEYS.USER_INFORMATION_LIST, params],
     queryFn: async () => {
-      const res = await kycService.listUsers(params as Record<string, unknown>)
-      return {
-        items: res?.body?.items || [],
-        total: res?.body?.total || 0,
+      try {
+        const res = await kycService.listUsers(
+          params as Record<string, unknown>
+        )
+        return {
+          items: res?.body?.items || [],
+          total: res?.body?.total || 0,
+        }
+      } catch (error) {
+        console.error('Failed to fetch user information:', error)
+        return {
+          items: [],
+          total: 0,
+        }
       }
     },
+    retry: 1,
   })
 
   const handleCreateSuccess = useCallback(() => {
@@ -47,22 +59,8 @@ export function KycInfo() {
   const toolbarConfig = useMemo(
     () => ({
       searchPlaceholder: 'ID or Email or Sub account id',
-      searchKey: 'query',
-      filters: [
-        {
-          columnId: 'status',
-          title: 'Status',
-          options: statusOptions as unknown as {
-            label: string
-            value: string
-          }[],
-        },
-        {
-          columnId: 'role',
-          title: 'Role',
-          options: roles.map((role) => ({ ...role })),
-        },
-      ],
+      searchKey: 'email',
+      filters: [],
       extra: handleDateRangeChange ? (
         <DateRangePicker
           value={{
@@ -86,29 +84,28 @@ export function KycInfo() {
         columns={columns}
         search={search}
         navigate={navigate}
-        tableId='kyc-info-table'
+        tableId='user-information-table'
         tableConfig={{
-          pagination: { defaultPage: 1, defaultPageSize: 10 },
+          pagination: { defaultPage: 1, defaultPageSize: 20 },
           globalFilter: { enabled: false },
           columnFilters: [
             { columnId: 'email', searchKey: 'email', type: 'string' },
-            { columnId: 'status', searchKey: 'status', type: 'array' },
-            { columnId: 'role', searchKey: 'role', type: 'array' },
           ],
         }}
         header={
           <TableHeader
-            title='KYC Info'
-            description='Manage user KYC information and verification status'
-            createButtonLabel='Add User'
-            createButtonIcon={<UserPlus className='h-4 w-4' />}
+            title='User Information'
+            fileName='user-information.xlsx'
+            description='Manage user information and verification status'
+            // createButtonLabel='Add User'
+            // createButtonIcon={<UserPlus className='h-4 w-4' />}
             onRefresh={() => refetch()}
-            onCreate={() => setCreateOpen(true)}
+            // onCreate={() => setCreateOpen(true)}
           />
         }
         toolbar={toolbarConfig}
-        UpdateComponent={UserDialogs.Form}
-        DeleteComponent={UserDialogs.Delete}
+        // UpdateComponent={UserDialogs.Form}
+        // DeleteComponent={UserDialogs.Delete}
         onRefresh={refetch}
       />
 

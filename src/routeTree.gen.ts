@@ -31,7 +31,7 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
-import { Route as AuthenticateduserManagementKycInfoIndexRouteImport } from './routes/_authenticated/(user-management)/kyc-info/index'
+import { Route as AuthenticateduserManagementUserInformationIndexRouteImport } from './routes/_authenticated/(user-management)/user-information/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -150,10 +150,10 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticateduserManagementKycInfoIndexRoute =
-  AuthenticateduserManagementKycInfoIndexRouteImport.update({
-    id: '/(user-management)/kyc-info/',
-    path: '/kyc-info/',
+const AuthenticateduserManagementUserInformationIndexRoute =
+  AuthenticateduserManagementUserInformationIndexRouteImport.update({
+    id: '/(user-management)/user-information/',
+    path: '/user-information/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
@@ -179,7 +179,7 @@ export interface FileRoutesByFullPath {
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
-  '/kyc-info': typeof AuthenticateduserManagementKycInfoIndexRoute
+  '/user-information': typeof AuthenticateduserManagementUserInformationIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -202,7 +202,7 @@ export interface FileRoutesByTo {
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
-  '/kyc-info': typeof AuthenticateduserManagementKycInfoIndexRoute
+  '/user-information': typeof AuthenticateduserManagementUserInformationIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -228,7 +228,7 @@ export interface FileRoutesById {
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
-  '/_authenticated/(user-management)/kyc-info/': typeof AuthenticateduserManagementKycInfoIndexRoute
+  '/_authenticated/(user-management)/user-information/': typeof AuthenticateduserManagementUserInformationIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -254,7 +254,7 @@ export interface FileRouteTypes {
     | '/help-center'
     | '/settings/'
     | '/tasks'
-    | '/kyc-info'
+    | '/user-information'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -277,7 +277,7 @@ export interface FileRouteTypes {
     | '/help-center'
     | '/settings'
     | '/tasks'
-    | '/kyc-info'
+    | '/user-information'
   id:
     | '__root__'
     | '/_authenticated'
@@ -302,7 +302,7 @@ export interface FileRouteTypes {
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
-    | '/_authenticated/(user-management)/kyc-info/'
+    | '/_authenticated/(user-management)/user-information/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -474,11 +474,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/(user-management)/kyc-info/': {
-      id: '/_authenticated/(user-management)/kyc-info/'
-      path: '/kyc-info'
-      fullPath: '/kyc-info'
-      preLoaderRoute: typeof AuthenticateduserManagementKycInfoIndexRouteImport
+    '/_authenticated/(user-management)/user-information/': {
+      id: '/_authenticated/(user-management)/user-information/'
+      path: '/user-information'
+      fullPath: '/user-information'
+      preLoaderRoute: typeof AuthenticateduserManagementUserInformationIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -515,7 +515,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
-  AuthenticateduserManagementKycInfoIndexRoute: typeof AuthenticateduserManagementKycInfoIndexRoute
+  AuthenticateduserManagementUserInformationIndexRoute: typeof AuthenticateduserManagementUserInformationIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -526,8 +526,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
-  AuthenticateduserManagementKycInfoIndexRoute:
-    AuthenticateduserManagementKycInfoIndexRoute,
+  AuthenticateduserManagementUserInformationIndexRoute:
+    AuthenticateduserManagementUserInformationIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

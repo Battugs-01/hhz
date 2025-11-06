@@ -55,6 +55,6 @@ export const roles = [
  * React Query query keys
  */
 export const QUERY_KEYS = {
-  KYC_INFO_LIST: 'kyc-info',
-  KYC_INFO_DETAIL: 'kyc-info-detail',
+  USER_INFORMATION_LIST: 'user-information',
+  USER_INFORMATION_DETAIL: 'user-information-detail',
 } as const
