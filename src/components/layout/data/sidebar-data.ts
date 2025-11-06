@@ -73,9 +73,15 @@ export const sidebarData: SidebarData = {
           icon: MessagesSquare,
         },
         {
-          title: 'KYC info',
-          url: '/kyc-info',
+          title: 'User Management',
           icon: Users,
+          items: [
+            {
+              title: 'KYC Info',
+              url: '/kyc-info',
+              icon: UserCog,
+            },
+          ],
         },
       ],
     },

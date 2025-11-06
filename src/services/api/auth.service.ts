@@ -15,7 +15,6 @@ export const authService = {
       )
       return response.data
     } catch (error) {
-      // Axios error-оос message-ийг авч throw хийх
       if (axios.isAxiosError(error) && error.response?.data) {
         const errorData = error.response.data as {
           message?: string

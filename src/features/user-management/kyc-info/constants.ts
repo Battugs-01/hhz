@@ -16,6 +16,16 @@ export const callTypes = new Map<UserStatus, string>([
 ])
 
 /**
+ * Status options для filter
+ */
+export const statusOptions = [
+  { label: 'Active', value: 'active' },
+  { label: 'Inactive', value: 'inactive' },
+  { label: 'Invited', value: 'invited' },
+  { label: 'Suspended', value: 'suspended' },
+] as const
+
+/**
  * Role options для select/dropdown
  */
 export const roles = [
@@ -40,3 +50,11 @@ export const roles = [
     icon: CreditCard,
   },
 ] as const
+
+/**
+ * React Query query keys
+ */
+export const QUERY_KEYS = {
+  KYC_INFO_LIST: 'kyc-info',
+  KYC_INFO_DETAIL: 'kyc-info-detail',
+} as const

@@ -1,6 +1,15 @@
-export { DataTablePagination } from './pagination'
+export { BaseTable } from './base-table'
+export type {
+  ActionComponentProps,
+  BaseTableProps,
+  TableConfig,
+  ToolbarConfig,
+} from './base-table'
+export { DataTableBulkActions } from './bulk-actions'
 export { DataTableColumnHeader } from './column-header'
 export { DataTableFacetedFilter } from './faceted-filter'
-export { DataTableViewOptions } from './view-options'
+export { DataTablePagination } from './pagination'
+export { TableHeader } from './table-header'
+export type { TableHeaderProps } from './table-header'
 export { DataTableToolbar } from './toolbar'
-export { DataTableBulkActions } from './bulk-actions'
+export { DataTableViewOptions } from './view-options'

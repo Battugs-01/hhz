@@ -1,7 +1,7 @@
 import z from 'zod'
 import { createFileRoute } from '@tanstack/react-router'
-import { KycInfo } from '@/features/kyc-info'
-import { roles } from '@/features/kyc-info/constants'
+import { KycInfo } from '@/features/user-management/kyc-info'
+import { roles } from '@/features/user-management/kyc-info/constants'
 
 const kycInfoSearchSchema = z.object({
   page: z.number().optional().catch(1),
@@ -24,12 +24,14 @@ const kycInfoSearchSchema = z.object({
     .catch([]),
   // Per-column text filter (example for username)
   username: z.string().optional().catch(''),
-  // Date range filter
-  start_day: z.string().optional().catch(undefined),
-  end_day: z.string().optional().catch(undefined),
+  // Date range filter (default утга component-д)
+  start_day: z.string().optional(),
+  end_day: z.string().optional(),
 })
 
-export const Route = createFileRoute('/_authenticated/kyc-info/')({
+export const Route = createFileRoute(
+  '/_authenticated/(user-management)/kyc-info/'
+)({
   validateSearch: kycInfoSearchSchema,
   component: KycInfo,
 })

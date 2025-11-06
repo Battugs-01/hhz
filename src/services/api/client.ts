@@ -3,7 +3,6 @@ import { useAuthStore } from '@/stores/auth-store'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
-// Axios instance үүсгэх
 export const apiClient: AxiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
@@ -11,7 +10,6 @@ export const apiClient: AxiosInstance = axios.create({
   },
 })
 
-// Request interceptor - token автоматаар нэмэх
 apiClient.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().auth.accessToken
@@ -25,7 +23,6 @@ apiClient.interceptors.request.use(
   }
 )
 
-// Response interceptor - 401 error-д автоматаар logout
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
