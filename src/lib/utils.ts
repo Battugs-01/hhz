@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from 'clsx'
+import dayjs from 'dayjs'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -80,4 +81,27 @@ export function maskValue(
   if (strValue.length <= visibleChars) return strValue
   const maskLength = Math.min(strValue.length - visibleChars, maxMaskLength)
   return strValue.slice(0, visibleChars) + '*'.repeat(maskLength)
+}
+
+/**
+ * Formats a date string or Date object to a readable format
+ * @param date - The date to format (string, Date, or undefined)
+ * @param format - The format string (default: 'YYYY-MM-DD HH:mm:ss')
+ * @returns Formatted date string or '-' if date is invalid or missing
+ *
+ * Examples:
+ * - formatDate('2025-10-29T17:44:25.29+08:00') → "2025-10-29 17:44:25"
+ * - formatDate(new Date()) → "2025-10-29 17:44:25"
+ * - formatDate(undefined) → "-"
+ */
+export function formatDate(
+  date: string | Date | undefined | null,
+  format: string = 'YYYY-MM-DD HH:mm:ss'
+): string {
+  if (!date) return '-'
+  try {
+    return dayjs(date).format(format)
+  } catch {
+    return '-'
+  }
 }

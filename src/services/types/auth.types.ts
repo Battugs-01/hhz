@@ -24,6 +24,31 @@ export interface LoginResponseBody {
   adminUser: AdminUser
 }
 
-export interface LoginResponse extends BaseResponse<LoginResponseBody> {}
+export interface MFAChallengeResponseBody {
+  challengeName: string
+  session: string
+  username: string
+  adminUser: AdminUser
+}
+
+export interface LoginResponse
+  extends BaseResponse<LoginResponseBody | MFAChallengeResponseBody> {}
+
+export interface VerifyOTPCredentials {
+  session: string
+  username: string
+  code: string
+}
+
+export interface VerifyOTPResponseBody {
+  accessToken: string
+  idToken: string // JWT token, middleware-д ашиглана
+  refreshToken: string
+  expiresIn: number
+  adminUser: AdminUser
+}
+
+export interface VerifyOTPResponse
+  extends BaseResponse<VerifyOTPResponseBody> {}
 
 export interface UserInfoResponse extends BaseResponse<AdminUser> {}

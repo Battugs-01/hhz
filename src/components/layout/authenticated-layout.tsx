@@ -31,7 +31,8 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
       }
       return info
     },
-    enabled: !!auth.accessToken,
+    // idToken эсвэл accessToken аль нь байвал query enable хийх
+    enabled: !!(auth.idToken || auth.accessToken),
     refetchOnWindowFocus: true,
     staleTime: 5 * 60 * 1000,
     retry: false,

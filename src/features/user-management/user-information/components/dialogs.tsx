@@ -21,8 +21,6 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { PasswordInput } from '@/components/password-input'
-import { SelectDropdown } from '@/components/select-dropdown'
-import { roles } from './constants'
 import {
   inviteFormSchema,
   userFormSchema,
@@ -205,7 +203,7 @@ function UserFormDialog({
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name='role'
           render={({ field }) => (
@@ -216,12 +214,15 @@ function UserFormDialog({
                 onValueChange={field.onChange}
                 placeholder='Select a role'
                 className='col-span-4'
-                items={roles.map(({ label, value }) => ({ label, value }))}
+                items={roles.map((role) => ({
+                  label: role.label,
+                  value: role.value,
+                }))}
               />
               <FormMessage className='col-span-4 col-start-3' />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name='password'
@@ -346,7 +347,7 @@ function InviteUserDialog({ open, onClose, onSuccess }: StandardDialogProps) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control}
           name='role'
           render={({ field }) => (
@@ -356,12 +357,15 @@ function InviteUserDialog({ open, onClose, onSuccess }: StandardDialogProps) {
                 defaultValue={field.value}
                 onValueChange={field.onChange}
                 placeholder='Select a role'
-                items={roles.map(({ label, value }) => ({ label, value }))}
+                items={roles.map((role) => ({
+                  label: role.label,
+                  value: role.value,
+                }))}
               />
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <FormField
           control={form.control}
           name='desc'

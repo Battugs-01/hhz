@@ -1,17 +1,18 @@
 import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
-import { kycService, type User } from '@/services'
+import type { CryptoDeposit } from '@/services'
+import { bankService } from '@/services'
 import { useFilterParams } from '@/hooks/use-filter-params'
 import { BaseTable, TableHeader } from '@/components/data-table'
 import { Main } from '@/components/layout/main'
 import { createColumns } from './components/columns'
 import { QUERY_KEYS, TABLE_CONFIG } from './components/constants'
-import { UserInformationToolbarActions } from './components/toolbar-actions'
+import { CryptoDepositToolbarActions } from './components/toolbar-actions'
 
-const route = getRouteApi('/_authenticated/(user-management)/user-information/')
+const route = getRouteApi('/_authenticated/crypto/deposit/')
 
-export function UserInformation() {
+export function CryptoDeposit() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
@@ -25,12 +26,23 @@ export function UserInformation() {
   })
 
   const { data: list, refetch } = useQuery({
-    queryKey: [QUERY_KEYS.USER_INFORMATION_LIST, params],
+    queryKey: [QUERY_KEYS.CRYPTO_DEPOSIT_LIST, params],
     queryFn: async () => {
-      const res = await kycService.listUsers(params)
-      return {
-        items: res?.body?.items || [],
-        total: res?.body?.total || 0,
+      try {
+        const res = await bankService.listCryptoDeposits(params)
+        if (import.meta.env.DEV) {
+          console.log('Crypto Deposits API response:', res)
+        }
+        return {
+          items: res?.body?.items || [],
+          total: res?.body?.total || 0,
+        }
+      } catch (error) {
+        console.error('Failed to fetch crypto deposits:', error)
+        return {
+          items: [],
+          total: 0,
+        }
       }
     },
     retry: 1,
@@ -43,7 +55,7 @@ export function UserInformation() {
       searchKey: TABLE_CONFIG.SEARCH_KEY,
       filters: [],
       extra: (
-        <UserInformationToolbarActions
+        <CryptoDepositToolbarActions
           search={search}
           navigate={navigate}
           onDateRangeChange={handleDateRangeChange}
@@ -56,7 +68,7 @@ export function UserInformation() {
 
   return (
     <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
-      <BaseTable<User>
+      <BaseTable<CryptoDeposit>
         data={list?.items ?? []}
         total={list?.total}
         columns={columns}
@@ -71,18 +83,16 @@ export function UserInformation() {
           globalFilter: { enabled: false },
           columnFilters: [
             {
-              columnId: 'email',
+              columnId: 'id',
               searchKey: TABLE_CONFIG.SEARCH_KEY,
               type: 'string',
             },
           ],
         }}
-        // UpdateComponent={UserDialogs.Form}
-        // DetailComponent={UserDialogs.Form}
         header={
           <TableHeader
-            title='User Information'
-            description='Manage user information and verification status'
+            title='Crypto Deposits'
+            description='Manage and view all crypto deposit transactions'
           />
         }
         toolbar={toolbarConfig}

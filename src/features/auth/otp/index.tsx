@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useSearch } from '@tanstack/react-router'
 import {
   Card,
   CardContent,
@@ -11,6 +11,10 @@ import { AuthLayout } from '../auth-layout'
 import { OtpForm } from './components/otp-form'
 
 export function Otp() {
+  const { session, username, redirect } = useSearch({
+    from: '/(auth)/otp',
+  })
+
   return (
     <AuthLayout>
       <Card className='gap-4'>
@@ -24,7 +28,7 @@ export function Otp() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <OtpForm />
+          <OtpForm session={session} username={username} redirect={redirect} />
         </CardContent>
         <CardFooter>
           <p className='text-muted-foreground px-8 text-center text-sm'>

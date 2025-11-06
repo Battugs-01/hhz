@@ -3,6 +3,8 @@ import type {
   LoginCredentials,
   LoginResponse,
   UserInfoResponse,
+  VerifyOTPCredentials,
+  VerifyOTPResponse,
 } from '../types/auth.types'
 import { apiClient } from './client'
 
@@ -29,6 +31,27 @@ export const authService = {
   getUserInfo: async (): Promise<UserInfoResponse> => {
     const response = await apiClient.get<UserInfoResponse>('/auth/info')
     return response.data
+  },
+
+  verifyMFA: async (
+    credentials: VerifyOTPCredentials
+  ): Promise<VerifyOTPResponse> => {
+    try {
+      const response = await apiClient.post<VerifyOTPResponse>(
+        '/auth/mfa-challenge',
+        credentials
+      )
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as {
+          message?: string
+          body?: null
+        }
+        throw new Error(errorData.message || 'OTP verification failed')
+      }
+      throw error
+    }
   },
 
   logout: async (): Promise<void> => {

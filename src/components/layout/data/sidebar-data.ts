@@ -2,11 +2,13 @@ import {
   AudioWaveform,
   Bell,
   Bug,
+  Coins,
   Command,
   Construction,
   FileX,
   GalleryVerticalEnd,
   HelpCircle,
+  Landmark,
   LayoutDashboard,
   Lock,
   Monitor,
@@ -77,6 +79,38 @@ export const sidebarData: SidebarData = {
               title: 'User Information',
               url: '/user-information',
               icon: UserCog,
+            },
+          ],
+        },
+        {
+          title: 'Bank',
+          icon: Landmark,
+          items: [
+            {
+              title: 'Deposit',
+              url: '/bank/deposit',
+              icon: Landmark,
+            },
+            {
+              title: 'Withdrawal',
+              url: '/bank/withdrawal',
+              icon: Landmark,
+            },
+            {
+              title: 'Wallets',
+              url: '/bank/wallets',
+              icon: Landmark,
+            },
+          ],
+        },
+        {
+          title: 'Crypto',
+          icon: Coins,
+          items: [
+            {
+              title: 'Deposit',
+              url: '/crypto/deposit',
+              icon: Coins,
             },
           ],
         },

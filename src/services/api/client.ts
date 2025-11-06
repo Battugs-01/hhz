@@ -12,7 +12,12 @@ export const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().auth.accessToken
+    // idToken-ийг Authorization header-д ашиглах
+    const idToken = useAuthStore.getState().auth.idToken
+    // idToken байхгүй бол accessToken-ийг fallback болгон ашиглах (backward compatibility)
+    const accessToken = useAuthStore.getState().auth.accessToken
+    const token = idToken || accessToken
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -27,10 +32,17 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Token хүчингүй болсон, logout хийх
-      useAuthStore.getState().auth.reset()
-      if (typeof window !== 'undefined') {
-        window.location.href = '/sign-in'
+      // Login болон mfa-challenge request-д redirect хийхгүй, алдааны мэдээллийг харуулах
+      const isAuthRequest =
+        error.config?.url?.includes('/auth/login') ||
+        error.config?.url?.includes('/auth/mfa-challenge')
+
+      if (!isAuthRequest) {
+        // Token хүчингүй болсон, logout хийх (зөвхөн authenticated request-д)
+        useAuthStore.getState().auth.reset()
+        if (typeof window !== 'undefined') {
+          window.location.href = '/sign-in'
+        }
       }
     }
 

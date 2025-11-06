@@ -31,6 +31,10 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedCryptoDepositIndexRouteImport } from './routes/_authenticated/crypto/deposit/index'
+import { Route as AuthenticatedBankWithdrawalIndexRouteImport } from './routes/_authenticated/bank/withdrawal/index'
+import { Route as AuthenticatedBankWalletsIndexRouteImport } from './routes/_authenticated/bank/wallets/index'
+import { Route as AuthenticatedBankDepositIndexRouteImport } from './routes/_authenticated/bank/deposit/index'
 import { Route as AuthenticateduserManagementUserInformationIndexRouteImport } from './routes/_authenticated/(user-management)/user-information/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -150,6 +154,30 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCryptoDepositIndexRoute =
+  AuthenticatedCryptoDepositIndexRouteImport.update({
+    id: '/crypto/deposit/',
+    path: '/crypto/deposit/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBankWithdrawalIndexRoute =
+  AuthenticatedBankWithdrawalIndexRouteImport.update({
+    id: '/bank/withdrawal/',
+    path: '/bank/withdrawal/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBankWalletsIndexRoute =
+  AuthenticatedBankWalletsIndexRouteImport.update({
+    id: '/bank/wallets/',
+    path: '/bank/wallets/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBankDepositIndexRoute =
+  AuthenticatedBankDepositIndexRouteImport.update({
+    id: '/bank/deposit/',
+    path: '/bank/deposit/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticateduserManagementUserInformationIndexRoute =
   AuthenticateduserManagementUserInformationIndexRouteImport.update({
     id: '/(user-management)/user-information/',
@@ -180,6 +208,10 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/user-information': typeof AuthenticateduserManagementUserInformationIndexRoute
+  '/bank/deposit': typeof AuthenticatedBankDepositIndexRoute
+  '/bank/wallets': typeof AuthenticatedBankWalletsIndexRoute
+  '/bank/withdrawal': typeof AuthenticatedBankWithdrawalIndexRoute
+  '/crypto/deposit': typeof AuthenticatedCryptoDepositIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -203,6 +235,10 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/user-information': typeof AuthenticateduserManagementUserInformationIndexRoute
+  '/bank/deposit': typeof AuthenticatedBankDepositIndexRoute
+  '/bank/wallets': typeof AuthenticatedBankWalletsIndexRoute
+  '/bank/withdrawal': typeof AuthenticatedBankWithdrawalIndexRoute
+  '/crypto/deposit': typeof AuthenticatedCryptoDepositIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -229,6 +265,10 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/(user-management)/user-information/': typeof AuthenticateduserManagementUserInformationIndexRoute
+  '/_authenticated/bank/deposit/': typeof AuthenticatedBankDepositIndexRoute
+  '/_authenticated/bank/wallets/': typeof AuthenticatedBankWalletsIndexRoute
+  '/_authenticated/bank/withdrawal/': typeof AuthenticatedBankWithdrawalIndexRoute
+  '/_authenticated/crypto/deposit/': typeof AuthenticatedCryptoDepositIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -255,6 +295,10 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/tasks'
     | '/user-information'
+    | '/bank/deposit'
+    | '/bank/wallets'
+    | '/bank/withdrawal'
+    | '/crypto/deposit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -278,6 +322,10 @@ export interface FileRouteTypes {
     | '/settings'
     | '/tasks'
     | '/user-information'
+    | '/bank/deposit'
+    | '/bank/wallets'
+    | '/bank/withdrawal'
+    | '/crypto/deposit'
   id:
     | '__root__'
     | '/_authenticated'
@@ -303,6 +351,10 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/(user-management)/user-information/'
+    | '/_authenticated/bank/deposit/'
+    | '/_authenticated/bank/wallets/'
+    | '/_authenticated/bank/withdrawal/'
+    | '/_authenticated/crypto/deposit/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -474,6 +526,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/crypto/deposit/': {
+      id: '/_authenticated/crypto/deposit/'
+      path: '/crypto/deposit'
+      fullPath: '/crypto/deposit'
+      preLoaderRoute: typeof AuthenticatedCryptoDepositIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/bank/withdrawal/': {
+      id: '/_authenticated/bank/withdrawal/'
+      path: '/bank/withdrawal'
+      fullPath: '/bank/withdrawal'
+      preLoaderRoute: typeof AuthenticatedBankWithdrawalIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/bank/wallets/': {
+      id: '/_authenticated/bank/wallets/'
+      path: '/bank/wallets'
+      fullPath: '/bank/wallets'
+      preLoaderRoute: typeof AuthenticatedBankWalletsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/bank/deposit/': {
+      id: '/_authenticated/bank/deposit/'
+      path: '/bank/deposit'
+      fullPath: '/bank/deposit'
+      preLoaderRoute: typeof AuthenticatedBankDepositIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/(user-management)/user-information/': {
       id: '/_authenticated/(user-management)/user-information/'
       path: '/user-information'
@@ -516,6 +596,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticateduserManagementUserInformationIndexRoute: typeof AuthenticateduserManagementUserInformationIndexRoute
+  AuthenticatedBankDepositIndexRoute: typeof AuthenticatedBankDepositIndexRoute
+  AuthenticatedBankWalletsIndexRoute: typeof AuthenticatedBankWalletsIndexRoute
+  AuthenticatedBankWithdrawalIndexRoute: typeof AuthenticatedBankWithdrawalIndexRoute
+  AuthenticatedCryptoDepositIndexRoute: typeof AuthenticatedCryptoDepositIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -528,6 +612,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticateduserManagementUserInformationIndexRoute:
     AuthenticateduserManagementUserInformationIndexRoute,
+  AuthenticatedBankDepositIndexRoute: AuthenticatedBankDepositIndexRoute,
+  AuthenticatedBankWalletsIndexRoute: AuthenticatedBankWalletsIndexRoute,
+  AuthenticatedBankWithdrawalIndexRoute: AuthenticatedBankWithdrawalIndexRoute,
+  AuthenticatedCryptoDepositIndexRoute: AuthenticatedCryptoDepositIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

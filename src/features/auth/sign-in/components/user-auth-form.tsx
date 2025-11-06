@@ -46,8 +46,42 @@ export function UserAuthForm({
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: async (data) => {
-      // Save token first
-      if (data.body?.token) {
+      if (!data.body) {
+        toast.error('Алдаа гарлаа')
+        return
+      }
+
+      // MFA challenge шалгах
+      if (
+        'challengeName' in data.body &&
+        data.body.challengeName === 'SOFTWARE_TOKEN_MFA'
+      ) {
+        // Session болон username байгаа эсэхийг шалгах
+        if (
+          'session' in data.body &&
+          'username' in data.body &&
+          data.body.session &&
+          data.body.username
+        ) {
+          // OTP хуудас руу navigate хийх, session болон username дамжуулах
+          navigate({
+            to: '/otp',
+            search: {
+              session: data.body.session,
+              username: data.body.username,
+              redirect: redirectTo,
+            },
+            replace: true,
+          })
+          return
+        } else {
+          toast.error('MFA challenge-д session эсвэл username байхгүй байна')
+          return
+        }
+      }
+
+      // Энгийн login (token байвал)
+      if ('token' in data.body && data.body.token) {
         auth.saveToken(data.body.token)
 
         try {
