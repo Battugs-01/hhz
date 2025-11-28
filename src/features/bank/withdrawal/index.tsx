@@ -2,20 +2,35 @@ import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { bankService, type Withdrawal } from '@/services'
+import { useDrawer } from '@/context/drawer-provider'
 import { useFilterParams } from '@/hooks/use-filter-params'
 import { BaseTable, TableHeader } from '@/components/data-table'
 import { Main } from '@/components/layout/main'
 import { createColumns } from './components/columns'
 import { QUERY_KEYS, TABLE_CONFIG } from './components/constants'
 import { WithdrawalToolbarActions } from './components/toolbar-actions'
+import { WithdrawalDetailContent } from './components/withdrawal-detail-content'
 
 const route = getRouteApi('/_authenticated/bank/withdrawal/')
 
 export function Withdrawal() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const { openDrawer } = useDrawer()
 
-  const columns = useMemo(() => createColumns(), [])
+  const handleIdClick = (withdrawal: Withdrawal) => {
+    openDrawer({
+      title: 'Withdrawal Details',
+      description:
+        'View detailed information about this withdrawal transaction',
+      content: <WithdrawalDetailContent withdrawal={withdrawal} />,
+    })
+  }
+
+  const columns = useMemo(
+    () => createColumns({ onIdClick: handleIdClick }),
+    [openDrawer]
+  )
 
   const { params, handleDateRangeChange } = useFilterParams(search, {
     defaultMonths: 0,
@@ -24,7 +39,11 @@ export function Withdrawal() {
     navigate,
   })
 
-  const { data: list, refetch } = useQuery({
+  const {
+    data: list,
+    refetch,
+    isLoading: isLoadingWithdrawals,
+  } = useQuery({
     queryKey: [QUERY_KEYS.WITHDRAWAL_LIST, params],
     queryFn: async () => {
       try {
@@ -74,6 +93,7 @@ export function Withdrawal() {
         search={search}
         navigate={navigate}
         tableId={TABLE_CONFIG.ID}
+        isLoading={isLoadingWithdrawals}
         tableConfig={{
           pagination: {
             defaultPage: TABLE_CONFIG.DEFAULT_PAGE,
@@ -82,7 +102,7 @@ export function Withdrawal() {
           globalFilter: { enabled: false },
           columnFilters: [
             {
-              columnId: 'id',
+              columnId: TABLE_CONFIG.SEARCH_KEY,
               searchKey: TABLE_CONFIG.SEARCH_KEY,
               type: 'string',
             },

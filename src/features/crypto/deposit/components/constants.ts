@@ -1,6 +1,17 @@
 import type { FilterField } from '@/components/filter-panel'
 
-export const FILTER_KEYS = ['status', 'currency', 'txnId', 'id'] as const
+export const FILTER_KEYS = [
+  'status',
+  'coin',
+  'txId',
+  'id',
+  'network',
+  'amount',
+  'amountCondition',
+  'usdtValuation',
+  'usdtValuationCondition',
+  'address',
+] as const
 
 export const CRYPTO_DEPOSIT_FILTER_FIELDS: FilterField[] = [
   {
@@ -14,25 +25,76 @@ export const CRYPTO_DEPOSIT_FILTER_FIELDS: FilterField[] = [
     label: 'Status',
     type: 'select',
     options: [
-      { label: 'Transferred', value: 'TRANSFERRED' },
-      { label: 'Pending', value: 'PENDING' },
-      { label: 'Completed', value: 'COMPLETED' },
-      { label: 'Failed', value: 'FAILED' },
-      { label: 'Cancelled', value: 'CANCELLED' },
+      { label: 'Completed', value: '1' },
+      { label: 'Pending', value: '0' },
     ],
     placeholder: 'Select status...',
   },
   {
-    key: 'currency',
-    label: 'Currency',
-    type: 'text',
-    placeholder: 'Enter currency...',
+    key: 'amount',
+    label: 'Amount',
+    type: 'number',
+    placeholder: 'Enter amount...',
   },
   {
-    key: 'txnId',
+    key: 'amountCondition',
+    label: 'Amount Condition',
+    type: 'select',
+    options: [
+      { label: 'Equal', value: 'EQUAL' },
+      { label: 'Greater Than', value: 'GREATER_THAN' },
+      { label: 'Less Than', value: 'LESS_THAN' },
+    ],
+    placeholder: 'Select condition...',
+    showWhen: {
+      field: 'amount',
+      hasValue: true,
+    },
+  },
+  {
+    key: 'usdtValuation',
+    label: 'USDT Valuation',
+    type: 'number',
+    placeholder: 'Enter USDT valuation...',
+  },
+  {
+    key: 'usdtValuationCondition',
+    label: 'USDT Valuation Condition',
+    type: 'select',
+    options: [
+      { label: 'Equal', value: 'EQUAL' },
+      { label: 'Greater Than', value: 'GREATER_THAN' },
+      { label: 'Less Than', value: 'LESS_THAN' },
+    ],
+    placeholder: 'Select condition...',
+    showWhen: {
+      field: 'usdtValuation',
+      hasValue: true,
+    },
+  },
+  {
+    key: 'coin',
+    label: 'Coin',
+    type: 'text',
+    placeholder: 'Enter coin symbol...',
+  },
+  {
+    key: 'network',
+    label: 'Network',
+    type: 'text',
+    placeholder: 'Enter network...',
+  },
+  {
+    key: 'txId',
     label: 'Transaction ID',
     type: 'text',
     placeholder: 'Enter transaction ID...',
+  },
+  {
+    key: 'address',
+    label: 'Address',
+    type: 'text',
+    placeholder: 'Enter address...',
   },
   {
     key: 'dateRange',
@@ -52,7 +114,7 @@ export const TABLE_CONFIG = {
   EXPORT_FILE_NAME: 'crypto-deposits.xlsx',
   DEFAULT_PAGE_SIZE: 20,
   DEFAULT_PAGE: 1,
-  SEARCH_KEY: 'id',
+  SEARCH_KEY: 'query',
   SEARCH_PLACEHOLDER: 'Search by User ID, Sub Account ID, or Email',
 } as const
 
@@ -64,10 +126,10 @@ export const TABLE_CONFIG = {
 export function getStatusVariant(
   status: string
 ): 'success' | 'error' | 'warning' {
-  if (status === 'TRANSFERRED' || status === 'COMPLETED') {
+  if (status === 'Completed' || status === '1') {
     return 'success'
   }
-  if (status === 'FAILED' || status === 'CANCELLED') {
+  if (status === 'Failed' || status === 'CANCELLED') {
     return 'error'
   }
   return 'warning'

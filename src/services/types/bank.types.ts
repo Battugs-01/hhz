@@ -7,7 +7,7 @@ const depositStatusSchema = z.union([
   z.literal('COMPLETED'),
   z.literal('FAILED'),
   z.literal('CANCELLED'),
-  z.string(), // Allow any string status
+  z.string(),
 ])
 export type DepositStatus = z.infer<typeof depositStatusSchema>
 
@@ -49,7 +49,6 @@ export type Deposit = z.infer<typeof depositSchema>
 export const depositListSchema = z.array(depositSchema)
 export type DepositList = z.infer<typeof depositListSchema>
 
-// API Request Types
 export interface DepositListRequest {
   current?: number
   pageSize?: number
@@ -62,13 +61,8 @@ export interface DepositListRequest {
   }
 }
 
-// API Response Types
 export interface DepositListResponse
   extends BaseResponse<PaginationResponse<Deposit>> {}
-
-// ============================================
-// WITHDRAWAL TYPES
-// ============================================
 
 const withdrawalStatusSchema = z.union([
   z.literal('TRANSFERRED'),
@@ -76,7 +70,7 @@ const withdrawalStatusSchema = z.union([
   z.literal('COMPLETED'),
   z.literal('FAILED'),
   z.literal('CANCELLED'),
-  z.string(), // Allow any string status
+  z.string(),
 ])
 export type WithdrawalStatus = z.infer<typeof withdrawalStatusSchema>
 
@@ -141,7 +135,6 @@ export type Withdrawal = z.infer<typeof withdrawalSchema>
 export const withdrawalListSchema = z.array(withdrawalSchema)
 export type WithdrawalList = z.infer<typeof withdrawalListSchema>
 
-// API Request Types
 export interface WithdrawalListRequest {
   current?: number
   pageSize?: number
@@ -154,21 +147,14 @@ export interface WithdrawalListRequest {
   }
 }
 
-// API Response Types
 export interface WithdrawalListResponse
   extends BaseResponse<PaginationResponse<Withdrawal>> {}
 
-// ============================================
-// WALLET TYPES
-// ============================================
-
-// Reuse the walletSchema from withdrawal types (already exported above)
 export type Wallet = z.infer<typeof walletSchema>
 
 export const walletListSchema = z.array(walletSchema)
 export type WalletList = z.infer<typeof walletListSchema>
 
-// API Request Types
 export interface WalletListRequest {
   current?: number
   pageSize?: number
@@ -182,35 +168,73 @@ export interface WalletListRequest {
   }
 }
 
-// API Response Types
 export interface WalletListResponse
   extends BaseResponse<PaginationResponse<Wallet>> {}
 
-// ============================================
-// CRYPTO DEPOSIT TYPES
-// ============================================
+// Exchange Txn types
+const bankResponseSchema = z.object({
+  bancsTransaction: z
+    .object({
+      baseAmount: z.number().optional(),
+      fromRate: z.number().optional(),
+      isser: z.string().optional(),
+      toRate: z.number().optional(),
+    })
+    .optional(),
+  journalNo: z.number().optional(),
+  systemDate: z.string().optional(),
+  transferId: z.string().optional(),
+  uuid: z.string().optional(),
+})
 
-// Reuse deposit schema for crypto deposits (can be adjusted based on actual API response)
-export const cryptoDepositSchema = depositSchema
-export type CryptoDeposit = z.infer<typeof cryptoDepositSchema>
+const exchangeTxnMetadataSchema = z.object({
+  notifyBody: z.record(z.string(), z.unknown()).optional(),
+  notifyLambda: z.string().optional(),
+  userId: z.string().optional(),
+  walletId: z.string().optional(),
+})
 
-export const cryptoDepositListSchema = z.array(cryptoDepositSchema)
-export type CryptoDepositList = z.infer<typeof cryptoDepositListSchema>
+export const exchangeTxnSchema = z.object({
+  id: z.string(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  amount: z.number(),
+  bankResponse: bankResponseSchema.optional(),
+  currency: z.string(),
+  description: z.string().optional(),
+  metadata: exchangeTxnMetadataSchema.optional(),
+  reason: z.string().optional(),
+  receiverBankCode: z.string().optional(),
+  receiverIBAN: z.string().optional(),
+  receiverName: z.string().optional(),
+  requestTime: z.string().optional(),
+  senderBankCode: z.string().optional(),
+  senderIBAN: z.string().optional(),
+  status: z.union([
+    z.literal('completed'),
+    z.literal('iban'),
+    z.literal('timeout'),
+    z.literal('error'),
+    z.string(),
+  ]),
+  transferTime: z.string().optional(),
+})
+export type ExchangeTxn = z.infer<typeof exchangeTxnSchema>
 
-// API Request Types
-export interface CryptoDepositListRequest {
+export const exchangeTxnListSchema = z.array(exchangeTxnSchema)
+export type ExchangeTxnList = z.infer<typeof exchangeTxnListSchema>
+
+export interface ExchangeTxnListRequest {
   current?: number
   pageSize?: number
   query?: string
   status?: string
   currency?: string
-  txnId?: string
   sortDate?: {
     end_day: string
     start_day: string
   }
 }
 
-// API Response Types
-export interface CryptoDepositListResponse
-  extends BaseResponse<PaginationResponse<CryptoDeposit>> {}
+export interface ExchangeTxnListResponse
+  extends BaseResponse<PaginationResponse<ExchangeTxn>> {}

@@ -10,6 +10,7 @@ export const cryptoDepositSearchSchema = z.object({
   status: z.string().optional(),
   currency: z.string().optional(),
   txnId: z.string().optional(),
+  address: z.string().optional(),
   start_day: z.string().optional(),
   end_day: z.string().optional(),
 })

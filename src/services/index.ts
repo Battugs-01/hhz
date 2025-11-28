@@ -1,19 +1,13 @@
-// API Client
-export { apiClient } from './api/client'
-
-// Auth Service
 export { authService } from './api/auth.service'
-
-// KYC Service
-export { kycService } from './api/kyc.service'
-
-// Bank Service
 export { bankService } from './api/bank.service'
+export { apiClient } from './api/client'
+export { cryptoService } from './api/crypto.service'
+export { kycService } from './api/kyc.service'
+export { newsService } from './api/news.service'
+export { stakeService } from './api/stake.service'
 
-// Common Types
 export type { BaseResponse, PaginationResponse } from './types/common.types'
 
-// Auth Types
 export type {
   AdminUser,
   LoginCredentials,
@@ -35,7 +29,6 @@ export type {
   UserStatus,
 } from './types/kyc.types'
 
-// Bank Types
 export { depositListSchema, depositSchema } from './types/bank.types'
 export type {
   Deposit,
@@ -62,13 +55,99 @@ export type {
   WalletListResponse,
 } from './types/bank.types'
 
+export { exchangeTxnListSchema, exchangeTxnSchema } from './types/bank.types'
+export type {
+  ExchangeTxn,
+  ExchangeTxnList,
+  ExchangeTxnListRequest,
+  ExchangeTxnListResponse,
+} from './types/bank.types'
+
+export { stakeListSchema, stakeSchema } from './types/stake.types'
+export type {
+  Stake,
+  StakeList,
+  StakeListRequest,
+  StakeListResponse,
+  StakeStatus,
+} from './types/stake.types'
+
+export { stakeAssetListSchema, stakeAssetSchema } from './types/stake.types'
+export type {
+  StakeAsset,
+  StakeAssetCreateParams,
+  StakeAssetList,
+  StakeAssetListParams,
+  StakeAssetListResponse,
+  StakeAssetResponse,
+  StakeAssetUpdateParams,
+} from './types/stake.types'
+
 export {
+  stakeContractListSchema,
+  stakeContractSchema,
+} from './types/stake.types'
+export type {
+  StakeContract,
+  StakeContractCreateParams,
+  StakeContractList,
+  StakeContractListParams,
+  StakeContractListResponse,
+  StakeContractResponse,
+  StakeContractUpdateParams,
+} from './types/stake.types'
+
+export { USERS_STAKE_STATUS, userStakeListSchema } from './types/stake.types'
+export type {
+  UserStakeList,
+  UserStakeListParams,
+  UserStakeListResponse,
+} from './types/stake.types'
+
+export {
+  coinListSchema,
+  coinSchema,
   cryptoDepositListSchema,
   cryptoDepositSchema,
-} from './types/bank.types'
+  cryptoWithdrawalListSchema,
+  cryptoWithdrawalSchema,
+  walletAddressListSchema,
+  walletAddressSchema,
+} from './types/crypto.types'
 export type {
+  Coin,
+  CoinList,
+  CoinListParams,
+  CoinListResponse,
+  CoinResponse,
   CryptoDeposit,
   CryptoDepositList,
   CryptoDepositListRequest,
   CryptoDepositListResponse,
-} from './types/bank.types'
+  CryptoWithdrawal,
+  CryptoWithdrawalList,
+  CryptoWithdrawalListRequest,
+  CryptoWithdrawalListResponse,
+  Network,
+  WalletAddress,
+  WalletAddressList,
+  WalletAddressListRequest,
+  WalletAddressListResponse,
+} from './types/crypto.types'
+
+export {
+  newsApiResponseSchema,
+  newsListSchema,
+  newsSchema,
+  transformNewsApiResponse,
+  transformNewsToApiRequest,
+} from './types/news.types'
+export type {
+  News,
+  NewsCreateParams,
+  NewsList,
+  NewsListRequest,
+  NewsListResponse,
+  NewsResponse,
+  NewsUpdateParams,
+} from './types/news.types'

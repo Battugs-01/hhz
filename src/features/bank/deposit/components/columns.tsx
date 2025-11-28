@@ -6,8 +6,23 @@ import { CopyButton } from '@/components/copy-button'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { getStatusVariant } from './constants'
 
-export const createColumns = (): ColumnDef<Deposit>[] => {
+type CreateColumnsOptions = {
+  onIdClick?: (deposit: Deposit) => void
+}
+
+export const createColumns = (
+  options?: CreateColumnsOptions
+): ColumnDef<Deposit>[] => {
+  const { onIdClick } = options || {}
   return [
+    {
+      id: 'query',
+      accessorKey: 'query',
+      header: () => null,
+      cell: () => null,
+      enableHiding: false,
+      enableSorting: false,
+    },
     {
       accessorKey: 'id',
       header: ({ column }: { column: Column<Deposit> }) => (
@@ -15,9 +30,19 @@ export const createColumns = (): ColumnDef<Deposit>[] => {
       ),
       cell: ({ row }: { row: Row<Deposit> }) => {
         const id = row.getValue('id') as string
+        const deposit = row.original
         return (
-          <div className='flex items-center gap-1 ps-2'>
-            <span className='font-mono text-sm text-nowrap'>
+          <div
+            className='flex items-center gap-1 ps-2'
+            onClick={(e) => {
+              e.stopPropagation()
+              if (onIdClick) {
+                onIdClick(deposit)
+              }
+            }}
+            style={{ cursor: onIdClick ? 'pointer' : 'default' }}
+          >
+            <span className='hover:text-primary font-mono text-sm text-nowrap underline'>
               {maskValue(id)}
             </span>
             <CopyButton value={id} />

@@ -4,6 +4,7 @@ import { authService } from '@/services'
 import { useAuthStore } from '@/stores/auth-store'
 import { getCookie } from '@/lib/cookies'
 import { cn } from '@/lib/utils'
+import { DrawerProvider } from '@/context/drawer-provider'
 import { LayoutProvider } from '@/context/layout-provider'
 import { SearchProvider } from '@/context/search-provider'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
@@ -31,9 +32,9 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
       }
       return info
     },
-    // idToken эсвэл accessToken аль нь байвал query enable хийх
     enabled: !!(auth.idToken || auth.accessToken),
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
     staleTime: 5 * 60 * 1000,
     retry: false,
   })
@@ -41,34 +42,31 @@ export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   return (
     <SearchProvider>
       <LayoutProvider>
-        <SidebarProvider defaultOpen={defaultOpen}>
-          <SkipToMain />
-          <AppSidebar />
-          <SidebarInset
-            className={cn(
-              // Set content container, so we can use container queries
-              '@container/content',
+        <DrawerProvider>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <SkipToMain />
+            <AppSidebar />
+            <SidebarInset
+              className={cn(
+                '@container/content',
 
-              // If layout is fixed, set the height
-              // to 100svh to prevent overflow
-              'has-[[data-layout=fixed]]:h-svh',
+                'has-[[data-layout=fixed]]:h-svh',
 
-              // If layout is fixed and sidebar is inset,
-              // set the height to 100svh - spacing (total margins) to prevent overflow
-              'peer-data-[variant=inset]:has-[[data-layout=fixed]]:h-[calc(100svh-(var(--spacing)*4))]'
-            )}
-          >
-            <Header fixed>
-              <Search />
-              <div className='ms-auto flex items-center space-x-4'>
-                <ThemeSwitch />
-                <ConfigDrawer />
-                <ProfileDropdown />
-              </div>
-            </Header>
-            {children ?? <Outlet />}
-          </SidebarInset>
-        </SidebarProvider>
+                'peer-data-[variant=inset]:has-[[data-layout=fixed]]:h-[calc(100svh-(var(--spacing)*4))]'
+              )}
+            >
+              <Header fixed>
+                <Search />
+                <div className='ms-auto flex items-center space-x-4'>
+                  <ThemeSwitch />
+                  <ConfigDrawer />
+                  <ProfileDropdown />
+                </div>
+              </Header>
+              {children ?? <Outlet />}
+            </SidebarInset>
+          </SidebarProvider>
+        </DrawerProvider>
       </LayoutProvider>
     </SearchProvider>
   )

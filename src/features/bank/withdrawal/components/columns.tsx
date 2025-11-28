@@ -6,8 +6,23 @@ import { CopyButton } from '@/components/copy-button'
 import { DataTableColumnHeader } from '@/components/data-table'
 import { getStatusVariant } from './constants'
 
-export const createColumns = (): ColumnDef<Withdrawal>[] => {
+type CreateColumnsOptions = {
+  onIdClick?: (withdrawal: Withdrawal) => void
+}
+
+export const createColumns = (
+  options?: CreateColumnsOptions
+): ColumnDef<Withdrawal>[] => {
+  const { onIdClick } = options || {}
   return [
+    {
+      id: 'query',
+      accessorKey: 'query',
+      header: () => null,
+      cell: () => null,
+      enableHiding: false,
+      enableSorting: false,
+    },
     {
       accessorKey: 'id',
       header: ({ column }: { column: Column<Withdrawal> }) => (
@@ -15,9 +30,19 @@ export const createColumns = (): ColumnDef<Withdrawal>[] => {
       ),
       cell: ({ row }: { row: Row<Withdrawal> }) => {
         const id = row.getValue('id') as string
+        const withdrawal = row.original
         return (
-          <div className='flex items-center gap-1 ps-2'>
-            <span className='font-mono text-sm text-nowrap'>
+          <div
+            className='flex items-center gap-1 ps-2'
+            onClick={(e) => {
+              e.stopPropagation()
+              if (onIdClick) {
+                onIdClick(withdrawal)
+              }
+            }}
+            style={{ cursor: onIdClick ? 'pointer' : 'default' }}
+          >
+            <span className='hover:text-primary font-mono text-sm text-nowrap underline'>
               {maskValue(id)}
             </span>
             <CopyButton value={id} />
@@ -113,15 +138,18 @@ export const createColumns = (): ColumnDef<Withdrawal>[] => {
       ),
       cell: ({ row }: { row: Row<Withdrawal> }) => {
         const accountNumber = row.getValue('accountNumber') as
+          | number
           | string
           | undefined
-        if (!accountNumber) return <div>-</div>
+        if (accountNumber === undefined || accountNumber === null)
+          return <div>-</div>
+        const accountNumberStr = String(accountNumber)
         return (
           <div className='flex items-center gap-1 ps-2'>
             <span className='font-mono text-sm'>
-              {maskValue(accountNumber)}
+              {maskValue(accountNumberStr)}
             </span>
-            <CopyButton value={accountNumber} />
+            <CopyButton value={accountNumberStr} />
           </div>
         )
       },

@@ -12,20 +12,6 @@ interface CopyButtonProps {
   errorMessage?: string
 }
 
-/**
- * Reusable Copy Button Component
- * Copies the provided value to clipboard and shows a toast notification
- *
- * @param value - The value to copy to clipboard
- * @param className - Additional CSS classes
- * @param size - Button size (default: 'icon')
- * @param successMessage - Custom success message (default: 'Copied to clipboard!')
- * @param errorMessage - Custom error message (default: 'Failed to copy')
- *
- * @example
- * <CopyButton value="example@email.com" />
- * <CopyButton value={userId} size="sm" successMessage="ID copied!" />
- */
 export function CopyButton({
   value,
   className,

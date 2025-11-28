@@ -25,20 +25,24 @@ export function Wallets() {
     navigate,
   })
 
-  const { data: list, refetch } = useQuery({
+  const {
+    data: list,
+    refetch,
+    isLoading: isLoadingWallets,
+  } = useQuery({
     queryKey: [QUERY_KEYS.WALLET_LIST, params],
     queryFn: async () => {
       try {
         const res = await bankService.listWallets(params)
         if (import.meta.env.DEV) {
-          console.log('Wallets API response:', res)
+          console.log('Bank Accounts API response:', res)
         }
         return {
           items: res?.body?.items || [],
           total: res?.body?.total || 0,
         }
       } catch (error) {
-        console.error('Failed to fetch wallets:', error)
+        console.error('Failed to fetch bank accounts:', error)
         return {
           items: [],
           total: 0,
@@ -75,6 +79,7 @@ export function Wallets() {
         search={search}
         navigate={navigate}
         tableId={TABLE_CONFIG.ID}
+        isLoading={isLoadingWallets}
         tableConfig={{
           pagination: {
             defaultPage: TABLE_CONFIG.DEFAULT_PAGE,
@@ -83,7 +88,7 @@ export function Wallets() {
           globalFilter: { enabled: false },
           columnFilters: [
             {
-              columnId: 'id',
+              columnId: TABLE_CONFIG.SEARCH_KEY,
               searchKey: TABLE_CONFIG.SEARCH_KEY,
               type: 'string',
             },
@@ -91,8 +96,8 @@ export function Wallets() {
         }}
         header={
           <TableHeader
-            title='Wallets'
-            description='Manage and view all user bank account wallets'
+            title='Bank Accounts'
+            description='Manage and view all bank accounts'
           />
         }
         toolbar={toolbarConfig}

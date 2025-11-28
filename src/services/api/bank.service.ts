@@ -1,6 +1,6 @@
 import type {
-  CryptoDepositListResponse,
   DepositListResponse,
+  ExchangeTxnListResponse,
   WalletListResponse,
   WithdrawalListResponse,
 } from '../types/bank.types'
@@ -34,11 +34,31 @@ export const bankService = {
     )
     return response.data
   },
-  listCryptoDeposits: async (
+  listExchangeTxn: async (
     body: Record<string, unknown> = {}
-  ): Promise<CryptoDepositListResponse> => {
-    const response = await apiClient.post<CryptoDepositListResponse>(
-      '/crypto/deposit-history/list',
+  ): Promise<ExchangeTxnListResponse> => {
+    const response = await apiClient.post<ExchangeTxnListResponse>(
+      '/banks/exchange-txn-task/list',
+      body
+    )
+    return response.data
+  },
+  getUserDepositHistory: async (
+    userId: string,
+    body: Record<string, unknown> = {}
+  ): Promise<DepositListResponse> => {
+    const response = await apiClient.post<DepositListResponse>(
+      `/banks/deposit-history/${userId}`,
+      body
+    )
+    return response.data
+  },
+  getUserWithdrawalHistory: async (
+    userId: string,
+    body: Record<string, unknown> = {}
+  ): Promise<WithdrawalListResponse> => {
+    const response = await apiClient.post<WithdrawalListResponse>(
+      `/banks/withdrawal-history/${userId}`,
       body
     )
     return response.data

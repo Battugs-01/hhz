@@ -82,20 +82,26 @@ export function useFilterParams(
       }
     }
 
-    // Add all other search params dynamically
     Object.keys(search).forEach((key) => {
-      // Skip already handled keys
       if (
         !['page', 'pageSize', searchKey, 'start_day', 'end_day'].includes(key)
       ) {
         const value = search[key]
-        // Only add non-empty values
         if (value !== undefined && value !== null && value !== '') {
-          // Skip empty arrays
           if (Array.isArray(value) && value.length === 0) {
             return
           }
-          result[key] = value
+          if (
+            (key === 'amount' ||
+              key === 'totalAmount' ||
+              key === 'usdtValuation') &&
+            typeof value === 'string'
+          ) {
+            const numValue = Number(value)
+            result[key] = isNaN(numValue) ? value : numValue
+          } else {
+            result[key] = value
+          }
         }
       }
     })
@@ -123,9 +129,6 @@ export function useFilterParams(
   }
 }
 
-/**
- * Default date range авах utility
- */
 export function getDefaultDateRange(months: number = 3) {
   const today = dayjs()
   const monthsAgo = today.subtract(months, 'month')

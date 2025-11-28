@@ -15,7 +15,7 @@ export function UserInformation() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
 
-  const columns = useMemo(() => createColumns(), [])
+  const columns = useMemo(() => createColumns(navigate), [navigate])
 
   const { params, handleDateRangeChange } = useFilterParams(search, {
     defaultMonths: 0,
@@ -24,7 +24,11 @@ export function UserInformation() {
     navigate,
   })
 
-  const { data: list, refetch } = useQuery({
+  const {
+    data: list,
+    refetch,
+    isLoading: isLoadingUsers,
+  } = useQuery({
     queryKey: [QUERY_KEYS.USER_INFORMATION_LIST, params],
     queryFn: async () => {
       const res = await kycService.listUsers(params)
@@ -63,6 +67,7 @@ export function UserInformation() {
         search={search}
         navigate={navigate}
         tableId={TABLE_CONFIG.ID}
+        isLoading={isLoadingUsers}
         tableConfig={{
           pagination: {
             defaultPage: TABLE_CONFIG.DEFAULT_PAGE,
@@ -77,8 +82,6 @@ export function UserInformation() {
             },
           ],
         }}
-        // UpdateComponent={UserDialogs.Form}
-        // DetailComponent={UserDialogs.Form}
         header={
           <TableHeader
             title='User Information'

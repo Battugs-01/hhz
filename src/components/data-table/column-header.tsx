@@ -69,7 +69,6 @@ export function DataTableColumnHeader<TData, TValue>({
     if (onSearch) {
       onSearch('')
     }
-    // Keep popover open for select type to show cleared state
     if (searchType === 'text') {
       setIsSearchOpen(false)
     }

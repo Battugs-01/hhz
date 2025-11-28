@@ -7,6 +7,8 @@ export const Route = createFileRoute('/_authenticated')({
     const { auth } = useAuthStore.getState()
 
     if (!auth.accessToken) {
+      // AccessToken байхгүй бол logout хийж, дараа нь sign-in хуудас руу redirect хийх
+      auth.reset()
       throw redirect({
         to: '/sign-in',
         search: {

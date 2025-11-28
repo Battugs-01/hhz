@@ -10,9 +10,9 @@ export const FILTER_KEYS = [
 export const WALLET_FILTER_FIELDS: FilterField[] = [
   {
     key: 'id',
-    label: 'Wallet ID',
+    label: 'Bank Account ID',
     type: 'text',
-    placeholder: 'Enter wallet ID...',
+    placeholder: 'Enter bank account ID...',
   },
   {
     key: 'status',
@@ -51,9 +51,9 @@ export const QUERY_KEYS = {
 
 export const TABLE_CONFIG = {
   ID: 'wallet-table',
-  EXPORT_FILE_NAME: 'wallets.xlsx',
+  EXPORT_FILE_NAME: 'bank-accounts.xlsx',
   DEFAULT_PAGE_SIZE: 20,
   DEFAULT_PAGE: 1,
-  SEARCH_KEY: 'id',
+  SEARCH_KEY: 'query',
   SEARCH_PLACEHOLDER: 'Search by User ID, Sub Account ID, or Email',
 } as const

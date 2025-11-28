@@ -8,6 +8,14 @@ import { DataTableColumnHeader } from '@/components/data-table'
 export const createColumns = (): ColumnDef<Wallet>[] => {
   return [
     {
+      id: 'query',
+      accessorKey: 'query',
+      header: () => null,
+      cell: () => null,
+      enableHiding: false,
+      enableSorting: false,
+    },
+    {
       accessorKey: 'id',
       header: ({ column }: { column: Column<Wallet> }) => (
         <DataTableColumnHeader column={column} title='ID' />
@@ -28,7 +36,7 @@ export const createColumns = (): ColumnDef<Wallet>[] => {
     {
       accessorKey: 'walletCode',
       header: ({ column }: { column: Column<Wallet> }) => (
-        <DataTableColumnHeader column={column} title='Wallet Code' />
+        <DataTableColumnHeader column={column} title='Account Code' />
       ),
       cell: ({ row }: { row: Row<Wallet> }) => {
         const walletCode = row.getValue('walletCode') as string | undefined

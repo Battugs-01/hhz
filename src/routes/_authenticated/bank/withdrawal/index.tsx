@@ -8,9 +8,16 @@ export const withdrawalSearchSchema = z.object({
   query: z.string().optional(),
   id: z.string().optional(),
   status: z.string().optional(),
-  totalAmount: z.string().optional(),
+  totalAmount: z
+    .union([z.string(), z.number()])
+    .optional()
+    .transform((val) => {
+      if (val === undefined || val === '') return undefined
+      const num = typeof val === 'string' ? Number(val) : val
+      return isNaN(num) ? undefined : num
+    }),
+  condition: z.string().optional(),
   accountNumber: z.string().optional(),
-  currency: z.string().optional(),
   txnId: z.string().optional(),
   start_day: z.string().optional(),
   end_day: z.string().optional(),

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -8,7 +9,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
 
 type DateRange = {
   start_day?: string
@@ -28,7 +28,6 @@ export function DateRangePicker({
   placeholder = 'Pick date range',
   className,
 }: DateRangePickerProps) {
-  // Applied values (from props)
   const [appliedStartDate, setAppliedStartDate] = useState<Date | undefined>(
     value?.start_day ? new Date(value.start_day) : undefined
   )
@@ -36,43 +35,37 @@ export function DateRangePicker({
     value?.end_day ? new Date(value.end_day) : undefined
   )
 
-  // Temporary values (being edited)
   const [startDate, setStartDate] = useState<Date | undefined>(appliedStartDate)
   const [endDate, setEndDate] = useState<Date | undefined>(appliedEndDate)
   const [open, setOpen] = useState(false)
 
-  // Sync applied dates with incoming value prop
   useEffect(() => {
-    setAppliedStartDate(value?.start_day ? new Date(value.start_day) : undefined)
+    setAppliedStartDate(
+      value?.start_day ? new Date(value.start_day) : undefined
+    )
     setAppliedEndDate(value?.end_day ? new Date(value.end_day) : undefined)
   }, [value?.start_day, value?.end_day])
 
-  // When popover opens, sync temporary values with applied values
   const handleOpenChange = (isOpen: boolean) => {
     if (isOpen) {
+      setStartDate(appliedStartDate)
+      setEndDate(appliedEndDate)
+    } else {
+      // Reset to applied values when closing without applying
       setStartDate(appliedStartDate)
       setEndDate(appliedEndDate)
     }
     setOpen(isOpen)
   }
 
-  const handleApply = () => {
-    setAppliedStartDate(startDate)
-    setAppliedEndDate(endDate)
-    const newRange: DateRange = {
-      start_day: startDate ? format(startDate, 'yyyy-MM-dd') : undefined,
-      end_day: endDate ? format(endDate, 'yyyy-MM-dd') : undefined,
-    }
-    onChange(newRange)
-    setOpen(false)
-  }
-
   const handleClear = () => {
     setStartDate(undefined)
     setEndDate(undefined)
-    setAppliedStartDate(undefined)
-    setAppliedEndDate(undefined)
-    onChange({ start_day: undefined, end_day: undefined })
+    const newRange: DateRange = {
+      start_day: undefined,
+      end_day: undefined,
+    }
+    onChange(newRange)
     setOpen(false)
   }
 
@@ -110,11 +103,20 @@ export function DateRangePicker({
         <div className='flex flex-col gap-2 p-3'>
           <div className='flex flex-col gap-2 sm:flex-row'>
             <div className='flex flex-col gap-2'>
-              <div className='text-sm font-medium px-3'>Start Date</div>
+              <div className='px-3 text-sm font-medium'>Start Date</div>
               <Calendar
                 mode='single'
                 selected={startDate}
-                onSelect={setStartDate}
+                onSelect={(date) => {
+                  setStartDate(date)
+                  const newRange: DateRange = {
+                    start_day: date ? format(date, 'yyyy-MM-dd') : undefined,
+                    end_day: endDate
+                      ? format(endDate, 'yyyy-MM-dd')
+                      : undefined,
+                  }
+                  onChange(newRange)
+                }}
                 disabled={(date: Date) => {
                   if (endDate && date > endDate) return true
                   return false
@@ -122,11 +124,20 @@ export function DateRangePicker({
               />
             </div>
             <div className='flex flex-col gap-2'>
-              <div className='text-sm font-medium px-3'>End Date</div>
+              <div className='px-3 text-sm font-medium'>End Date</div>
               <Calendar
                 mode='single'
                 selected={endDate}
-                onSelect={setEndDate}
+                onSelect={(date) => {
+                  setEndDate(date)
+                  const newRange: DateRange = {
+                    start_day: startDate
+                      ? format(startDate, 'yyyy-MM-dd')
+                      : undefined,
+                    end_day: date ? format(date, 'yyyy-MM-dd') : undefined,
+                  }
+                  onChange(newRange)
+                }}
                 disabled={(date: Date) => {
                   if (startDate && date < startDate) return true
                   return false
@@ -134,16 +145,9 @@ export function DateRangePicker({
               />
             </div>
           </div>
-          <div className='flex justify-end gap-2 px-3 pt-2 border-t'>
-            <Button
-              variant='outline'
-              size='sm'
-              onClick={handleClear}
-            >
+          <div className='flex justify-end gap-2 border-t px-3 pt-2'>
+            <Button variant='outline' size='sm' onClick={handleClear}>
               Clear
-            </Button>
-            <Button size='sm' onClick={handleApply}>
-              Apply
             </Button>
           </div>
         </div>

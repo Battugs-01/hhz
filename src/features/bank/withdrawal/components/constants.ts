@@ -2,11 +2,11 @@ import type { FilterField } from '@/components/filter-panel'
 
 export const FILTER_KEYS = [
   'status',
-  'currency',
   'txnId',
   'id',
   'totalAmount',
   'accountNumber',
+  'condition',
 ] as const
 
 export const WITHDRAWAL_FILTER_FIELDS: FilterField[] = [
@@ -32,20 +32,29 @@ export const WITHDRAWAL_FILTER_FIELDS: FilterField[] = [
   {
     key: 'totalAmount',
     label: 'Total Amount',
-    type: 'text',
+    type: 'number',
     placeholder: 'Enter total amount...',
+  },
+  {
+    key: 'condition',
+    label: 'Condition',
+    type: 'select',
+    options: [
+      { label: 'Equal', value: 'EQUAL' },
+      { label: 'Greater Than', value: 'GREATER_THAN' },
+      { label: 'Less Than', value: 'LESS_THAN' },
+    ],
+    placeholder: 'Select condition...',
+    showWhen: {
+      field: 'totalAmount',
+      hasValue: true,
+    },
   },
   {
     key: 'accountNumber',
     label: 'Account Number',
     type: 'text',
     placeholder: 'Enter account number...',
-  },
-  {
-    key: 'currency',
-    label: 'Currency',
-    type: 'text',
-    placeholder: 'Enter currency...',
   },
   {
     key: 'txnId',
@@ -71,7 +80,7 @@ export const TABLE_CONFIG = {
   EXPORT_FILE_NAME: 'withdrawals.xlsx',
   DEFAULT_PAGE_SIZE: 20,
   DEFAULT_PAGE: 1,
-  SEARCH_KEY: 'id',
+  SEARCH_KEY: 'query',
   SEARCH_PLACEHOLDER: 'Search by User ID, Sub Account ID, or Email',
 } as const
 

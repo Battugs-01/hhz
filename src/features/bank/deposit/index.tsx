@@ -2,11 +2,13 @@ import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import { bankService, type Deposit } from '@/services'
+import { useDrawer } from '@/context/drawer-provider'
 import { useFilterParams } from '@/hooks/use-filter-params'
 import { BaseTable, TableHeader } from '@/components/data-table'
 import { Main } from '@/components/layout/main'
 import { createColumns } from './components/columns'
 import { QUERY_KEYS, TABLE_CONFIG } from './components/constants'
+import { DepositDetailContent } from './components/deposit-detail-content'
 import { DepositToolbarActions } from './components/toolbar-actions'
 
 const route = getRouteApi('/_authenticated/bank/deposit/')
@@ -14,8 +16,20 @@ const route = getRouteApi('/_authenticated/bank/deposit/')
 export function Deposit() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const { openDrawer } = useDrawer()
 
-  const columns = useMemo(() => createColumns(), [])
+  const handleIdClick = (deposit: Deposit) => {
+    openDrawer({
+      title: 'Deposit Details',
+      description: 'View detailed information about this deposit transaction',
+      content: <DepositDetailContent deposit={deposit} />,
+    })
+  }
+
+  const columns = useMemo(
+    () => createColumns({ onIdClick: handleIdClick }),
+    [openDrawer]
+  )
 
   const { params, handleDateRangeChange } = useFilterParams(search, {
     defaultMonths: 0,
@@ -24,7 +38,11 @@ export function Deposit() {
     navigate,
   })
 
-  const { data: list, refetch } = useQuery({
+  const {
+    data: list,
+    refetch,
+    isLoading: isLoadingDeposits,
+  } = useQuery({
     queryKey: [QUERY_KEYS.DEPOSIT_LIST, params],
     queryFn: async () => {
       try {
@@ -74,6 +92,7 @@ export function Deposit() {
         search={search}
         navigate={navigate}
         tableId={TABLE_CONFIG.ID}
+        isLoading={isLoadingDeposits}
         tableConfig={{
           pagination: {
             defaultPage: TABLE_CONFIG.DEFAULT_PAGE,
@@ -82,7 +101,7 @@ export function Deposit() {
           globalFilter: { enabled: false },
           columnFilters: [
             {
-              columnId: 'id',
+              columnId: TABLE_CONFIG.SEARCH_KEY,
               searchKey: TABLE_CONFIG.SEARCH_KEY,
               type: 'string',
             },

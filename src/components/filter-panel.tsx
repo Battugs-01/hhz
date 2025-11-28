@@ -22,7 +22,12 @@ const BOOLEAN_OPTIONS = [
   { label: '✗ False', value: 'false' },
 ] as const
 
-export type FilterFieldType = 'text' | 'select' | 'boolean' | 'date-range'
+export type FilterFieldType =
+  | 'text'
+  | 'number'
+  | 'select'
+  | 'boolean'
+  | 'date-range'
 
 export type FilterFieldOption = {
   label: string
@@ -35,6 +40,10 @@ export type FilterField = {
   type: FilterFieldType
   placeholder?: string
   options?: FilterFieldOption[]
+  showWhen?: {
+    field: string
+    hasValue?: boolean
+  }
 }
 
 export type FilterValues = Record<string, string | undefined>
@@ -65,17 +74,32 @@ export function FilterPanel({
 }: FilterPanelProps) {
   const [open, setOpen] = useState(false)
   const [localFilters, setLocalFilters] = useState<FilterValues>(search)
+  const [localDateRange, setLocalDateRange] = useState<{
+    start_day?: string
+    end_day?: string
+  }>(dateRange || {})
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = {
       ...localFilters,
       [key]: value || undefined,
     }
+
+    // Clear dependent fields when their dependency is cleared
+    fields.forEach((field) => {
+      if (field.showWhen?.field === key && !value) {
+        newFilters[field.key] = undefined
+      }
+    })
+
     setLocalFilters(newFilters)
   }
 
   const handleApply = () => {
     onFilterChange(localFilters)
+    if (onDateRangeChange) {
+      onDateRangeChange(localDateRange)
+    }
     setOpen(false)
   }
 
@@ -93,9 +117,25 @@ export function FilterPanel({
     setLocalFilters(search)
   }, [search])
 
+  useEffect(() => {
+    setLocalDateRange(dateRange || {})
+  }, [dateRange])
+
   const activeFiltersCount =
     Object.values(search).filter((v) => v !== undefined && v !== '').length +
     (dateRange?.start_day || dateRange?.end_day ? 1 : 0)
+
+  // Filter fields based on their showWhen conditions
+  const visibleFields = fields.filter((field) => {
+    if (!field.showWhen) return true
+
+    const { field: dependentField, hasValue = true } = field.showWhen
+    const dependentValue = localFilters[dependentField]
+    const hasDependentValue =
+      dependentValue !== undefined && dependentValue !== ''
+
+    return hasValue ? hasDependentValue : !hasDependentValue
+  })
 
   const renderField = (field: FilterField) => {
     switch (field.type) {
@@ -104,6 +144,21 @@ export function FilterPanel({
           <div className='space-y-2' key={field.key}>
             <label className='text-sm font-medium'>{field.label}</label>
             <Input
+              placeholder={
+                field.placeholder || `Enter ${field.label.toLowerCase()}...`
+              }
+              value={localFilters[field.key] || ''}
+              onChange={(e) => handleFilterChange(field.key, e.target.value)}
+            />
+          </div>
+        )
+
+      case 'number':
+        return (
+          <div className='space-y-2' key={field.key}>
+            <label className='text-sm font-medium'>{field.label}</label>
+            <Input
+              type='number'
               placeholder={
                 field.placeholder || `Enter ${field.label.toLowerCase()}...`
               }
@@ -173,8 +228,8 @@ export function FilterPanel({
           <div className='space-y-2' key={field.key}>
             <label className='text-sm font-medium'>{field.label}</label>
             <DateRangePicker
-              value={dateRange}
-              onChange={onDateRangeChange}
+              value={localDateRange}
+              onChange={setLocalDateRange}
               placeholder={field.placeholder || 'Filter by date'}
               className='w-full'
             />
@@ -202,19 +257,19 @@ export function FilterPanel({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-96' align='start'>
-        <div className='space-y-3'>
-          <div className='space-y-1'>
+      <PopoverContent className='w-96 p-0' align='start'>
+        <div className='flex max-h-[80vh] flex-col'>
+          <div className='flex-shrink-0 space-y-1 p-4 pb-3'>
             <h4 className='text-sm font-semibold'>{title}</h4>
             <p className='text-muted-foreground text-xs'>{description}</p>
           </div>
 
-          <div className='space-y-4'>
-            {fields.map((field) => renderField(field))}
+          <div className='min-h-0 flex-1 space-y-4 overflow-y-auto px-4'>
+            {visibleFields.map((field) => renderField(field))}
           </div>
 
           {activeFiltersCount > 0 && (
-            <div className='bg-muted flex flex-wrap gap-2 rounded-md border p-3'>
+            <div className='bg-muted mx-4 mt-4 flex flex-shrink-0 flex-wrap gap-2 rounded-md border p-3'>
               <span className='text-muted-foreground text-xs font-medium'>
                 Active filters:
               </span>
@@ -270,7 +325,7 @@ export function FilterPanel({
             </div>
           )}
 
-          <div className='flex justify-end gap-2 pt-2'>
+          <div className='bg-popover flex flex-shrink-0 justify-end gap-2 border-t p-4 pt-3'>
             <Button variant='outline' size='sm' onClick={handleClear}>
               Clear All
             </Button>

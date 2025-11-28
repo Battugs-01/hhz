@@ -34,7 +34,6 @@ export type User = z.infer<typeof userSchema>
 export const userListSchema = z.array(userSchema)
 export type UserList = z.infer<typeof userListSchema>
 
-// API Request Types
 export interface UserListRequest {
   current?: number
   pageSize?: number
@@ -45,7 +44,6 @@ export interface UserListRequest {
   }
 }
 
-// API Response Types
 export interface UserListResponse
   extends BaseResponse<PaginationResponse<User>> {}
 
@@ -76,7 +74,6 @@ export interface Referral {
   referredBy: null
 }
 
-// Enums
 export enum KycInfoTypeEnum {
   KycInfoTypeAccountNumber = 'account_number',
   KycInfoTypeUser = 'default_filter_by_user',

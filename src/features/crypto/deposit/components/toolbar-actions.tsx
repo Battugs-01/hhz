@@ -29,9 +29,33 @@ export function CryptoDepositToolbarActions({
       search={{
         id: typeof search.id === 'string' ? search.id : undefined,
         status: typeof search.status === 'string' ? search.status : undefined,
-        currency:
-          typeof search.currency === 'string' ? search.currency : undefined,
-        txnId: typeof search.txnId === 'string' ? search.txnId : undefined,
+        amount:
+          typeof search.amount === 'number'
+            ? String(search.amount)
+            : typeof search.amount === 'string' && search.amount !== ''
+              ? search.amount
+              : undefined,
+        amountCondition:
+          typeof search.amountCondition === 'string'
+            ? search.amountCondition
+            : undefined,
+        usdtValuation:
+          typeof search.usdtValuation === 'number'
+            ? String(search.usdtValuation)
+            : typeof search.usdtValuation === 'string' &&
+                search.usdtValuation !== ''
+              ? search.usdtValuation
+              : undefined,
+        usdtValuationCondition:
+          typeof search.usdtValuationCondition === 'string'
+            ? search.usdtValuationCondition
+            : undefined,
+        coin: typeof search.coin === 'string' ? search.coin : undefined,
+        network:
+          typeof search.network === 'string' ? search.network : undefined,
+        txId: typeof search.txId === 'string' ? search.txId : undefined,
+        address:
+          typeof search.address === 'string' ? search.address : undefined,
         start_day:
           typeof search.start_day === 'string' ? search.start_day : undefined,
         end_day:

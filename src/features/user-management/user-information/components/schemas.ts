@@ -1,9 +1,5 @@
 import { z } from 'zod'
 
-// ============================================
-// USER FORM SCHEMA (Add/Edit)
-// ============================================
-
 export const userFormSchema = z
   .object({
     firstName: z.string().min(1, 'First Name is required.'),
@@ -63,10 +59,6 @@ export const userFormSchema = z
     { message: "Passwords don't match.", path: ['confirmPassword'] }
   )
 
-// ============================================
-// INVITE USER SCHEMA
-// ============================================
-
 export const inviteFormSchema = z.object({
   email: z.email({
     error: (iss) =>
@@ -75,10 +67,6 @@ export const inviteFormSchema = z.object({
   role: z.string().min(1, 'Role is required.'),
   desc: z.string().optional(),
 })
-
-// ============================================
-// TYPE EXPORTS
-// ============================================
 
 export type UserForm = z.infer<typeof userFormSchema>
 export type InviteForm = z.infer<typeof inviteFormSchema>

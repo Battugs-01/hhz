@@ -1,3 +1,4 @@
+import { type NavigateFn } from '@tanstack/react-router'
 import { type Column, type ColumnDef, type Row } from '@tanstack/react-table'
 import { type User } from '@/services'
 import { formatDate, maskValue } from '@/lib/utils'
@@ -5,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { CopyButton } from '@/components/copy-button'
 import { DataTableColumnHeader } from '@/components/data-table'
 
-export const createColumns = (): ColumnDef<User>[] => {
+export const createColumns = (navigate?: NavigateFn): ColumnDef<User>[] => {
   return [
     {
       accessorKey: 'id',
@@ -15,8 +16,20 @@ export const createColumns = (): ColumnDef<User>[] => {
       cell: ({ row }: { row: Row<User> }) => {
         const id = row.getValue('id') as string
         return (
-          <div className='flex items-center gap-1 ps-2'>
-            <span className='font-mono text-sm text-nowrap'>
+          <div
+            className='flex items-center gap-1 ps-2'
+            onClick={(e) => {
+              e.stopPropagation()
+              if (navigate && id) {
+                navigate({
+                  to: '/user-information/$id',
+                  params: { id },
+                })
+              }
+            }}
+            style={{ cursor: navigate ? 'pointer' : 'default' }}
+          >
+            <span className='hover:text-primary font-mono text-sm text-nowrap underline'>
               {maskValue(id)}
             </span>
             <CopyButton value={id} />

@@ -30,15 +30,21 @@ export function WithdrawalToolbarActions({
         id: typeof search.id === 'string' ? search.id : undefined,
         status: typeof search.status === 'string' ? search.status : undefined,
         totalAmount:
-          typeof search.totalAmount === 'string'
-            ? search.totalAmount
-            : undefined,
+          typeof search.totalAmount === 'number'
+            ? String(search.totalAmount)
+            : typeof search.totalAmount === 'string' &&
+                search.totalAmount !== ''
+              ? search.totalAmount
+              : undefined,
+        condition:
+          typeof search.condition === 'string' ? search.condition : undefined,
         accountNumber:
-          typeof search.accountNumber === 'string'
-            ? search.accountNumber
-            : undefined,
-        currency:
-          typeof search.currency === 'string' ? search.currency : undefined,
+          typeof search.accountNumber === 'number'
+            ? String(search.accountNumber)
+            : typeof search.accountNumber === 'string' &&
+                search.accountNumber !== ''
+              ? search.accountNumber
+              : undefined,
         txnId: typeof search.txnId === 'string' ? search.txnId : undefined,
         start_day:
           typeof search.start_day === 'string' ? search.start_day : undefined,

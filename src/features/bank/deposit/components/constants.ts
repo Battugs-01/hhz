@@ -1,6 +1,12 @@
 import type { FilterField } from '@/components/filter-panel'
 
-export const FILTER_KEYS = ['status', 'currency', 'txnId', 'id'] as const
+export const FILTER_KEYS = [
+  'status',
+  'amount',
+  'txnId',
+  'id',
+  'condition',
+] as const
 
 export const DEPOSIT_FILTER_FIELDS: FilterField[] = [
   {
@@ -23,10 +29,25 @@ export const DEPOSIT_FILTER_FIELDS: FilterField[] = [
     placeholder: 'Select status...',
   },
   {
-    key: 'currency',
-    label: 'Currency',
-    type: 'text',
-    placeholder: 'Enter currency...',
+    key: 'amount',
+    label: 'Amount',
+    type: 'number',
+    placeholder: 'Enter amount...',
+  },
+  {
+    key: 'condition',
+    label: 'Condition',
+    type: 'select',
+    options: [
+      { label: 'Equal', value: 'EQUAL' },
+      { label: 'Greater Than', value: 'GREATER_THAN' },
+      { label: 'Less Than', value: 'LESS_THAN' },
+    ],
+    placeholder: 'Select condition...',
+    showWhen: {
+      field: 'amount',
+      hasValue: true,
+    },
   },
   {
     key: 'txnId',
@@ -52,15 +73,10 @@ export const TABLE_CONFIG = {
   EXPORT_FILE_NAME: 'deposits.xlsx',
   DEFAULT_PAGE_SIZE: 20,
   DEFAULT_PAGE: 1,
-  SEARCH_KEY: 'id',
+  SEARCH_KEY: 'query',
   SEARCH_PLACEHOLDER: 'Search by User ID, Sub Account ID, or Email',
 } as const
 
-/**
- * Maps deposit status to badge variant
- * @param status - Deposit status string
- * @returns Badge variant ('success', 'error', or 'warning')
- */
 export function getStatusVariant(
   status: string
 ): 'success' | 'error' | 'warning' {

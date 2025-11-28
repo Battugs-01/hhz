@@ -17,7 +17,6 @@ type DataTableToolbarProps<TData> = {
       icon?: React.ComponentType<{ className?: string }>
     }[]
   }[]
-  /** Debounce хугацаа (ms), default 500ms */
   debounceDelay?: number
 }
 
@@ -28,7 +27,6 @@ export function DataTableToolbar<TData>({
   filters = [],
   debounceDelay = 500,
 }: DataTableToolbarProps<TData>) {
-  // Local search state
   const [searchValue, setSearchValue] = useState(() => {
     if (searchKey) {
       return (table.getColumn(searchKey)?.getFilterValue() as string) ?? ''
@@ -36,10 +34,8 @@ export function DataTableToolbar<TData>({
     return table.getState().globalFilter ?? ''
   })
 
-  // Debounced search value
   const debouncedSearchValue = useDebounce(searchValue, debounceDelay)
 
-  // Debounced утга table-руу дамжуулах
   useEffect(() => {
     if (searchKey) {
       const currentValue = table
@@ -59,12 +55,14 @@ export function DataTableToolbar<TData>({
   return (
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 flex-col-reverse items-start gap-y-2 sm:flex-row sm:items-center sm:space-x-2'>
-        <Input
-          placeholder={searchPlaceholder}
-          value={searchValue}
-          onChange={(event) => setSearchValue(event.target.value)}
-          className='h-8 w-[150px] lg:w-[250px]'
-        />
+        {searchKey !== undefined && (
+          <Input
+            placeholder={searchPlaceholder}
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.target.value)}
+            className='h-8 w-[150px] lg:w-[250px]'
+          />
+        )}
         <div className='flex gap-x-2'>
           {filters.map((filter) => {
             const column = table.getColumn(filter.columnId)

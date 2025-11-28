@@ -1,12 +1,10 @@
 import {
-  AudioWaveform,
   Bell,
   Bug,
   Coins,
-  Command,
   Construction,
+  FileText,
   FileX,
-  GalleryVerticalEnd,
   HelpCircle,
   Landmark,
   LayoutDashboard,
@@ -16,11 +14,13 @@ import {
   ServerOff,
   Settings,
   ShieldCheck,
+  TrendingUp,
   UserCog,
   UserX,
   Users,
   Wrench,
 } from 'lucide-react'
+import { LogoImage } from '../logo-image'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
@@ -31,19 +31,9 @@ export const sidebarData: SidebarData = {
   },
   teams: [
     {
-      name: 'Shadcn Admin',
-      logo: Command,
-      plan: 'Vite + ShadcnUI',
-    },
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
+      name: 'Xmeta Admin Dashboard',
+      logo: LogoImage,
+      plan: 'Xmeta Admin Dashboard',
     },
   ],
   navGroups: [
@@ -97,8 +87,13 @@ export const sidebarData: SidebarData = {
               icon: Landmark,
             },
             {
-              title: 'Wallets',
+              title: 'Bank Accounts',
               url: '/bank/wallets',
+              icon: Landmark,
+            },
+            {
+              title: 'Exchange Txn',
+              url: '/bank/exchange-txn',
               icon: Landmark,
             },
           ],
@@ -111,6 +106,53 @@ export const sidebarData: SidebarData = {
               title: 'Deposit',
               url: '/crypto/deposit',
               icon: Coins,
+            },
+            {
+              title: 'Withdrawal',
+              url: '/crypto/withdrawal',
+              icon: Coins,
+            },
+            {
+              title: 'Coins',
+              url: '/crypto/coins',
+              icon: Coins,
+            },
+            {
+              title: 'Wallet Address',
+              url: '/crypto/wallet-address',
+              icon: Coins,
+            },
+          ],
+        },
+        {
+          title: 'Stake',
+          icon: TrendingUp,
+          items: [
+            {
+              title: 'Asset',
+              url: '/stake/asset',
+              icon: Coins,
+            },
+            {
+              title: 'Contract',
+              url: '/stake/contract',
+              icon: TrendingUp,
+            },
+            {
+              title: 'User Stake List',
+              url: '/stake/user-stake-list',
+              icon: Users,
+            },
+          ],
+        },
+        {
+          title: 'Additional',
+          icon: FileText,
+          items: [
+            {
+              title: 'News',
+              url: '/additional/news',
+              icon: FileText,
             },
           ],
         },

@@ -1,5 +1,12 @@
-import { createContext, useContext, useEffect, useState, useMemo } from 'react'
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { getCookie, removeCookie, setCookie } from '@/lib/cookies'
 
 type Theme = 'dark' | 'light' | 'system'
 type ResolvedTheme = Exclude<Theme, 'system'>
@@ -52,13 +59,28 @@ export function ThemeProvider({
     return theme as ResolvedTheme
   }, [theme])
 
+  const prevResolvedThemeRef = useRef<ResolvedTheme | null>(null)
+
   useEffect(() => {
     const root = window.document.documentElement
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
-    const applyTheme = (currentResolvedTheme: ResolvedTheme) => {
-      root.classList.remove('light', 'dark') // Remove existing theme classes
-      root.classList.add(currentResolvedTheme) // Add the new theme class
+    const applyTheme = (
+      currentResolvedTheme: ResolvedTheme,
+      isInitial = false
+    ) => {
+      // On initial load, apply theme immediately
+      if (isInitial || prevResolvedThemeRef.current === null) {
+        root.classList.remove('light', 'dark')
+        root.classList.add(currentResolvedTheme)
+        prevResolvedThemeRef.current = currentResolvedTheme
+      } else {
+        // For theme changes, apply immediately
+        // View Transition API or fallback animation will handle the transition
+        root.classList.remove('light', 'dark')
+        root.classList.add(currentResolvedTheme)
+        prevResolvedThemeRef.current = currentResolvedTheme
+      }
     }
 
     const handleChange = () => {
@@ -68,7 +90,8 @@ export function ThemeProvider({
       }
     }
 
-    applyTheme(resolvedTheme)
+    const isInitial = prevResolvedThemeRef.current === null
+    applyTheme(resolvedTheme, isInitial)
 
     mediaQuery.addEventListener('change', handleChange)
 

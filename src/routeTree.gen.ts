@@ -31,11 +31,20 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedStakeUserStakeListIndexRouteImport } from './routes/_authenticated/stake/user-stake-list/index'
+import { Route as AuthenticatedStakeContractIndexRouteImport } from './routes/_authenticated/stake/contract/index'
+import { Route as AuthenticatedStakeAssetIndexRouteImport } from './routes/_authenticated/stake/asset/index'
+import { Route as AuthenticatedCryptoWithdrawalIndexRouteImport } from './routes/_authenticated/crypto/withdrawal/index'
+import { Route as AuthenticatedCryptoWalletAddressIndexRouteImport } from './routes/_authenticated/crypto/wallet-address/index'
 import { Route as AuthenticatedCryptoDepositIndexRouteImport } from './routes/_authenticated/crypto/deposit/index'
+import { Route as AuthenticatedCryptoCoinsIndexRouteImport } from './routes/_authenticated/crypto/coins/index'
 import { Route as AuthenticatedBankWithdrawalIndexRouteImport } from './routes/_authenticated/bank/withdrawal/index'
 import { Route as AuthenticatedBankWalletsIndexRouteImport } from './routes/_authenticated/bank/wallets/index'
+import { Route as AuthenticatedBankExchangeTxnIndexRouteImport } from './routes/_authenticated/bank/exchange-txn/index'
 import { Route as AuthenticatedBankDepositIndexRouteImport } from './routes/_authenticated/bank/deposit/index'
+import { Route as AuthenticatedAdditionalNewsIndexRouteImport } from './routes/_authenticated/additional/news/index'
 import { Route as AuthenticateduserManagementUserInformationIndexRouteImport } from './routes/_authenticated/(user-management)/user-information/index'
+import { Route as AuthenticateduserManagementUserInformationIdRouteImport } from './routes/_authenticated/(user-management)/user-information/$id'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -154,10 +163,46 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedStakeUserStakeListIndexRoute =
+  AuthenticatedStakeUserStakeListIndexRouteImport.update({
+    id: '/stake/user-stake-list/',
+    path: '/stake/user-stake-list/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStakeContractIndexRoute =
+  AuthenticatedStakeContractIndexRouteImport.update({
+    id: '/stake/contract/',
+    path: '/stake/contract/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStakeAssetIndexRoute =
+  AuthenticatedStakeAssetIndexRouteImport.update({
+    id: '/stake/asset/',
+    path: '/stake/asset/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCryptoWithdrawalIndexRoute =
+  AuthenticatedCryptoWithdrawalIndexRouteImport.update({
+    id: '/crypto/withdrawal/',
+    path: '/crypto/withdrawal/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCryptoWalletAddressIndexRoute =
+  AuthenticatedCryptoWalletAddressIndexRouteImport.update({
+    id: '/crypto/wallet-address/',
+    path: '/crypto/wallet-address/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCryptoDepositIndexRoute =
   AuthenticatedCryptoDepositIndexRouteImport.update({
     id: '/crypto/deposit/',
     path: '/crypto/deposit/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCryptoCoinsIndexRoute =
+  AuthenticatedCryptoCoinsIndexRouteImport.update({
+    id: '/crypto/coins/',
+    path: '/crypto/coins/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedBankWithdrawalIndexRoute =
@@ -172,16 +217,34 @@ const AuthenticatedBankWalletsIndexRoute =
     path: '/bank/wallets/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBankExchangeTxnIndexRoute =
+  AuthenticatedBankExchangeTxnIndexRouteImport.update({
+    id: '/bank/exchange-txn/',
+    path: '/bank/exchange-txn/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBankDepositIndexRoute =
   AuthenticatedBankDepositIndexRouteImport.update({
     id: '/bank/deposit/',
     path: '/bank/deposit/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdditionalNewsIndexRoute =
+  AuthenticatedAdditionalNewsIndexRouteImport.update({
+    id: '/additional/news/',
+    path: '/additional/news/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticateduserManagementUserInformationIndexRoute =
   AuthenticateduserManagementUserInformationIndexRouteImport.update({
     id: '/(user-management)/user-information/',
     path: '/user-information/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticateduserManagementUserInformationIdRoute =
+  AuthenticateduserManagementUserInformationIdRouteImport.update({
+    id: '/(user-management)/user-information/$id',
+    path: '/user-information/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
@@ -207,11 +270,20 @@ export interface FileRoutesByFullPath {
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/user-information/$id': typeof AuthenticateduserManagementUserInformationIdRoute
   '/user-information': typeof AuthenticateduserManagementUserInformationIndexRoute
+  '/additional/news': typeof AuthenticatedAdditionalNewsIndexRoute
   '/bank/deposit': typeof AuthenticatedBankDepositIndexRoute
+  '/bank/exchange-txn': typeof AuthenticatedBankExchangeTxnIndexRoute
   '/bank/wallets': typeof AuthenticatedBankWalletsIndexRoute
   '/bank/withdrawal': typeof AuthenticatedBankWithdrawalIndexRoute
+  '/crypto/coins': typeof AuthenticatedCryptoCoinsIndexRoute
   '/crypto/deposit': typeof AuthenticatedCryptoDepositIndexRoute
+  '/crypto/wallet-address': typeof AuthenticatedCryptoWalletAddressIndexRoute
+  '/crypto/withdrawal': typeof AuthenticatedCryptoWithdrawalIndexRoute
+  '/stake/asset': typeof AuthenticatedStakeAssetIndexRoute
+  '/stake/contract': typeof AuthenticatedStakeContractIndexRoute
+  '/stake/user-stake-list': typeof AuthenticatedStakeUserStakeListIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -234,11 +306,20 @@ export interface FileRoutesByTo {
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/user-information/$id': typeof AuthenticateduserManagementUserInformationIdRoute
   '/user-information': typeof AuthenticateduserManagementUserInformationIndexRoute
+  '/additional/news': typeof AuthenticatedAdditionalNewsIndexRoute
   '/bank/deposit': typeof AuthenticatedBankDepositIndexRoute
+  '/bank/exchange-txn': typeof AuthenticatedBankExchangeTxnIndexRoute
   '/bank/wallets': typeof AuthenticatedBankWalletsIndexRoute
   '/bank/withdrawal': typeof AuthenticatedBankWithdrawalIndexRoute
+  '/crypto/coins': typeof AuthenticatedCryptoCoinsIndexRoute
   '/crypto/deposit': typeof AuthenticatedCryptoDepositIndexRoute
+  '/crypto/wallet-address': typeof AuthenticatedCryptoWalletAddressIndexRoute
+  '/crypto/withdrawal': typeof AuthenticatedCryptoWithdrawalIndexRoute
+  '/stake/asset': typeof AuthenticatedStakeAssetIndexRoute
+  '/stake/contract': typeof AuthenticatedStakeContractIndexRoute
+  '/stake/user-stake-list': typeof AuthenticatedStakeUserStakeListIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -264,11 +345,20 @@ export interface FileRoutesById {
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/_authenticated/(user-management)/user-information/$id': typeof AuthenticateduserManagementUserInformationIdRoute
   '/_authenticated/(user-management)/user-information/': typeof AuthenticateduserManagementUserInformationIndexRoute
+  '/_authenticated/additional/news/': typeof AuthenticatedAdditionalNewsIndexRoute
   '/_authenticated/bank/deposit/': typeof AuthenticatedBankDepositIndexRoute
+  '/_authenticated/bank/exchange-txn/': typeof AuthenticatedBankExchangeTxnIndexRoute
   '/_authenticated/bank/wallets/': typeof AuthenticatedBankWalletsIndexRoute
   '/_authenticated/bank/withdrawal/': typeof AuthenticatedBankWithdrawalIndexRoute
+  '/_authenticated/crypto/coins/': typeof AuthenticatedCryptoCoinsIndexRoute
   '/_authenticated/crypto/deposit/': typeof AuthenticatedCryptoDepositIndexRoute
+  '/_authenticated/crypto/wallet-address/': typeof AuthenticatedCryptoWalletAddressIndexRoute
+  '/_authenticated/crypto/withdrawal/': typeof AuthenticatedCryptoWithdrawalIndexRoute
+  '/_authenticated/stake/asset/': typeof AuthenticatedStakeAssetIndexRoute
+  '/_authenticated/stake/contract/': typeof AuthenticatedStakeContractIndexRoute
+  '/_authenticated/stake/user-stake-list/': typeof AuthenticatedStakeUserStakeListIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -294,11 +384,20 @@ export interface FileRouteTypes {
     | '/help-center'
     | '/settings/'
     | '/tasks'
+    | '/user-information/$id'
     | '/user-information'
+    | '/additional/news'
     | '/bank/deposit'
+    | '/bank/exchange-txn'
     | '/bank/wallets'
     | '/bank/withdrawal'
+    | '/crypto/coins'
     | '/crypto/deposit'
+    | '/crypto/wallet-address'
+    | '/crypto/withdrawal'
+    | '/stake/asset'
+    | '/stake/contract'
+    | '/stake/user-stake-list'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -321,11 +420,20 @@ export interface FileRouteTypes {
     | '/help-center'
     | '/settings'
     | '/tasks'
+    | '/user-information/$id'
     | '/user-information'
+    | '/additional/news'
     | '/bank/deposit'
+    | '/bank/exchange-txn'
     | '/bank/wallets'
     | '/bank/withdrawal'
+    | '/crypto/coins'
     | '/crypto/deposit'
+    | '/crypto/wallet-address'
+    | '/crypto/withdrawal'
+    | '/stake/asset'
+    | '/stake/contract'
+    | '/stake/user-stake-list'
   id:
     | '__root__'
     | '/_authenticated'
@@ -350,11 +458,20 @@ export interface FileRouteTypes {
     | '/_authenticated/help-center/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
+    | '/_authenticated/(user-management)/user-information/$id'
     | '/_authenticated/(user-management)/user-information/'
+    | '/_authenticated/additional/news/'
     | '/_authenticated/bank/deposit/'
+    | '/_authenticated/bank/exchange-txn/'
     | '/_authenticated/bank/wallets/'
     | '/_authenticated/bank/withdrawal/'
+    | '/_authenticated/crypto/coins/'
     | '/_authenticated/crypto/deposit/'
+    | '/_authenticated/crypto/wallet-address/'
+    | '/_authenticated/crypto/withdrawal/'
+    | '/_authenticated/stake/asset/'
+    | '/_authenticated/stake/contract/'
+    | '/_authenticated/stake/user-stake-list/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -526,11 +643,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/stake/user-stake-list/': {
+      id: '/_authenticated/stake/user-stake-list/'
+      path: '/stake/user-stake-list'
+      fullPath: '/stake/user-stake-list'
+      preLoaderRoute: typeof AuthenticatedStakeUserStakeListIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/stake/contract/': {
+      id: '/_authenticated/stake/contract/'
+      path: '/stake/contract'
+      fullPath: '/stake/contract'
+      preLoaderRoute: typeof AuthenticatedStakeContractIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/stake/asset/': {
+      id: '/_authenticated/stake/asset/'
+      path: '/stake/asset'
+      fullPath: '/stake/asset'
+      preLoaderRoute: typeof AuthenticatedStakeAssetIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/crypto/withdrawal/': {
+      id: '/_authenticated/crypto/withdrawal/'
+      path: '/crypto/withdrawal'
+      fullPath: '/crypto/withdrawal'
+      preLoaderRoute: typeof AuthenticatedCryptoWithdrawalIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/crypto/wallet-address/': {
+      id: '/_authenticated/crypto/wallet-address/'
+      path: '/crypto/wallet-address'
+      fullPath: '/crypto/wallet-address'
+      preLoaderRoute: typeof AuthenticatedCryptoWalletAddressIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/crypto/deposit/': {
       id: '/_authenticated/crypto/deposit/'
       path: '/crypto/deposit'
       fullPath: '/crypto/deposit'
       preLoaderRoute: typeof AuthenticatedCryptoDepositIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/crypto/coins/': {
+      id: '/_authenticated/crypto/coins/'
+      path: '/crypto/coins'
+      fullPath: '/crypto/coins'
+      preLoaderRoute: typeof AuthenticatedCryptoCoinsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/bank/withdrawal/': {
@@ -547,6 +706,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBankWalletsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/bank/exchange-txn/': {
+      id: '/_authenticated/bank/exchange-txn/'
+      path: '/bank/exchange-txn'
+      fullPath: '/bank/exchange-txn'
+      preLoaderRoute: typeof AuthenticatedBankExchangeTxnIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/bank/deposit/': {
       id: '/_authenticated/bank/deposit/'
       path: '/bank/deposit'
@@ -554,11 +720,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBankDepositIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/additional/news/': {
+      id: '/_authenticated/additional/news/'
+      path: '/additional/news'
+      fullPath: '/additional/news'
+      preLoaderRoute: typeof AuthenticatedAdditionalNewsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/(user-management)/user-information/': {
       id: '/_authenticated/(user-management)/user-information/'
       path: '/user-information'
       fullPath: '/user-information'
       preLoaderRoute: typeof AuthenticateduserManagementUserInformationIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/(user-management)/user-information/$id': {
+      id: '/_authenticated/(user-management)/user-information/$id'
+      path: '/user-information/$id'
+      fullPath: '/user-information/$id'
+      preLoaderRoute: typeof AuthenticateduserManagementUserInformationIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -595,11 +775,20 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
+  AuthenticateduserManagementUserInformationIdRoute: typeof AuthenticateduserManagementUserInformationIdRoute
   AuthenticateduserManagementUserInformationIndexRoute: typeof AuthenticateduserManagementUserInformationIndexRoute
+  AuthenticatedAdditionalNewsIndexRoute: typeof AuthenticatedAdditionalNewsIndexRoute
   AuthenticatedBankDepositIndexRoute: typeof AuthenticatedBankDepositIndexRoute
+  AuthenticatedBankExchangeTxnIndexRoute: typeof AuthenticatedBankExchangeTxnIndexRoute
   AuthenticatedBankWalletsIndexRoute: typeof AuthenticatedBankWalletsIndexRoute
   AuthenticatedBankWithdrawalIndexRoute: typeof AuthenticatedBankWithdrawalIndexRoute
+  AuthenticatedCryptoCoinsIndexRoute: typeof AuthenticatedCryptoCoinsIndexRoute
   AuthenticatedCryptoDepositIndexRoute: typeof AuthenticatedCryptoDepositIndexRoute
+  AuthenticatedCryptoWalletAddressIndexRoute: typeof AuthenticatedCryptoWalletAddressIndexRoute
+  AuthenticatedCryptoWithdrawalIndexRoute: typeof AuthenticatedCryptoWithdrawalIndexRoute
+  AuthenticatedStakeAssetIndexRoute: typeof AuthenticatedStakeAssetIndexRoute
+  AuthenticatedStakeContractIndexRoute: typeof AuthenticatedStakeContractIndexRoute
+  AuthenticatedStakeUserStakeListIndexRoute: typeof AuthenticatedStakeUserStakeListIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -610,12 +799,26 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
+  AuthenticateduserManagementUserInformationIdRoute:
+    AuthenticateduserManagementUserInformationIdRoute,
   AuthenticateduserManagementUserInformationIndexRoute:
     AuthenticateduserManagementUserInformationIndexRoute,
+  AuthenticatedAdditionalNewsIndexRoute: AuthenticatedAdditionalNewsIndexRoute,
   AuthenticatedBankDepositIndexRoute: AuthenticatedBankDepositIndexRoute,
+  AuthenticatedBankExchangeTxnIndexRoute:
+    AuthenticatedBankExchangeTxnIndexRoute,
   AuthenticatedBankWalletsIndexRoute: AuthenticatedBankWalletsIndexRoute,
   AuthenticatedBankWithdrawalIndexRoute: AuthenticatedBankWithdrawalIndexRoute,
+  AuthenticatedCryptoCoinsIndexRoute: AuthenticatedCryptoCoinsIndexRoute,
   AuthenticatedCryptoDepositIndexRoute: AuthenticatedCryptoDepositIndexRoute,
+  AuthenticatedCryptoWalletAddressIndexRoute:
+    AuthenticatedCryptoWalletAddressIndexRoute,
+  AuthenticatedCryptoWithdrawalIndexRoute:
+    AuthenticatedCryptoWithdrawalIndexRoute,
+  AuthenticatedStakeAssetIndexRoute: AuthenticatedStakeAssetIndexRoute,
+  AuthenticatedStakeContractIndexRoute: AuthenticatedStakeContractIndexRoute,
+  AuthenticatedStakeUserStakeListIndexRoute:
+    AuthenticatedStakeUserStakeListIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

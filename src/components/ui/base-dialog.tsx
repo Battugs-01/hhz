@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import { Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -29,11 +30,12 @@ export interface BaseDialogProps {
     onClick?: () => void
     show?: boolean
   }
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
   className?: string
   contentClassName?: string
   showCloseButton?: boolean
   onClose?: () => void
+  onInteractOutside?: (e: Event) => void
 }
 
 const maxWidthClasses = {
@@ -42,6 +44,8 @@ const maxWidthClasses = {
   lg: 'sm:max-w-lg',
   xl: 'sm:max-w-xl',
   '2xl': 'sm:max-w-2xl',
+  '3xl': 'sm:max-w-3xl',
+  '4xl': 'sm:max-w-4xl',
 }
 
 export function BaseDialog({
@@ -58,6 +62,7 @@ export function BaseDialog({
   contentClassName,
   showCloseButton = true,
   onClose,
+  onInteractOutside,
 }: BaseDialogProps) {
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen && onClose) {
@@ -84,7 +89,14 @@ export function BaseDialog({
           onClick={submitButton.onClick}
           disabled={submitButton.disabled || submitButton.loading}
         >
-          {submitButton.loading ? 'Loading...' : submitButton.text || 'Submit'}
+          {submitButton.loading ? (
+            <>
+              <Loader2 className='h-4 w-4 animate-spin' />
+              Loading...
+            </>
+          ) : (
+            submitButton.text || 'Submit'
+          )}
         </Button>
       )}
     </DialogFooter>
@@ -95,21 +107,28 @@ export function BaseDialog({
       <DialogContent
         className={cn(maxWidthClasses[maxWidth], contentClassName)}
         showCloseButton={showCloseButton}
+        onInteractOutside={onInteractOutside}
       >
-        {(title || description) && (
-          <DialogHeader className='text-start'>
-            {title && <DialogTitle>{title}</DialogTitle>}
-            {description && (
-              <DialogDescription>{description}</DialogDescription>
-            )}
-          </DialogHeader>
-        )}
-        <div className={cn('overflow-y-auto', className)}>{children}</div>
-        {footer !== undefined
-          ? footer
-          : submitButton || cancelButton?.show !== false
-            ? defaultFooter
-            : null}
+        <div className='flex max-h-[85vh] flex-col'>
+          {(title || description) && (
+            <DialogHeader className='flex-shrink-0 text-start'>
+              {title && <DialogTitle>{title}</DialogTitle>}
+              {description && (
+                <DialogDescription>{description}</DialogDescription>
+              )}
+            </DialogHeader>
+          )}
+          <div className={cn('min-h-0 flex-1 overflow-y-auto', className)}>
+            {children}
+          </div>
+          <div className='flex-shrink-0 pt-4'>
+            {footer !== undefined
+              ? footer
+              : submitButton || cancelButton?.show !== false
+                ? defaultFooter
+                : null}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   )

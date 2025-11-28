@@ -2,12 +2,14 @@ import { useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
 import type { CryptoDeposit } from '@/services'
-import { bankService } from '@/services'
+import { cryptoService } from '@/services'
+import { useDrawer } from '@/context/drawer-provider'
 import { useFilterParams } from '@/hooks/use-filter-params'
 import { BaseTable, TableHeader } from '@/components/data-table'
 import { Main } from '@/components/layout/main'
 import { createColumns } from './components/columns'
 import { QUERY_KEYS, TABLE_CONFIG } from './components/constants'
+import { CryptoDepositDetailContent } from './components/crypto-deposit-detail-content'
 import { CryptoDepositToolbarActions } from './components/toolbar-actions'
 
 const route = getRouteApi('/_authenticated/crypto/deposit/')
@@ -15,8 +17,21 @@ const route = getRouteApi('/_authenticated/crypto/deposit/')
 export function CryptoDeposit() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+  const { openDrawer } = useDrawer()
 
-  const columns = useMemo(() => createColumns(), [])
+  const handleIdClick = (deposit: CryptoDeposit) => {
+    openDrawer({
+      title: 'Crypto Deposit Details',
+      description:
+        'View detailed information about this crypto deposit transaction',
+      content: <CryptoDepositDetailContent deposit={deposit} />,
+    })
+  }
+
+  const columns = useMemo(
+    () => createColumns({ onIdClick: handleIdClick }),
+    [openDrawer]
+  )
 
   const { params, handleDateRangeChange } = useFilterParams(search, {
     defaultMonths: 0,
@@ -25,11 +40,15 @@ export function CryptoDeposit() {
     navigate,
   })
 
-  const { data: list, refetch } = useQuery({
+  const {
+    data: list,
+    refetch,
+    isLoading: isLoadingCryptoDeposits,
+  } = useQuery({
     queryKey: [QUERY_KEYS.CRYPTO_DEPOSIT_LIST, params],
     queryFn: async () => {
       try {
-        const res = await bankService.listCryptoDeposits(params)
+        const res = await cryptoService.listCryptoDeposits(params)
         if (import.meta.env.DEV) {
           console.log('Crypto Deposits API response:', res)
         }
@@ -75,6 +94,7 @@ export function CryptoDeposit() {
         search={search}
         navigate={navigate}
         tableId={TABLE_CONFIG.ID}
+        isLoading={isLoadingCryptoDeposits}
         tableConfig={{
           pagination: {
             defaultPage: TABLE_CONFIG.DEFAULT_PAGE,
@@ -83,7 +103,7 @@ export function CryptoDeposit() {
           globalFilter: { enabled: false },
           columnFilters: [
             {
-              columnId: 'id',
+              columnId: TABLE_CONFIG.SEARCH_KEY,
               searchKey: TABLE_CONFIG.SEARCH_KEY,
               type: 'string',
             },

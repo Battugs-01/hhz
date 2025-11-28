@@ -1,16 +1,16 @@
-import { type ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import {
-  type ColumnDef,
-  type SortingState,
-  type TableOptions,
-  type Table as TanStackTable,
-  type VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getSortedRowModel,
   useReactTable,
+  type ColumnDef,
+  type SortingState,
+  type TableOptions,
+  type Table as TanStackTable,
+  type VisibilityState,
 } from '@tanstack/react-table'
 import type {
   CreateDialogProps,
@@ -19,7 +19,7 @@ import type {
   UpdateDialogProps,
 } from '@/lib/dialog-types'
 import { cn } from '@/lib/utils'
-import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
+import { useTableUrlState, type NavigateFn } from '@/hooks/use-table-url-state'
 import {
   Table,
   TableBody,
@@ -28,9 +28,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { Skeleton } from '../ui/skeleton'
 import { DataTablePagination, DataTableToolbar } from './index'
 
-// Legacy Dialog Component Props (backwards compatibility)
 export interface ActionComponentProps<TData> {
   open: boolean
   onCancel: () => void
@@ -43,7 +43,6 @@ export interface ActionComponentProps<TData> {
   setTransictionModal?: (record: TData) => void
 }
 
-// Toolbar Config Props
 export interface ToolbarConfig {
   searchPlaceholder?: string
   searchKey?: string
@@ -57,11 +56,9 @@ export interface ToolbarConfig {
     }[]
   }[]
   extra?: ReactNode
-  /** Debounce хугацаа (ms), default 500ms */
   debounceDelay?: number
 }
 
-// Table Config Props
 export interface TableConfig {
   pagination?: {
     pageKey?: string
@@ -92,59 +89,41 @@ export interface TableConfig {
   >
 }
 
-// Main Table Props
 export interface BaseTableProps<TData> {
-  // Data
   data: TData[]
   total?: number
   columns: ColumnDef<TData>[]
-
-  // URL State
   search: Record<string, unknown>
   navigate: NavigateFn
   tableConfig?: TableConfig
-
-  // Dialogs (Standard Interface - Recommended)
   CreateComponent?: React.ComponentType<CreateDialogProps>
   UpdateComponent?: React.ComponentType<UpdateDialogProps<TData>>
   DeleteComponent?: React.ComponentType<DeleteDialogProps<TData>>
   DetailComponent?: React.ComponentType<DetailDialogProps<TData>>
-
-  // Actions
   hideAction?: boolean
   customActions?: (record: TData) => ReactNode
   hideEditButton?: (record: TData) => boolean
   hideDeleteButton?: (record: TData) => boolean
   showDetailButton?: (record: TData) => boolean
-
-  // Toolbar
   toolbar?: ToolbarConfig
   hideToolbar?: boolean
-
-  // Table Options
   enableRowSelection?: boolean
   manualPagination?: boolean
   manualFiltering?: boolean
   tableId?: string
-
-  // Custom render
   header?: ReactNode
   renderBeforeTable?: ReactNode
   renderAfterTable?: (table: TanStackTable<TData>) => ReactNode
   emptyState?: ReactNode
-
-  // Callbacks
   onRefresh?: () => void
   onUpdate?: (record: TData) => void
   onDelete?: (record: TData) => void
   onDetail?: (record: TData) => void
-
-  // Additional props
   rowKey?: keyof TData | ((record: TData) => string | number)
   className?: string
+  isLoading?: boolean
 }
 
-// Row Actions Component
 function RowActions<TData>({
   record,
   onEdit,
@@ -172,18 +151,35 @@ function RowActions<TData>({
   if (!hasActions) return null
 
   return (
-    <div className='flex items-center justify-end gap-2'>
+    <div className='flex items-center justify-end gap-1.5'>
       {onDetail && (
         <button
           type='button'
           onClick={onDetail}
           disabled={canDetail}
           className={cn(
-            'rounded px-2 py-1 text-sm text-blue-600 hover:bg-blue-50',
+            'group relative flex h-8 w-8 items-center justify-center rounded-md border border-transparent transition-all duration-200',
+            'text-muted-foreground hover:border-primary/20 hover:bg-primary/5 hover:text-primary',
+            'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
             canDetail && 'cursor-not-allowed opacity-50'
           )}
+          title='View details'
         >
-          Detail
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='16'
+            height='16'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='2'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            className='transition-transform duration-200 group-hover:scale-110'
+          >
+            <path d='M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z' />
+            <circle cx='12' cy='12' r='3' />
+          </svg>
         </button>
       )}
       {onEdit && (
@@ -192,11 +188,29 @@ function RowActions<TData>({
           onClick={onEdit}
           disabled={!canEdit}
           className={cn(
-            'rounded px-2 py-1 text-sm text-blue-600 hover:bg-blue-50',
+            'group relative flex h-8 w-8 items-center justify-center rounded-md border border-transparent transition-all duration-200',
+            'text-muted-foreground hover:border-primary/20 hover:bg-primary/5 hover:text-primary',
+            'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+            'active:scale-95',
             !canEdit && 'cursor-not-allowed opacity-50'
           )}
+          title='Edit'
         >
-          Edit
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='16'
+            height='16'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='2'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            className='transition-transform duration-200 group-hover:scale-110'
+          >
+            <path d='M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7' />
+            <path d='M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z' />
+          </svg>
         </button>
       )}
       {onDelete && (
@@ -205,11 +219,30 @@ function RowActions<TData>({
           onClick={onDelete}
           disabled={!canDelete}
           className={cn(
-            'rounded px-2 py-1 text-sm text-red-600 hover:bg-red-50',
+            'group relative flex h-8 w-8 items-center justify-center rounded-md border border-transparent transition-all duration-200',
+            'text-red-600 hover:border-red-200 hover:bg-red-50 hover:text-red-700',
+            'focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:outline-none',
+            'active:scale-95',
             !canDelete && 'cursor-not-allowed opacity-50'
           )}
+          title='Delete'
         >
-          Delete
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='16'
+            height='16'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='2'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            className='transition-transform duration-200 group-hover:scale-110'
+          >
+            <path d='M3 6h18' />
+            <path d='M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6' />
+            <path d='M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2' />
+          </svg>
         </button>
       )}
       {customActions && customActions(record)}
@@ -249,18 +282,17 @@ export function BaseTable<TData extends Record<string, unknown>>({
   onDetail,
   rowKey = 'id' as keyof TData,
   className,
+  isLoading = false,
 }: BaseTableProps<TData>) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
 
-  // Dialog states
   const [createOpen, setCreateOpen] = useState(false)
   const [updateRecord, setUpdateRecord] = useState<TData | undefined>()
   const [deleteRecord, setDeleteRecord] = useState<TData | undefined>()
   const [detailRecord, setDetailRecord] = useState<TData | undefined>()
 
-  // URL State
   const {
     columnFilters,
     onColumnFiltersChange,
@@ -275,11 +307,9 @@ export function BaseTable<TData extends Record<string, unknown>>({
     ...tableConfig,
   })
 
-  // Calculate page count
   const pageCount =
     total && pagination.pageSize ? Math.ceil(total / pagination.pageSize) : -1
 
-  // Add action column if needed
   const tableColumns: ColumnDef<TData>[] = [
     ...columns,
     ...(hideAction
@@ -327,7 +357,6 @@ export function BaseTable<TData extends Record<string, unknown>>({
         ]),
   ]
 
-  // Table instance
   const table = useReactTable<TData>({
     data,
     columns: tableColumns,
@@ -421,7 +450,20 @@ export function BaseTable<TData extends Record<string, unknown>>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, index) => (
+                <TableRow key={`skeleton-${index}`}>
+                  {tableColumns.map((_, colIndex) => (
+                    <TableCell
+                      key={`skeleton-${index}-${colIndex}`}
+                      className='bg-background'
+                    >
+                      <Skeleton className='h-4 w-full' />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -469,7 +511,6 @@ export function BaseTable<TData extends Record<string, unknown>>({
           onClose={() => setCreateOpen(false)}
           onSuccess={() => {
             setCreateOpen(false)
-            onRefresh?.()
           }}
         />
       )}
@@ -480,7 +521,6 @@ export function BaseTable<TData extends Record<string, unknown>>({
           onClose={() => setUpdateRecord(undefined)}
           onSuccess={() => {
             setUpdateRecord(undefined)
-            onRefresh?.()
           }}
           data={updateRecord}
         />

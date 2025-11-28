@@ -6,48 +6,22 @@ import type { FilterField, FilterValues } from '@/components/filter-panel'
 import { FilterPanel } from '@/components/filter-panel'
 
 type FilterToolbarActionsProps = {
-  /** Filter fields configuration */
   fields: FilterField[]
-  /** Current search values */
   search: FilterValues & {
     start_day?: string
     end_day?: string
   }
-  /** Navigate function from route */
   navigate: NavigateFn
-  /** Filter keys to handle (excluding date range) */
   filterKeys: readonly string[]
-  /** Date range change handler */
   onDateRangeChange?: (range: { start_day?: string; end_day?: string }) => void
-  /** Refresh handler */
   onRefresh: () => void
-  /** Export handler */
   onExport?: () => void
-  /** Table ID for export */
   tableId: string
-  /** Export file name */
   exportFileName: string
-  /** Filter panel title */
   filterTitle?: string
-  /** Filter panel description */
   filterDescription?: string
 }
 
-/**
- * Generic toolbar actions component with filter panel
- *
- * @example
- * <FilterToolbarActions
- *   fields={FILTER_FIELDS}
- *   search={search}
- *   navigate={navigate}
- *   filterKeys={FILTER_KEYS}
- *   onDateRangeChange={handleDateRangeChange}
- *   onRefresh={refetch}
- *   tableId="my-table"
- *   exportFileName="data.xlsx"
- * />
- */
 export function FilterToolbarActions({
   fields,
   search,
@@ -87,7 +61,6 @@ export function FilterToolbarActions({
     }
   }, [onExport, tableId, exportFileName])
 
-  // Extract filter values (excluding date range)
   const filterValues: FilterValues = {}
   filterKeys.forEach((key) => {
     if (search[key] !== undefined) {

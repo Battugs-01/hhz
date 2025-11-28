@@ -31,7 +31,6 @@ export function DataTableToolbarActions({
       const tableElement = document.getElementById(tableId)
       if (tableElement) {
         console.log('Export', exportFileName, tableElement)
-        // TODO: Implement actual export functionality
       }
     } catch (error) {
       console.error('Export error:', error)

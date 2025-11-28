@@ -28,10 +28,6 @@ import {
   type UserForm,
 } from './schemas'
 
-// ============================================
-// USER FORM DIALOG (Add/Edit)
-// ============================================
-
 function UserFormDialog({
   open,
   onClose,
@@ -56,16 +52,8 @@ function UserFormDialog({
         },
   })
 
-  // Real API mutation
   const mutation = useMutation({
     mutationFn: async (values: UserForm) => {
-      // TODO: Replace with real API endpoint
-      // if (isEdit) {
-      //   return await kycService.updateUser(data.id, values)
-      // }
-      // return await kycService.createUser(values)
-
-      // Mock API call for now
       await new Promise((resolve) => setTimeout(resolve, 1000))
       return values
     },
@@ -265,23 +253,14 @@ function UserFormDialog({
   )
 }
 
-// ============================================
-// INVITE USER DIALOG
-// ============================================
-
 function InviteUserDialog({ open, onClose, onSuccess }: StandardDialogProps) {
   const form = useForm<InviteForm>({
     resolver: zodResolver(inviteFormSchema),
     defaultValues: { email: '', role: '', desc: '' },
   })
 
-  // Real API mutation
   const mutation = useMutation({
     mutationFn: async (values: InviteForm) => {
-      // TODO: Replace with real API endpoint
-      // return await kycService.inviteUser(values)
-
-      // Mock API call for now
       await new Promise((resolve) => setTimeout(resolve, 1000))
       return values
     },
@@ -388,10 +367,6 @@ function InviteUserDialog({ open, onClose, onSuccess }: StandardDialogProps) {
   )
 }
 
-// ============================================
-// DELETE USER DIALOG
-// ============================================
-
 function DeleteUserDialog({
   open,
   onClose,
@@ -402,13 +377,8 @@ function DeleteUserDialog({
 
   if (!data) return null
 
-  // Real API mutation
   const mutation = useMutation({
     mutationFn: async () => {
-      // TODO: Replace with real API endpoint
-      // return await kycService.deleteUser(data.id)
-
-      // Mock API call for now
       await new Promise((resolve) => setTimeout(resolve, 1000))
       return data
     },
@@ -483,10 +453,6 @@ function DeleteUserDialog({
     />
   )
 }
-
-// ============================================
-// EXPORTS
-// ============================================
 
 export const UserDialogs = {
   Form: UserFormDialog,
