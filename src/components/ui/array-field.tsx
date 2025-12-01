@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { DatePicker } from '@/components/date-picker'
 import { DateTimePicker } from '../datetime-picker'
 import type { FormFieldConfig } from './config-form-dialog'
+import { SubArrayField } from './sub-array-field'
 
 const NUMBER_INPUT_PATTERN = /^-?\d*(\.\d*)?$/
 const TEMPORARY_NUMBER_VALUES = new Set(['', '-', '.', '-.'])
@@ -201,6 +202,13 @@ export function ArrayField<TFormData extends Record<string, unknown>>({
                                     'Pick a date and time'
                                   }
                                 />
+                              ) : itemField.type === 'array' ? (
+                                  <SubArrayField
+                                    key={String(itemField.name)}
+                                    field={itemField}
+                                    form={form}
+                                    parentPath={`${String(field.name)}.${index}.${String(itemField.name)}`}
+                                  />
                               ) : (
                                 <Input
                                   type={itemField.type}
