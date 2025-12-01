@@ -2,28 +2,28 @@ import { z } from 'zod'
 import type { FormFieldConfig } from '@/components/ui/config-form-dialog'
 
 export const takeActionFormSchema = z.object({
-    actionId: z.string(),   
-    createdAt: z.number().optional(),
-    content: z.object({
-        mainTitle: z.string(),
-        mainDesc: z.string(),
-        deepLink: z.string().optional(),
-        sub_content: z
-        .array(
-            z.object({
-            title: z.string(),
-            desc: z.string(),
-            status: z.string().optional(),
-            type: z.string(),
-            value: z.string().optional()
-            })
-        )
-        .optional()
-    }),
-    contentType: z.enum(['EMAIL', 'PHONE', 'MARK_DOWN']),
-    updatedAt: z.number().optional(),
-    status: z.enum(['active', 'inactive']),
-    type: z.string()
+  actionId: z.string(),
+  createdAt: z.number().optional(),
+  content: z.object({
+    mainTitle: z.string(),
+    mainDesc: z.string(),
+    deepLink: z.string().optional(),
+    sub_content: z
+      .array(
+        z.object({
+          title: z.string(),
+          desc: z.string(),
+          status: z.string().optional(),
+          type: z.string(),
+          value: z.string().optional(),
+        })
+      )
+      .optional(),
+  }),
+  contentType: z.enum(['EMAIL', 'PHONE', 'MARK_DOWN']),
+  updatedAt: z.number().optional(),
+  status: z.enum(['active', 'inactive']),
+  type: z.string(),
 })
 
 export type takeActionForm = z.infer<typeof takeActionFormSchema>
@@ -41,7 +41,6 @@ export const TAKE_ACTION_FORM_FIELDS: FormFieldConfig<takeActionForm>[] = [
     required: true,
     gridCols: 1,
   },
-
   {
     name: 'contentType',
     label: 'Content Type',
@@ -55,7 +54,6 @@ export const TAKE_ACTION_FORM_FIELDS: FormFieldConfig<takeActionForm>[] = [
     required: true,
     gridCols: 1,
   },
-
   {
     name: 'status',
     label: 'Status',
@@ -90,15 +88,17 @@ export const TAKE_ACTION_FORM_FIELDS: FormFieldConfig<takeActionForm>[] = [
         placeholder: 'Please enter main description...',
         required: true,
       },
-
       {
         name: 'deepLink',
         label: 'Deep Link',
         type: 'text',
         placeholder: 'Please enter deep link...',
         required: true,
+        showWhen: {
+          field: 'contentType',
+          notValue: 'MARK_DOWN',
+        },
       },
-
       {
         name: 'sub_content',
         label: 'Sub Content',
@@ -106,6 +106,10 @@ export const TAKE_ACTION_FORM_FIELDS: FormFieldConfig<takeActionForm>[] = [
         required: true,
         gridCols: 1,
         addButtonLabel: 'Add Sub Content Item',
+        showWhen: {
+          field: 'contentType',
+          value: 'MARK_DOWN',
+        },
         arrayItemFields: [
           {
             name: 'title',
@@ -131,8 +135,8 @@ export const TAKE_ACTION_FORM_FIELDS: FormFieldConfig<takeActionForm>[] = [
             ],
             placeholder: 'Select sub type...',
             required: true,
-          }
-        ]
+          },
+        ],
       },
     ],
   },

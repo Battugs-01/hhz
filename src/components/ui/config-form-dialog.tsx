@@ -68,6 +68,7 @@ export type FormFieldConfig<TFormData = Record<string, unknown>> = {
     field: keyof TFormData
     hasValue?: boolean
     value?: unknown
+    notValue?: unknown
   }
   comboboxOptions?: {
     fetchOptions: (
@@ -228,6 +229,9 @@ export function ConfigFormDialog<TFormData extends Record<string, unknown>>({
 
     if (field.showWhen.hasValue !== undefined) {
       return field.showWhen.hasValue ? !!dependentValue : !dependentValue
+    }
+    if (field.showWhen.notValue !== undefined) {
+      return dependentValue !== field.showWhen.notValue
     }
     if (field.showWhen.value !== undefined) {
       return dependentValue === field.showWhen.value

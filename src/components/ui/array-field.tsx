@@ -38,6 +38,28 @@ export function ArrayField<TFormData extends Record<string, unknown>>({
     name: field.name as any,
   })
 
+  const shouldShowField = (itemField: FormFieldConfig<any>): boolean => {
+    if (!itemField.showWhen) return true
+
+    const fieldName = itemField.showWhen.field
+    const fieldPath = String(fieldName)
+
+    const dependentValue = fieldPath.includes('.')
+      ? form.watch(fieldPath as any)
+      : form.watch(fieldName as any)
+
+    if (itemField.showWhen.hasValue !== undefined) {
+      return itemField.showWhen.hasValue ? !!dependentValue : !dependentValue
+    }
+    if (itemField.showWhen.notValue !== undefined) {
+      return dependentValue !== itemField.showWhen.notValue
+    }
+    if (itemField.showWhen.value !== undefined) {
+      return dependentValue === itemField.showWhen.value
+    }
+    return !!dependentValue
+  }
+
   const getDefaultItemValue = () => {
     const defaultItem: Record<string, unknown> = {}
     field.arrayItemFields?.forEach((itemField) => {
@@ -84,6 +106,8 @@ export function ArrayField<TFormData extends Record<string, unknown>>({
                 </div>
                 <div className='grid grid-cols-1 gap-4'>
                   {field.arrayItemFields?.map((itemField) => {
+                    if (!shouldShowField(itemField)) return null
+
                     const fieldPath =
                       `${String(field.name)}.${index}.${String(itemField.name)}` as any
                     return (
@@ -220,12 +244,12 @@ export function ArrayField<TFormData extends Record<string, unknown>>({
                                   }
                                 />
                               ) : itemField.type === 'array' ? (
-                                  <SubArrayField
-                                    key={String(itemField.name)}
-                                    field={itemField}
-                                    form={form}
-                                    parentPath={`${String(field.name)}.${index}.${String(itemField.name)}`}
-                                  />
+                                <SubArrayField
+                                  key={String(itemField.name)}
+                                  field={itemField}
+                                  form={form}
+                                  parentPath={`${String(field.name)}.${index}.${String(itemField.name)}`}
+                                />
                               ) : (
                                 <Input
                                   type={itemField.type}
