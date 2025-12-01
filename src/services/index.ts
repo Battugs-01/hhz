@@ -5,6 +5,7 @@ export { cryptoService } from './api/crypto.service'
 export { kycService } from './api/kyc.service'
 export { newsService } from './api/news.service'
 export { stakeService } from './api/stake.service'
+export { TakeActionService } from './api/takeAction.service'
 
 export type { BaseResponse, PaginationResponse } from './types/common.types'
 
@@ -151,3 +152,8 @@ export type {
   NewsResponse,
   NewsUpdateParams,
 } from './types/news.types'
+
+export type { 
+  TakeAction 
+  
+} from './types/takeAction.types'

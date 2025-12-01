@@ -8,8 +8,19 @@ const AWS_SERVERLESS_API_URL =
 const NEWS_API_URL =
   import.meta.env.VITE_NEWS_API_URL || 'http://api.x-meta.com/api/news/admin'
 
+const TAKE_ACTION_API_URL =
+  import.meta.env.VITE_TAKE_ACTION_API_URL || 'http://api.x-meta.com/api/take-action/admin'
+
 export const apiClient: AxiosInstance = axios.create({
   baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+
+export const takeActionApiClient: AxiosInstance = axios.create({
+  baseURL: TAKE_ACTION_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -138,6 +149,52 @@ newsApiClient.interceptors.request.use(
 )
 
 newsApiClient.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    if (error.response?.status === 401) {
+      // 401 алдаа гарвал logout хийж, sign-in хуудас руу redirect хийх
+      useAuthStore.getState().auth.reset()
+      if (typeof window !== 'undefined') {
+        window.location.href = '/sign-in'
+      }
+      return Promise.reject(error)
+    }
+
+    if (error.response?.data) {
+      const errorData = error.response.data as {
+        msg?: string
+        message?: string
+        data?: unknown
+      }
+      const errorMessage = errorData.msg || errorData.message
+      if (errorMessage) {
+        const customError = new Error(errorMessage)
+        return Promise.reject(customError)
+      }
+    }
+
+    return Promise.reject(error)
+  }
+)
+
+
+takeActionApiClient.interceptors.request.use(
+  (config) => {
+    const idToken = useAuthStore.getState().auth.idToken
+    const accessToken = useAuthStore.getState().auth.accessToken
+    const token = idToken || accessToken
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
+
+takeActionApiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     if (error.response?.status === 401) {
