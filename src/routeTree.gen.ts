@@ -31,6 +31,7 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedTakeActionTakeActionListIndexRouteImport } from './routes/_authenticated/take-action/take-action-list/index'
 import { Route as AuthenticatedStakeUserStakeListIndexRouteImport } from './routes/_authenticated/stake/user-stake-list/index'
 import { Route as AuthenticatedStakeStatisticsIndexRouteImport } from './routes/_authenticated/stake/statistics/index'
 import { Route as AuthenticatedStakeContractIndexRouteImport } from './routes/_authenticated/stake/contract/index'
@@ -164,6 +165,12 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedTakeActionTakeActionListIndexRoute =
+  AuthenticatedTakeActionTakeActionListIndexRouteImport.update({
+    id: '/take-action/take-action-list/',
+    path: '/take-action/take-action-list/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStakeUserStakeListIndexRoute =
   AuthenticatedStakeUserStakeListIndexRouteImport.update({
     id: '/stake/user-stake-list/',
@@ -292,6 +299,7 @@ export interface FileRoutesByFullPath {
   '/stake/contract': typeof AuthenticatedStakeContractIndexRoute
   '/stake/statistics': typeof AuthenticatedStakeStatisticsIndexRoute
   '/stake/user-stake-list': typeof AuthenticatedStakeUserStakeListIndexRoute
+  '/take-action/take-action-list': typeof AuthenticatedTakeActionTakeActionListIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
@@ -329,6 +337,7 @@ export interface FileRoutesByTo {
   '/stake/contract': typeof AuthenticatedStakeContractIndexRoute
   '/stake/statistics': typeof AuthenticatedStakeStatisticsIndexRoute
   '/stake/user-stake-list': typeof AuthenticatedStakeUserStakeListIndexRoute
+  '/take-action/take-action-list': typeof AuthenticatedTakeActionTakeActionListIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -369,6 +378,7 @@ export interface FileRoutesById {
   '/_authenticated/stake/contract/': typeof AuthenticatedStakeContractIndexRoute
   '/_authenticated/stake/statistics/': typeof AuthenticatedStakeStatisticsIndexRoute
   '/_authenticated/stake/user-stake-list/': typeof AuthenticatedStakeUserStakeListIndexRoute
+  '/_authenticated/take-action/take-action-list/': typeof AuthenticatedTakeActionTakeActionListIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -409,6 +419,7 @@ export interface FileRouteTypes {
     | '/stake/contract'
     | '/stake/statistics'
     | '/stake/user-stake-list'
+    | '/take-action/take-action-list'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
@@ -446,6 +457,7 @@ export interface FileRouteTypes {
     | '/stake/contract'
     | '/stake/statistics'
     | '/stake/user-stake-list'
+    | '/take-action/take-action-list'
   id:
     | '__root__'
     | '/_authenticated'
@@ -485,6 +497,7 @@ export interface FileRouteTypes {
     | '/_authenticated/stake/contract/'
     | '/_authenticated/stake/statistics/'
     | '/_authenticated/stake/user-stake-list/'
+    | '/_authenticated/take-action/take-action-list/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -656,6 +669,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/take-action/take-action-list/': {
+      id: '/_authenticated/take-action/take-action-list/'
+      path: '/take-action/take-action-list'
+      fullPath: '/take-action/take-action-list'
+      preLoaderRoute: typeof AuthenticatedTakeActionTakeActionListIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/stake/user-stake-list/': {
       id: '/_authenticated/stake/user-stake-list/'
       path: '/stake/user-stake-list'
@@ -810,6 +830,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedStakeContractIndexRoute: typeof AuthenticatedStakeContractIndexRoute
   AuthenticatedStakeStatisticsIndexRoute: typeof AuthenticatedStakeStatisticsIndexRoute
   AuthenticatedStakeUserStakeListIndexRoute: typeof AuthenticatedStakeUserStakeListIndexRoute
+  AuthenticatedTakeActionTakeActionListIndexRoute: typeof AuthenticatedTakeActionTakeActionListIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -842,6 +863,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedStakeStatisticsIndexRoute,
   AuthenticatedStakeUserStakeListIndexRoute:
     AuthenticatedStakeUserStakeListIndexRoute,
+  AuthenticatedTakeActionTakeActionListIndexRoute:
+    AuthenticatedTakeActionTakeActionListIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

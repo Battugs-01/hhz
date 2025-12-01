@@ -19,6 +19,8 @@ import {
   UserX,
   Users,
   Wrench,
+  ShieldUser,
+  BookOpenCheck
 } from 'lucide-react'
 import { LogoImage } from '../logo-image'
 import { type SidebarData } from '../types'
@@ -153,6 +155,17 @@ export const sidebarData: SidebarData = {
               title: 'News',
               url: '/additional/news',
               icon: FileText,
+            },
+          ],
+        },
+        {
+          title: 'User Take Action',
+          icon: ShieldUser,
+          items: [
+            {
+              title: 'Take Action',
+              url: '/take-action/take-action-list',
+              icon: BookOpenCheck,
             },
           ],
         },
