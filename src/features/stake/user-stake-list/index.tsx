@@ -6,9 +6,11 @@ import {
   stakeService,
   type UserStakeList as UserStakeListType,
 } from '@/services'
+import { BarChart3 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useDrawer } from '@/context/drawer-provider'
 import { useServerlessPagination } from '@/hooks/use-serverless-pagination'
+import { Button } from '@/components/ui/button'
 import { ServerlessTable, TableHeader } from '@/components/data-table'
 import { Main } from '@/components/layout/main'
 import { createColumns } from './components/columns'
@@ -116,6 +118,8 @@ export function UserStakeList() {
       QUERY_KEYS.USER_STAKE_LIST,
       lastEvaluatedKeyFromUrl,
       search.status,
+      search.start_day,
+      search.end_day,
       limitFromSearch,
     ],
     queryFn: async () => {
@@ -128,6 +132,14 @@ export function UserStakeList() {
         requestParams.limit = limitFromSearch
         if (search.status) {
           requestParams.status = search.status
+        }
+        if (search.start_day) {
+          requestParams.start_day =
+            typeof search.start_day === 'string' ? search.start_day : undefined
+        }
+        if (search.end_day) {
+          requestParams.end_day =
+            typeof search.end_day === 'string' ? search.end_day : undefined
         }
         const res = await stakeService.listUserStakes(requestParams)
         if (import.meta.env.DEV) {
@@ -179,29 +191,43 @@ export function UserStakeList() {
       searchPlaceholder: TABLE_CONFIG.SEARCH_PLACEHOLDER,
       searchKey: TABLE_CONFIG.SEARCH_KEY,
       filters: [],
-      extra: (
-        <UserStakeListToolbarActions
-          search={{
-            start_day:
-              typeof search.start_day === 'string'
-                ? search.start_day
-                : undefined,
-            end_day:
-              typeof search.end_day === 'string' ? search.end_day : undefined,
-            status:
-              typeof search.status === 'string' ? search.status : undefined,
-            limit:
-              typeof search.limit === 'string'
-                ? search.limit
-                : String(limitFromSearch),
-          }}
-          navigate={navigate}
-          onDateRangeChange={handleDateRangeChange}
-          onRefresh={refetch}
-        />
+      exportFileName: TABLE_CONFIG.EXPORT_FILE_NAME,
+      extra: (table: any) => (
+        <div className='flex items-center gap-2'>
+          <Button
+            type='button'
+            variant='outline'
+            size='sm'
+            onClick={() => navigate({ to: '/stake/statistics' })}
+            className='gap-2'
+          >
+            <BarChart3 className='h-4 w-4' />
+            Statistics
+          </Button>
+          <UserStakeListToolbarActions
+            search={{
+              start_day:
+                typeof search.start_day === 'string'
+                  ? search.start_day
+                  : undefined,
+              end_day:
+                typeof search.end_day === 'string' ? search.end_day : undefined,
+              status:
+                typeof search.status === 'string' ? search.status : undefined,
+              limit:
+                typeof search.limit === 'string'
+                  ? search.limit
+                  : String(limitFromSearch),
+            }}
+            navigate={navigate}
+            onDateRangeChange={handleDateRangeChange}
+            onRefresh={refetch}
+            table={table}
+          />
+        </div>
       ),
     }),
-    [search, navigate, refetch]
+    [search, navigate, refetch, limitFromSearch]
   )
 
   return (

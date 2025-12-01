@@ -12,6 +12,8 @@ import type {
   StakeContractListResponse,
   StakeContractResponse,
   StakeContractUpdateParams,
+  TotalUsersStakesInfo,
+  TotalUsersStakesInfoResponse,
   UserStakeListBackendResponse,
   UserStakeListParams,
   UserStakeListResponse,
@@ -205,6 +207,14 @@ export const stakeService = {
       apiBody.status = params.status
     }
 
+    if (params.start_day !== undefined) {
+      apiBody.start_day = params.start_day
+    }
+
+    if (params.end_day !== undefined) {
+      apiBody.end_day = params.end_day
+    }
+
     if (
       params.lastEvaluatedKey !== undefined &&
       params.lastEvaluatedKey !== null
@@ -253,5 +263,18 @@ export const stakeService = {
       }
     )
     return response.data
+  },
+
+  // Get Total Users Stakes Info
+  getTotalUsersStakesInfo: async (): Promise<TotalUsersStakesInfoResponse> => {
+    const response = await stakingApiClient.get<{
+      data: TotalUsersStakesInfo
+      msg: string
+      code: number
+    }>('/admin/stake/users/total-stakes-info')
+    return {
+      message: response.data.msg || 'Success',
+      body: response.data.data,
+    }
   },
 }

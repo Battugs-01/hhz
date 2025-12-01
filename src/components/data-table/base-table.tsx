@@ -29,7 +29,11 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '../ui/skeleton'
-import { DataTablePagination, DataTableToolbar } from './index'
+import {
+  DataTablePagination,
+  DataTableToolbar,
+  DataTableToolbarActions,
+} from './index'
 
 export interface ActionComponentProps<TData> {
   open: boolean
@@ -55,8 +59,9 @@ export interface ToolbarConfig {
       icon?: React.ComponentType<{ className?: string }>
     }[]
   }[]
-  extra?: ReactNode
+  extra?: ReactNode | ((table: TanStackTable<any>) => ReactNode)
   debounceDelay?: number
+  exportFileName?: string
 }
 
 export interface TableConfig {
@@ -409,7 +414,17 @@ export function BaseTable<TData extends Record<string, unknown>>({
             filters={toolbar.filters}
             debounceDelay={toolbar.debounceDelay}
           />
-          {toolbar.extra}
+          <div className='flex items-center gap-2'>
+            {toolbar.exportFileName && (
+              <DataTableToolbarActions
+                table={table}
+                exportFileName={toolbar.exportFileName}
+              />
+            )}
+            {typeof toolbar.extra === 'function'
+              ? toolbar.extra(table)
+              : toolbar.extra}
+          </div>
         </div>
       )}
 

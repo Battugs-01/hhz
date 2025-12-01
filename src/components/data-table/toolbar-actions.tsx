@@ -1,36 +1,74 @@
 import { type ReactNode } from 'react'
+import type { Table } from '@tanstack/react-table'
 import { Download, RotateCcw } from 'lucide-react'
+import { exportTable } from '@/utils/table-export'
 import { Button } from '@/components/ui/button'
 
-type ToolbarActionsProps = {
+type ToolbarActionsProps<TData = unknown> = {
   filterPanel?: ReactNode
   onRefresh?: () => void
   onExport?: () => void
+  table?: Table<TData>
   tableId?: string
   exportFileName?: string
   customActions?: ReactNode
 }
 
-export function DataTableToolbarActions({
+export function DataTableToolbarActions<TData = unknown>({
   filterPanel,
   onRefresh,
   onExport,
+  table,
   tableId,
   exportFileName,
   customActions,
-}: ToolbarActionsProps) {
-  const handleExport = () => {
+}: ToolbarActionsProps<TData>) {
+  const handleExport = async () => {
+    console.log('Export clicked', {
+      table: !!table,
+      exportFileName,
+      tableId,
+      onExport: !!onExport,
+    })
+
+    // Use table instance if available (preferred method)
+    if (table && exportFileName) {
+      const format = exportFileName.endsWith('.xlsx') ? 'excel' : 'csv'
+      console.log('Exporting with table instance', {
+        format,
+        fileName: exportFileName,
+        rowCount: table.getRowModel().rows.length,
+      })
+      try {
+        await exportTable<any>(table, exportFileName, format)
+        console.log('Export completed successfully')
+      } catch (error) {
+        console.error('Export error:', error)
+      }
+      return
+    }
+
+    // Fallback to onExport callback if table instance is not available
     if (onExport) {
       onExport()
       return
     }
 
-    if (!exportFileName || !tableId) return
+    // Fallback to tableId if table instance is not available
+    if (!exportFileName || !tableId) {
+      console.warn('Export failed: missing table instance or exportFileName', {
+        table: !!table,
+        exportFileName,
+        tableId,
+      })
+      return
+    }
 
     try {
       const tableElement = document.getElementById(tableId)
       if (tableElement) {
         console.log('Export', exportFileName, tableElement)
+        // TODO: Implement fallback export using tableElement
       }
     } catch (error) {
       console.error('Export error:', error)
@@ -62,7 +100,7 @@ export function DataTableToolbarActions({
           Refresh
         </Button>
       )}
-      {(onExport || (exportFileName && tableId)) && (
+      {(onExport || (exportFileName && (table || tableId))) && (
         <Button
           type='button'
           variant='outline'

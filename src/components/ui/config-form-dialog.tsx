@@ -30,7 +30,10 @@ import { HtmlEditor } from './html-editor'
 import { ImageUploadField } from './image-upload-field'
 import { MarkdownEditor } from './markdown-editor'
 
-const NUMBER_INPUT_PATTERN = /^-?\d*(\.\d*)?$/
+// Pattern to allow decimal numbers: allows negative, integer, and decimal parts
+// Examples: 0.1, 0.02, -0.5, 123.456, etc.
+// This pattern allows: integers, decimals starting with 0 (0.1), decimals starting with . (.5), and negative versions
+const NUMBER_INPUT_PATTERN = /^-?(\d+\.?\d*|\.\d+)$/
 const TEMPORARY_NUMBER_VALUES = new Set(['', '-', '.', '-.'])
 
 export type FormFieldConfig<TFormData = Record<string, unknown>> = {
@@ -374,13 +377,22 @@ export function ConfigFormDialog<TFormData extends Record<string, unknown>>({
                     const value = e.target.value
                     const fieldName = String(field.name)
 
+                    // Allow empty or temporary values
+                    if (value === '' || TEMPORARY_NUMBER_VALUES.has(value)) {
+                      numberInputValuesRef.current[fieldName] = value
+                      formField.onChange(undefined as any)
+                      return
+                    }
+
+                    // Check if value matches number pattern (including intermediate states like "0.", "0.1", etc.)
                     if (!NUMBER_INPUT_PATTERN.test(value)) {
                       return
                     }
 
                     numberInputValuesRef.current[fieldName] = value
 
-                    if (value === '' || TEMPORARY_NUMBER_VALUES.has(value)) {
+                    // Allow intermediate states like "0.", "-0." for user to continue typing
+                    if (value.endsWith('.') && !value.endsWith('..')) {
                       formField.onChange(undefined as any)
                       return
                     }
@@ -394,6 +406,13 @@ export function ConfigFormDialog<TFormData extends Record<string, unknown>>({
                     const fieldName = String(field.name)
                     const currentValue = numberInputValuesRef.current[fieldName]
                     if (currentValue === undefined) return
+
+                    // Handle temporary values like "0." or "-0." by converting to 0
+                    if (currentValue === '0.' || currentValue === '-0.') {
+                      formField.onChange(0 as any)
+                      numberInputValuesRef.current[fieldName] = '0'
+                      return
+                    }
 
                     if (TEMPORARY_NUMBER_VALUES.has(currentValue)) {
                       numberInputValuesRef.current[fieldName] =

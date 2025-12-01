@@ -71,16 +71,12 @@ export function StakeContract() {
           requestParams.lastEvaluatedKey = lastEvaluatedKeyFromUrl
         }
         const res = await stakeService.listStakeContracts(requestParams)
-        if (import.meta.env.DEV) {
-          console.log('Stake Contracts API response:', res)
-        }
         return {
           items: res?.body?.items || [],
           total: res?.body?.total || 0,
           lastEvaluatedKey: res?.body?.lastEvaluatedKey,
         }
       } catch (error) {
-        console.error('Failed to fetch stake contracts:', error)
         return {
           items: [],
           total: 0,

@@ -126,13 +126,13 @@ export function ContractDetailContent({
               title={`Policy ${index + 1}`}
               fields={[
                 {
-                  label: 'From Date',
-                  value: formatDate(policy.fromDate),
+                  label: 'From Day',
+                  value: `${policy.fromDay} day${policy.fromDay !== 1 ? 's' : ''}`,
                   icon: <Calendar className='h-4 w-4' />,
                 },
                 {
-                  label: 'To Date',
-                  value: formatDate(policy.toDate),
+                  label: 'To Day',
+                  value: `${policy.toDay} day${policy.toDay !== 1 ? 's' : ''}`,
                   icon: <Calendar className='h-4 w-4' />,
                 },
                 {

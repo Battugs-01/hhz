@@ -47,7 +47,7 @@ export function MarkdownEditor({
             className='min-h-[200px] resize-none border-0 focus-visible:ring-0'
           />
         ) : (
-          <div className='prose prose-sm dark:prose-invert [&_table]:border-border [&_th]:border-border [&_th]:bg-muted [&_td]:border-border max-w-none overflow-auto p-4 [&_table]:border-collapse [&_table]:border [&_td]:border [&_td]:p-2 [&_th]:border [&_th]:p-2 [&_th]:font-semibold'>
+          <div className='prose prose-sm dark:prose-invert [&_table]:border-border [&_th]:border-border [&_th]:bg-muted [&_td]:border-border max-w-none overflow-auto p-4 [&_table]:border-collapse [&_table]:border [&_td]:border [&_td]:p-2 [&_th]:p-2 [&_th]:font-semibold'>
             {value ? (
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
             ) : (

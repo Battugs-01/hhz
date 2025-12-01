@@ -37,36 +37,6 @@ export const createColumns = (): ColumnDef<StakeAsset>[] => {
       enableSorting: false,
     },
     {
-      accessorKey: 'maxSize',
-      header: ({ column }: { column: Column<StakeAsset> }) => (
-        <DataTableColumnHeader column={column} title='Max Size' />
-      ),
-      cell: ({ row }: { row: Row<StakeAsset> }) => {
-        const maxSize = row.getValue('maxSize') as number | undefined
-        return (
-          <div className='text-sm'>
-            {maxSize !== undefined ? maxSize.toLocaleString() : '-'}
-          </div>
-        )
-      },
-      enableSorting: false,
-    },
-    {
-      accessorKey: 'usedMaxSize',
-      header: ({ column }: { column: Column<StakeAsset> }) => (
-        <DataTableColumnHeader column={column} title='Used Max Size' />
-      ),
-      cell: ({ row }: { row: Row<StakeAsset> }) => {
-        const usedMaxSize = row.getValue('usedMaxSize') as number | undefined
-        return (
-          <div className='text-sm'>
-            {usedMaxSize !== undefined ? usedMaxSize.toLocaleString() : '-'}
-          </div>
-        )
-      },
-      enableSorting: false,
-    },
-    {
       accessorKey: 'totalStakedAmountSize',
       header: ({ column }: { column: Column<StakeAsset> }) => (
         <DataTableColumnHeader column={column} title='Total Staked' />
@@ -75,9 +45,32 @@ export const createColumns = (): ColumnDef<StakeAsset>[] => {
         const totalStaked = row.getValue('totalStakedAmountSize') as
           | number
           | undefined
+        const maxSize = row.original.maxSize as number | undefined
+
+        if (totalStaked === undefined) {
+          return <div className='text-sm'>-</div>
+        }
+
+        const percentage =
+          maxSize !== undefined && maxSize > 0
+            ? Math.min((totalStaked / maxSize) * 100, 100)
+            : 0
+
         return (
-          <div className='text-sm'>
-            {totalStaked !== undefined ? totalStaked.toLocaleString() : '-'}
+          <div className='flex w-full flex-col gap-1.5'>
+            <div className='flex items-center justify-between text-xs'>
+              <span className='text-muted-foreground'>
+                {totalStaked.toLocaleString()}
+                {maxSize !== undefined ? ` / ${maxSize.toLocaleString()}` : ''}
+              </span>
+              <span className='font-medium'>{percentage.toFixed(1)}%</span>
+            </div>
+            <div className='bg-secondary h-2 w-full overflow-hidden rounded-full'>
+              <div
+                className='bg-primary h-full transition-all'
+                style={{ width: `${percentage}%` }}
+              />
+            </div>
           </div>
         )
       },

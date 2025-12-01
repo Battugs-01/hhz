@@ -106,17 +106,19 @@ export const createColumns = (
       enableSorting: false,
     },
     {
-      accessorKey: 'decimalPlaces',
+      accessorKey: 'totalStakedAmount',
       header: ({ column }: { column: Column<StakeContract> }) => (
-        <DataTableColumnHeader column={column} title='Decimal Places' />
+        <DataTableColumnHeader column={column} title='Total Staked Amount' />
       ),
       cell: ({ row }: { row: Row<StakeContract> }) => {
-        const decimalPlaces = row.getValue('decimalPlaces') as
+        const totalStakedAmount = row.getValue('totalStakedAmount') as
           | number
           | undefined
         return (
           <div className='text-sm'>
-            {decimalPlaces !== undefined ? decimalPlaces : '-'}
+            {totalStakedAmount !== undefined
+              ? totalStakedAmount.toLocaleString()
+              : '-'}
           </div>
         )
       },

@@ -1,3 +1,4 @@
+import type { Table } from '@tanstack/react-table'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import { FilterToolbarActions } from '@/components/filter-toolbar-actions'
 import { FILTER_KEYS, TABLE_CONFIG, WALLET_FILTER_FIELDS } from './constants'
@@ -7,6 +8,7 @@ type WalletToolbarActionsProps = {
   navigate: NavigateFn
   onDateRangeChange?: (range: { start_day?: string; end_day?: string }) => void
   onRefresh: () => void
+  table?: Table<any>
 }
 
 /**
@@ -18,6 +20,7 @@ export function WalletToolbarActions({
   navigate,
   onDateRangeChange,
   onRefresh,
+  table,
 }: WalletToolbarActionsProps) {
   return (
     <FilterToolbarActions
@@ -44,6 +47,7 @@ export function WalletToolbarActions({
       onRefresh={onRefresh}
       tableId={TABLE_CONFIG.ID}
       exportFileName={TABLE_CONFIG.EXPORT_FILE_NAME}
+      table={table}
     />
   )
 }

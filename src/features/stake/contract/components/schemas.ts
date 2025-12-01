@@ -2,8 +2,8 @@ import { z } from 'zod'
 import type { FormFieldConfig } from '@/components/ui/config-form-dialog'
 
 export const cancelPolicySchema = z.object({
-  fromDate: z.number(),
-  toDate: z.number(),
+  fromDay: z.number(),
+  toDay: z.number(),
   apr: z.number(),
 })
 
@@ -44,7 +44,7 @@ export const STAKE_CONTRACT_FORM_FIELDS: FormFieldConfig<StakeContractForm>[] =
       label: 'Duration (days)',
       type: 'number',
       placeholder: 'Enter duration in days...',
-      required: true,
+      // required: true,
       gridCols: 1,
     },
     {
@@ -85,17 +85,17 @@ export const STAKE_CONTRACT_FORM_FIELDS: FormFieldConfig<StakeContractForm>[] =
       addButtonLabel: 'Add Cancel Policy',
       arrayItemFields: [
         {
-          name: 'fromDate',
-          label: 'From Date',
-          type: 'datetime',
-          placeholder: 'Select from date and time...',
+          name: 'fromDay',
+          label: 'From Day',
+          type: 'number',
+          placeholder: 'Enter from day...',
           required: true,
         },
         {
-          name: 'toDate',
-          label: 'To Date',
-          type: 'datetime',
-          placeholder: 'Select to date and time...',
+          name: 'toDay',
+          label: 'To Day',
+          type: 'number',
+          placeholder: 'Enter to day...',
           required: true,
         },
         {

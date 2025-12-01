@@ -32,6 +32,7 @@ import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_a
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedStakeUserStakeListIndexRouteImport } from './routes/_authenticated/stake/user-stake-list/index'
+import { Route as AuthenticatedStakeStatisticsIndexRouteImport } from './routes/_authenticated/stake/statistics/index'
 import { Route as AuthenticatedStakeContractIndexRouteImport } from './routes/_authenticated/stake/contract/index'
 import { Route as AuthenticatedStakeAssetIndexRouteImport } from './routes/_authenticated/stake/asset/index'
 import { Route as AuthenticatedCryptoWithdrawalIndexRouteImport } from './routes/_authenticated/crypto/withdrawal/index'
@@ -169,6 +170,12 @@ const AuthenticatedStakeUserStakeListIndexRoute =
     path: '/stake/user-stake-list/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedStakeStatisticsIndexRoute =
+  AuthenticatedStakeStatisticsIndexRouteImport.update({
+    id: '/stake/statistics/',
+    path: '/stake/statistics/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStakeContractIndexRoute =
   AuthenticatedStakeContractIndexRouteImport.update({
     id: '/stake/contract/',
@@ -283,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/crypto/withdrawal': typeof AuthenticatedCryptoWithdrawalIndexRoute
   '/stake/asset': typeof AuthenticatedStakeAssetIndexRoute
   '/stake/contract': typeof AuthenticatedStakeContractIndexRoute
+  '/stake/statistics': typeof AuthenticatedStakeStatisticsIndexRoute
   '/stake/user-stake-list': typeof AuthenticatedStakeUserStakeListIndexRoute
 }
 export interface FileRoutesByTo {
@@ -319,6 +327,7 @@ export interface FileRoutesByTo {
   '/crypto/withdrawal': typeof AuthenticatedCryptoWithdrawalIndexRoute
   '/stake/asset': typeof AuthenticatedStakeAssetIndexRoute
   '/stake/contract': typeof AuthenticatedStakeContractIndexRoute
+  '/stake/statistics': typeof AuthenticatedStakeStatisticsIndexRoute
   '/stake/user-stake-list': typeof AuthenticatedStakeUserStakeListIndexRoute
 }
 export interface FileRoutesById {
@@ -358,6 +367,7 @@ export interface FileRoutesById {
   '/_authenticated/crypto/withdrawal/': typeof AuthenticatedCryptoWithdrawalIndexRoute
   '/_authenticated/stake/asset/': typeof AuthenticatedStakeAssetIndexRoute
   '/_authenticated/stake/contract/': typeof AuthenticatedStakeContractIndexRoute
+  '/_authenticated/stake/statistics/': typeof AuthenticatedStakeStatisticsIndexRoute
   '/_authenticated/stake/user-stake-list/': typeof AuthenticatedStakeUserStakeListIndexRoute
 }
 export interface FileRouteTypes {
@@ -397,6 +407,7 @@ export interface FileRouteTypes {
     | '/crypto/withdrawal'
     | '/stake/asset'
     | '/stake/contract'
+    | '/stake/statistics'
     | '/stake/user-stake-list'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -433,6 +444,7 @@ export interface FileRouteTypes {
     | '/crypto/withdrawal'
     | '/stake/asset'
     | '/stake/contract'
+    | '/stake/statistics'
     | '/stake/user-stake-list'
   id:
     | '__root__'
@@ -471,6 +483,7 @@ export interface FileRouteTypes {
     | '/_authenticated/crypto/withdrawal/'
     | '/_authenticated/stake/asset/'
     | '/_authenticated/stake/contract/'
+    | '/_authenticated/stake/statistics/'
     | '/_authenticated/stake/user-stake-list/'
   fileRoutesById: FileRoutesById
 }
@@ -650,6 +663,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStakeUserStakeListIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/stake/statistics/': {
+      id: '/_authenticated/stake/statistics/'
+      path: '/stake/statistics'
+      fullPath: '/stake/statistics'
+      preLoaderRoute: typeof AuthenticatedStakeStatisticsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/stake/contract/': {
       id: '/_authenticated/stake/contract/'
       path: '/stake/contract'
@@ -788,6 +808,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCryptoWithdrawalIndexRoute: typeof AuthenticatedCryptoWithdrawalIndexRoute
   AuthenticatedStakeAssetIndexRoute: typeof AuthenticatedStakeAssetIndexRoute
   AuthenticatedStakeContractIndexRoute: typeof AuthenticatedStakeContractIndexRoute
+  AuthenticatedStakeStatisticsIndexRoute: typeof AuthenticatedStakeStatisticsIndexRoute
   AuthenticatedStakeUserStakeListIndexRoute: typeof AuthenticatedStakeUserStakeListIndexRoute
 }
 
@@ -817,6 +838,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCryptoWithdrawalIndexRoute,
   AuthenticatedStakeAssetIndexRoute: AuthenticatedStakeAssetIndexRoute,
   AuthenticatedStakeContractIndexRoute: AuthenticatedStakeContractIndexRoute,
+  AuthenticatedStakeStatisticsIndexRoute:
+    AuthenticatedStakeStatisticsIndexRoute,
   AuthenticatedStakeUserStakeListIndexRoute:
     AuthenticatedStakeUserStakeListIndexRoute,
 }

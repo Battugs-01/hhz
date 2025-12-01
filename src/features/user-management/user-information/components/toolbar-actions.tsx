@@ -1,3 +1,4 @@
+import type { Table } from '@tanstack/react-table'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import { FilterToolbarActions } from '@/components/filter-toolbar-actions'
 import {
@@ -11,6 +12,7 @@ type UserInformationToolbarActionsProps = {
   navigate: NavigateFn
   onDateRangeChange?: (range: { start_day?: string; end_day?: string }) => void
   onRefresh: () => void
+  table?: Table<any>
 }
 
 export function UserInformationToolbarActions({
@@ -18,6 +20,7 @@ export function UserInformationToolbarActions({
   navigate,
   onDateRangeChange,
   onRefresh,
+  table,
 }: UserInformationToolbarActionsProps) {
   return (
     <FilterToolbarActions
@@ -44,6 +47,7 @@ export function UserInformationToolbarActions({
       onRefresh={onRefresh}
       tableId={TABLE_CONFIG.ID}
       exportFileName={TABLE_CONFIG.EXPORT_FILE_NAME}
+      table={table}
     />
   )
 }

@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import type { Table } from '@tanstack/react-table'
 import { useFilterHandlers } from '@/hooks/use-filter-handlers'
 import type { NavigateFn } from '@/hooks/use-table-url-state'
 import { DataTableToolbarActions } from '@/components/data-table/toolbar-actions'
@@ -20,6 +20,7 @@ type FilterToolbarActionsProps = {
   exportFileName: string
   filterTitle?: string
   filterDescription?: string
+  table?: Table<any>
 }
 
 export function FilterToolbarActions({
@@ -34,32 +35,13 @@ export function FilterToolbarActions({
   exportFileName,
   filterTitle,
   filterDescription,
+  table,
 }: FilterToolbarActionsProps) {
   const { handleFilterChange, handleClearFilters } = useFilterHandlers({
     navigate,
     filterKeys,
     dateRangeKeys: ['start_day', 'end_day'],
   })
-
-  const handleExportInternal = useCallback(() => {
-    if (onExport) {
-      onExport()
-    } else {
-      try {
-        const tableElement = document.getElementById(tableId)
-        if (tableElement) {
-          // TODO: Implement actual export functionality
-          // Consider using libraries like xlsx or csv-export
-        }
-      } catch (error) {
-        // Error is handled by global error handler
-        // In production, use proper logging service
-        if (import.meta.env.DEV) {
-          console.error('Export error:', error)
-        }
-      }
-    }
-  }, [onExport, tableId, exportFileName])
 
   const filterValues: FilterValues = {}
   filterKeys.forEach((key) => {
@@ -86,7 +68,8 @@ export function FilterToolbarActions({
         />
       }
       onRefresh={onRefresh}
-      onExport={handleExportInternal}
+      onExport={table ? undefined : onExport}
+      table={table}
       tableId={tableId}
       exportFileName={exportFileName}
     />

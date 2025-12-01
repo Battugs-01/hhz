@@ -37,6 +37,12 @@ export const USER_STAKE_LIST_FILTER_FIELDS: FilterField[] = [
     ],
     placeholder: 'Select stake status...',
   },
+  {
+    key: 'dateRange',
+    label: 'Date Range',
+    type: 'date-range',
+    placeholder: 'Filter by date',
+  },
 ]
 
 export const QUERY_KEYS = {

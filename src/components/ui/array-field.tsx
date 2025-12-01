@@ -14,7 +14,7 @@ import { DatePicker } from '@/components/date-picker'
 import { DateTimePicker } from '../datetime-picker'
 import type { FormFieldConfig } from './config-form-dialog'
 
-const NUMBER_INPUT_PATTERN = /^-?\d*(\.\d*)?$/
+const NUMBER_INPUT_PATTERN = /^-?(\d+\.?\d*|\.\d+)$/
 const TEMPORARY_NUMBER_VALUES = new Set(['', '-', '.', '-.'])
 
 export function ArrayField<TFormData extends Record<string, unknown>>({
@@ -41,7 +41,7 @@ export function ArrayField<TFormData extends Record<string, unknown>>({
     const defaultItem: Record<string, unknown> = {}
     field.arrayItemFields?.forEach((itemField) => {
       if (itemField.type === 'number') {
-        defaultItem[itemField.name as string] = 0
+        defaultItem[itemField.name as string] = undefined
       } else if (itemField.type === 'date' || itemField.type === 'datetime') {
         defaultItem[itemField.name as string] = undefined
       } else {
@@ -125,6 +125,17 @@ export function ArrayField<TFormData extends Record<string, unknown>>({
                                   onChange={(e) => {
                                     const value = e.target.value
 
+                                    // Allow empty or temporary values
+                                    if (
+                                      value === '' ||
+                                      TEMPORARY_NUMBER_VALUES.has(value)
+                                    ) {
+                                      numberInputValuesRef.current[fieldPath] =
+                                        value
+                                      itemFormField.onChange(undefined as any)
+                                      return
+                                    }
+
                                     if (!NUMBER_INPUT_PATTERN.test(value)) {
                                       return
                                     }
@@ -132,12 +143,11 @@ export function ArrayField<TFormData extends Record<string, unknown>>({
                                     numberInputValuesRef.current[fieldPath] =
                                       value
 
-                                    if (value === '') {
+                                    if (
+                                      value.endsWith('.') &&
+                                      !value.endsWith('..')
+                                    ) {
                                       itemFormField.onChange(undefined as any)
-                                      return
-                                    }
-
-                                    if (TEMPORARY_NUMBER_VALUES.has(value)) {
                                       return
                                     }
 
@@ -150,6 +160,13 @@ export function ArrayField<TFormData extends Record<string, unknown>>({
                                     const value =
                                       numberInputValuesRef.current[fieldPath]
                                     if (value === undefined) return
+
+                                    if (value === '0.' || value === '-0.') {
+                                      itemFormField.onChange(0 as any)
+                                      numberInputValuesRef.current[fieldPath] =
+                                        '0'
+                                      return
+                                    }
 
                                     if (TEMPORARY_NUMBER_VALUES.has(value)) {
                                       numberInputValuesRef.current[fieldPath] =

@@ -30,6 +30,7 @@ import { Skeleton } from '../ui/skeleton'
 import type { ToolbarConfig } from './base-table'
 import { ServerlessPagination } from './serverless-pagination'
 import { DataTableToolbar } from './toolbar'
+import { DataTableToolbarActions } from './toolbar-actions'
 
 export interface ServerlessTableProps<TData> {
   data: TData[]
@@ -317,7 +318,17 @@ export function ServerlessTable<TData extends Record<string, unknown>>({
             filters={toolbar.filters}
             debounceDelay={toolbar.debounceDelay}
           />
-          {toolbar.extra}
+          <div className='flex items-center gap-2'>
+            {toolbar.exportFileName && (
+              <DataTableToolbarActions
+                table={table}
+                exportFileName={toolbar.exportFileName}
+              />
+            )}
+            {typeof toolbar.extra === 'function'
+              ? toolbar.extra(table)
+              : toolbar.extra}
+          </div>
         </div>
       )}
 

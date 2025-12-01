@@ -99,6 +99,8 @@ export type {
 
 export { USERS_STAKE_STATUS, userStakeListSchema } from './types/stake.types'
 export type {
+  TotalUsersStakesInfo,
+  TotalUsersStakesInfoResponse,
   UserStakeList,
   UserStakeListParams,
   UserStakeListResponse,

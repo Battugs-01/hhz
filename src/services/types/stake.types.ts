@@ -79,6 +79,8 @@ export interface UserStakeListParams {
   limit?: number
   lastEvaluatedKey?: string | Record<string, unknown>
   status?: USERS_STAKE_STATUS
+  start_day?: string
+  end_day?: string
 }
 
 export interface UserStakeListBackendResponse {
@@ -200,8 +202,8 @@ export interface StakeAssetListResponse
 
 // Stake Contract types
 export const cancelPolicySchema = z.object({
-  fromDate: z.number(),
-  toDate: z.number(),
+  fromDay: z.number(),
+  toDay: z.number(),
   apr: z.number(),
 })
 
@@ -237,8 +239,8 @@ export interface StakeContractCreateParams {
   maxAmount: number
   decimalPlaces?: number
   cancelPolicies?: Array<{
-    fromDate: number
-    toDate: number
+    fromDay: number
+    toDay: number
     apr: number
   }>
 }
@@ -252,8 +254,8 @@ export interface StakeContractUpdateParams {
   maxAmount?: number
   decimalPlaces?: number
   cancelPolicies?: Array<{
-    fromDate: number
-    toDate: number
+    fromDay: number
+    toDay: number
     apr: number
   }>
 }
@@ -279,3 +281,30 @@ export interface StakeContractListResponse
     total: number
     lastEvaluatedKey?: string | Record<string, unknown>
   }> {}
+
+// Total Users Stakes Info
+export const totalUsersStakesInfoResponseSchema = z.object({
+  total: z.number(),
+  general: z.object({
+    active: z.number(),
+    failed: z.number(),
+  }),
+  status: z.object({
+    redeemable: z.number(),
+    ongoing: z.number(),
+    cancelled: z.number(),
+    redeeming: z.number(),
+    canceling: z.number(),
+    cancel_requested: z.number(),
+    cancel_requested_manual: z.number(),
+    redeem_requested: z.number(),
+    redeem_requested_manual: z.number(),
+  }),
+})
+
+export type TotalUsersStakesInfo = z.infer<
+  typeof totalUsersStakesInfoResponseSchema
+>
+
+export interface TotalUsersStakesInfoResponse
+  extends BaseResponse<TotalUsersStakesInfo> {}

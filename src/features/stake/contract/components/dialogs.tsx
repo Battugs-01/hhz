@@ -51,14 +51,14 @@ function StakeContractFormDialog({
       return {
         asset: data.asset || '',
         stakeContractName: data.stakeContractName || '',
-        duration: data.duration || 0,
+        duration: data.duration,
         apr: data.apr,
-        minAmount: data.minAmount || 0,
-        maxAmount: data.maxAmount || 0,
+        minAmount: data.minAmount,
+        maxAmount: data.maxAmount,
         decimalPlaces: data.decimalPlaces,
         cancelPolicies: data.cancelPolicies?.map((policy) => ({
-          fromDate: policy.fromDate,
-          toDate: policy.toDate,
+          fromDay: policy.fromDay,
+          toDay: policy.toDay,
           apr: policy.apr,
         })),
       }
@@ -66,10 +66,10 @@ function StakeContractFormDialog({
     return {
       asset: '',
       stakeContractName: '',
-      duration: 0,
+      duration: undefined,
       apr: undefined,
-      minAmount: 0,
-      maxAmount: 0,
+      minAmount: undefined,
+      maxAmount: undefined,
       decimalPlaces: undefined,
       cancelPolicies: [],
     }

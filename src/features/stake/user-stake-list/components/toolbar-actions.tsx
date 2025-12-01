@@ -1,4 +1,5 @@
 import type { NavigateOptions } from '@tanstack/react-router'
+import type { Table } from '@tanstack/react-table'
 import type { FilterValues } from '@/components/filter-panel'
 import { FilterToolbarActions } from '@/components/filter-toolbar-actions'
 import {
@@ -17,6 +18,7 @@ type UserStakeListToolbarActionsProps = {
   navigate: (opts: NavigateOptions) => void
   onDateRangeChange?: (range: { start_day?: string; end_day?: string }) => void
   onRefresh: () => void
+  table?: Table<any>
 }
 
 export function UserStakeListToolbarActions({
@@ -24,6 +26,7 @@ export function UserStakeListToolbarActions({
   navigate,
   onDateRangeChange,
   onRefresh,
+  table,
 }: UserStakeListToolbarActionsProps) {
   const normalizedLimit =
     typeof search.limit === 'number'
@@ -49,6 +52,7 @@ export function UserStakeListToolbarActions({
       onRefresh={onRefresh}
       tableId={TABLE_CONFIG.ID}
       exportFileName={TABLE_CONFIG.EXPORT_FILE_NAME}
+      table={table}
     />
   )
 }

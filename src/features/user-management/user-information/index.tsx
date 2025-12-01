@@ -46,12 +46,14 @@ export function UserInformation() {
       searchPlaceholder: TABLE_CONFIG.SEARCH_PLACEHOLDER,
       searchKey: TABLE_CONFIG.SEARCH_KEY,
       filters: [],
-      extra: (
+      exportFileName: TABLE_CONFIG.EXPORT_FILE_NAME,
+      extra: (table: any) => (
         <UserInformationToolbarActions
           search={search}
           navigate={navigate}
           onDateRangeChange={handleDateRangeChange}
           onRefresh={refetch}
+          table={table}
         />
       ),
     }),
