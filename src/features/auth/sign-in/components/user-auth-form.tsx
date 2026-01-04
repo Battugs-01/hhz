@@ -41,66 +41,32 @@ export function UserAuthForm({
   ...props
 }: UserAuthFormProps) {
   const navigate = useNavigate()
-  const { auth } = useAuthStore()
+  const { setToken, setUser } = useAuthStore()
 
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: async (data) => {
-      if (!data.body) {
-        toast.error('Алдаа гарлаа')
+      if (!data.success || !data.data) {
+        toast.error(data.message || 'Алдаа гарлаа')
         return
       }
 
-      // MFA challenge шалгах
-      if (
-        'challengeName' in data.body &&
-        data.body.challengeName === 'SOFTWARE_TOKEN_MFA'
-      ) {
-        // Session болон username байгаа эсэхийг шалгах
-        if (
-          'session' in data.body &&
-          'username' in data.body &&
-          data.body.session &&
-          data.body.username
-        ) {
-          // OTP хуудас руу navigate хийх, session болон username дамжуулах
-          navigate({
-            to: '/otp',
-            search: {
-              session: data.body.session,
-              username: data.body.username,
-              redirect: redirectTo,
-            },
-            replace: true,
-          })
-          return
-        } else {
-          toast.error('MFA challenge-д session эсвэл username байхгүй байна')
-          return
-        }
-      }
+      // Token хадгалах
+      if (data.data.token) {
+        setToken(data.data.token)
 
-      // Энгийн login (token байвал)
-      if ('token' in data.body && data.body.token) {
-        auth.saveToken(data.body.token)
-
-        try {
-          const userInfo = await authService.getUserInfo()
-          if (userInfo.body) {
-            auth.setUser(userInfo.body)
-          }
-          navigate({ to: redirectTo || '/', replace: true })
-          toast.success('Амжилттай нэвтэрлээ')
-        } catch (error) {
-          console.error('Failed to fetch user info:', error)
-          toast.error('Хэрэглэгчийн мэдээлэл авч чадсангүй')
+        // Admin мэдээлэл хадгалах
+        if (data.data.admin) {
+          setUser(data.data.admin)
         }
+
+        navigate({ to: redirectTo || '/', replace: true })
+        toast.success(data.message || 'Амжилттай нэвтэрлээ')
       } else {
         toast.error('Token авах боломжгүй байна')
       }
     },
     onError: (err: Error) => {
-      // Error message-ийг харуулах
       const errorMessage = err.message || 'Алдаа гарлаа'
       toast.error(errorMessage)
       console.error('Login error:', err)

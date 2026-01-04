@@ -22,17 +22,17 @@ type AuthenticatedLayoutProps = {
 
 export function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
   const defaultOpen = getCookie('sidebar_state') !== 'false'
-  const { auth } = useAuthStore()
+  const { setUser, token } = useAuthStore()
   useQuery({
     queryKey: ['user-info'],
     queryFn: async () => {
       const info = await authService.getUserInfo()
-      if (info.body) {
-        auth.setUser(info.body)
+      if (info.success && info.data) {
+        setUser(info.data)
       }
       return info
     },
-    enabled: !!(auth.idToken || auth.accessToken),
+    enabled: !!token,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     staleTime: 5 * 60 * 1000,

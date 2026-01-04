@@ -118,7 +118,7 @@ export function BaseDialog({
               )}
             </DialogHeader>
           )}
-          <div className={cn('min-h-0 flex-1 overflow-y-auto', className)}>
+          <div className={cn('min-h-0 flex-1 overflow-y-auto pt-4', className)}>
             {children}
           </div>
           <div className='flex-shrink-0 pt-4'>

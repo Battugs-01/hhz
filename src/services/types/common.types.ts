@@ -4,12 +4,14 @@
 export interface BaseResponse<T> {
   message: string
   body: T | null
+  code: number
+  success: boolean
 }
 
 /**
  * Pagination response type
  */
 export interface PaginationResponse<T> {
-  total: number
-  items: Array<T>
+  list: Array<T>
+  items: number // total count
 }

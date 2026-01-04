@@ -12,6 +12,7 @@ import {
   type Table as TanStackTable,
   type VisibilityState,
 } from '@tanstack/react-table'
+import { Plus } from 'lucide-react'
 import type {
   CreateDialogProps,
   DeleteDialogProps,
@@ -20,6 +21,7 @@ import type {
 } from '@/lib/dialog-types'
 import { cn } from '@/lib/utils'
 import { useTableUrlState, type NavigateFn } from '@/hooks/use-table-url-state'
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -150,23 +152,21 @@ function RowActions<TData>({
 }) {
   const canEdit = !hideEditButton || !hideEditButton(record)
   const canDelete = !hideDeleteButton || !hideDeleteButton(record)
-  const canDetail = showDetailButton && showDetailButton(record)
+  const canDetail = !showDetailButton || showDetailButton(record)
   const hasActions = onDetail || onEdit || onDelete || customActions
 
   if (!hasActions) return null
 
   return (
     <div className='flex items-center justify-end gap-1.5'>
-      {onDetail && (
+      {onDetail && canDetail && (
         <button
           type='button'
           onClick={onDetail}
-          disabled={canDetail}
           className={cn(
             'group relative flex h-8 w-8 items-center justify-center rounded-md border border-transparent transition-all duration-200',
             'text-muted-foreground hover:border-primary/20 hover:bg-primary/5 hover:text-primary',
-            'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-            canDetail && 'cursor-not-allowed opacity-50'
+            'focus-visible:ring-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
           )}
           title='View details'
         >
@@ -409,12 +409,23 @@ export function BaseTable<TData extends Record<string, unknown>>({
         <div className='flex items-center justify-between gap-4'>
           <DataTableToolbar
             table={table}
-            searchPlaceholder={toolbar.searchPlaceholder || 'Filter...'}
+            searchPlaceholder={toolbar.searchPlaceholder || 'Хайх...'}
             searchKey={toolbar.searchKey}
             filters={toolbar.filters}
             debounceDelay={toolbar.debounceDelay}
           />
           <div className='flex items-center gap-2'>
+            {CreateComponent && (
+              <Button
+                type='button'
+                onClick={() => setCreateOpen(true)}
+                size='sm'
+                className='h-8 gap-2'
+              >
+                <Plus className='h-4 w-4' />
+                Үүсгэх
+              </Button>
+            )}
             {toolbar.exportFileName && (
               <DataTableToolbarActions
                 table={table}
@@ -526,6 +537,7 @@ export function BaseTable<TData extends Record<string, unknown>>({
           onClose={() => setCreateOpen(false)}
           onSuccess={() => {
             setCreateOpen(false)
+            onRefresh?.()
           }}
         />
       )}
@@ -536,6 +548,7 @@ export function BaseTable<TData extends Record<string, unknown>>({
           onClose={() => setUpdateRecord(undefined)}
           onSuccess={() => {
             setUpdateRecord(undefined)
+            onRefresh?.()
           }}
           data={updateRecord}
         />

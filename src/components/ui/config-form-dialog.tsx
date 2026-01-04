@@ -1,3 +1,4 @@
+import type React from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { type z } from 'zod'
 import { useForm, type UseFormReturn } from 'react-hook-form'
@@ -22,6 +23,7 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { DatePicker } from '@/components/date-picker'
+import { PasswordInput } from '@/components/password-input'
 import { DateTimePicker } from '../datetime-picker'
 import { ArrayField } from './array-field'
 import { BaseFormDialog } from './base-form-dialog'
@@ -102,6 +104,7 @@ export type ConfigFormDialogProps<TFormData extends Record<string, unknown>> = {
   defaultValues?: Partial<TFormData>
   getDefaultValues?: (data?: Partial<TFormData>) => Partial<TFormData>
   onFormReady?: (form: UseFormReturn<TFormData>) => void
+  renderBeforeForm?: React.ReactNode
 }
 
 export function ConfigFormDialog<TFormData extends Record<string, unknown>>({
@@ -114,11 +117,12 @@ export function ConfigFormDialog<TFormData extends Record<string, unknown>>({
   onSubmit,
   title,
   description,
-  submitButtonText = 'Save',
+  submitButtonText = 'Хадгалах',
   isSubmitting = false,
   defaultValues,
   getDefaultValues,
   onFormReady,
+  renderBeforeForm,
 }: ConfigFormDialogProps<TFormData>) {
   const form = useForm<TFormData>({
     resolver: zodResolver(schema as any) as any,
@@ -435,6 +439,13 @@ export function ConfigFormDialog<TFormData extends Record<string, unknown>>({
                     }
                   }}
                 />
+              ) : field.type === 'password' ? (
+                <PasswordInput
+                  placeholder={field.placeholder}
+                  disabled={field.disabled}
+                  {...formField}
+                  value={String(formField.value ?? '')}
+                />
               ) : (
                 <Input
                   type={field.type}
@@ -492,12 +503,13 @@ export function ConfigFormDialog<TFormData extends Record<string, unknown>>({
         disabled: isSubmitting || isUploadingImage,
       }}
       cancelButton={{
-        text: 'Cancel',
+        text: 'Болих',
         show: !isSubmitting && !isUploadingImage,
       }}
     >
       <Form {...form}>
         <div className='space-y-4'>
+          {renderBeforeForm && <div className='mb-4'>{renderBeforeForm}</div>}
           {Object.entries(groupedFields).map(([cols, fields]) => {
             const gridClass =
               {

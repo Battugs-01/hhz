@@ -2,9 +2,9 @@ import axios from 'axios'
 import type {
   LoginCredentials,
   LoginResponse,
+  UpdatePasswordRequest,
+  UpdatePasswordResponse,
   UserInfoResponse,
-  VerifyOTPCredentials,
-  VerifyOTPResponse,
 } from '../types/auth.types'
 import { apiClient } from './client'
 
@@ -20,7 +20,6 @@ export const authService = {
       if (axios.isAxiosError(error) && error.response?.data) {
         const errorData = error.response.data as {
           message?: string
-          body?: null
         }
         throw new Error(errorData.message || 'Login failed')
       }
@@ -29,29 +28,8 @@ export const authService = {
   },
 
   getUserInfo: async (): Promise<UserInfoResponse> => {
-    const response = await apiClient.get<UserInfoResponse>('/auth/info')
+    const response = await apiClient.get<UserInfoResponse>('/account/info')
     return response.data
-  },
-
-  verifyMFA: async (
-    credentials: VerifyOTPCredentials
-  ): Promise<VerifyOTPResponse> => {
-    try {
-      const response = await apiClient.post<VerifyOTPResponse>(
-        '/auth/mfa-challenge',
-        credentials
-      )
-      return response.data
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data) {
-        const errorData = error.response.data as {
-          message?: string
-          body?: null
-        }
-        throw new Error(errorData.message || 'OTP verification failed')
-      }
-      throw error
-    }
   },
 
   logout: async (): Promise<void> => {
@@ -59,6 +37,26 @@ export const authService = {
       await apiClient.post('/auth/logout')
     } catch (error) {
       console.log('Logout endpoint not available')
+    }
+  },
+
+  updatePassword: async (
+    data: UpdatePasswordRequest
+  ): Promise<UpdatePasswordResponse> => {
+    try {
+      const response = await apiClient.put<UpdatePasswordResponse>(
+        '/account/change-password',
+        data
+      )
+      return response.data
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const errorData = error.response.data as {
+          message?: string
+        }
+        throw new Error(errorData.message || 'Failed to update password')
+      }
+      throw error
     }
   },
 }

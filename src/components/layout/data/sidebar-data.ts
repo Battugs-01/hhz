@@ -1,36 +1,19 @@
 import {
-  Bell,
-  Bug,
-  Coins,
-  Construction,
-  FileText,
-  FileX,
-  HelpCircle,
-  Landmark,
+  Briefcase,
+  Building2,
+  Gavel,
+  HandCoins,
+  Key,
   LayoutDashboard,
-  Lock,
-  Monitor,
-  Palette,
-  ServerOff,
-  Settings,
+  MapPin,
   ShieldCheck,
-  TrendingUp,
   UserCog,
-  UserX,
   Users,
-  Wrench,
-  ShieldUser,
-  BookOpenCheck
 } from 'lucide-react'
 import { LogoImage } from '../logo-image'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
-  user: {
-    name: 'satnaing',
-    email: 'satnaingdev@gmail.com',
-    avatar: '/avatars/shadcn.jpg',
-  },
   teams: [
     {
       name: 'Xmeta Admin Dashboard',
@@ -40,237 +23,88 @@ export const sidebarData: SidebarData = {
   ],
   navGroups: [
     {
-      title: 'General',
+      title: 'Ерөнхий',
       items: [
         {
-          title: 'Dashboard',
+          title: 'Хянах самбар',
           url: '/',
           icon: LayoutDashboard,
         },
-        // {
-        //   title: 'Tasks',
-        //   url: '/tasks',
-        //   icon: ListTodo,
-        // },
-        // {
-        //   title: 'Apps',
-        //   url: '/apps',
-        //   icon: Package,
-        // },
-        // {
-        //   title: 'Chats',
-        //   url: '/chats',
-        //   badge: '3',
-        //   icon: MessagesSquare,
-        // },
         {
-          title: 'User Management',
+          title: 'Газрын зураг',
+          url: '/map',
+          icon: MapPin,
+        },
+        {
+          title: 'Хэрэглэгчид',
           icon: Users,
           items: [
             {
-              title: 'User Information',
-              url: '/user-information',
+              title: 'Админүүд',
+              url: '/admins',
               icon: UserCog,
             },
-          ],
-        },
-        {
-          title: 'Bank',
-          icon: Landmark,
-          items: [
             {
-              title: 'Deposit',
-              url: '/bank/deposit',
-              icon: Landmark,
+              title: 'Эдийн засагчид',
+              url: '/economists',
+              icon: Briefcase,
             },
             {
-              title: 'Withdrawal',
-              url: '/bank/withdrawal',
-              icon: Landmark,
-            },
-            {
-              title: 'Bank Accounts',
-              url: '/bank/wallets',
-              icon: Landmark,
-            },
-            {
-              title: 'Exchange Txn',
-              url: '/bank/exchange-txn',
-              icon: Landmark,
-            },
-          ],
-        },
-        {
-          title: 'Crypto',
-          icon: Coins,
-          items: [
-            {
-              title: 'Deposit',
-              url: '/crypto/deposit',
-              icon: Coins,
-            },
-            {
-              title: 'Withdrawal',
-              url: '/crypto/withdrawal',
-              icon: Coins,
-            },
-            {
-              title: 'Coins',
-              url: '/crypto/coins',
-              icon: Coins,
-            },
-            {
-              title: 'Wallet Address',
-              url: '/crypto/wallet-address',
-              icon: Coins,
-            },
-          ],
-        },
-        {
-          title: 'Stake',
-          icon: TrendingUp,
-          items: [
-            {
-              title: 'Asset',
-              url: '/stake/asset',
-              icon: Coins,
-            },
-            {
-              title: 'Contract',
-              url: '/stake/contract',
-              icon: TrendingUp,
-            },
-            {
-              title: 'User Stake List',
-              url: '/stake/user-stake-list',
+              title: 'Үйлчлүүлэгчид',
+              url: '/customers',
               icon: Users,
             },
           ],
         },
         {
-          title: 'Additional',
-          icon: FileText,
+          title: 'Салбар',
+          url: '/branches',
+          icon: Building2,
+        },
+        {
+          title: 'Зээл',
+          icon: HandCoins,
           items: [
             {
-              title: 'News',
-              url: '/additional/news',
-              icon: FileText,
+              title: 'Бүх зээлүүд',
+              url: '/loans',
+            },
+
+            {
+              title: 'Зээл оруулах',
+              url: '/loans/import',
+            },
+            {
+              title: 'Зээл статус',
+              url: '/loans/status',
             },
           ],
         },
         {
-          title: 'User Take Action',
-          icon: ShieldUser,
+          title: 'Шүүх',
+          icon: Gavel,
           items: [
             {
-              title: 'Take Action',
-              url: '/take-action/take-action-list',
-              icon: BookOpenCheck,
+              title: 'Хаах төлөв',
+              url: '/judge-close-status',
             },
           ],
         },
       ],
     },
     {
-      title: 'Pages',
+      title: 'Хуудас',
       items: [
         {
-          title: 'Auth',
+          title: 'Нэвтрэх эрх',
           icon: ShieldCheck,
           items: [
             {
-              title: 'Sign In',
-              url: '/sign-in',
-            },
-            {
-              title: 'Sign In (2 Col)',
-              url: '/sign-in-2',
-            },
-            {
-              title: 'Sign Up',
-              url: '/sign-up',
-            },
-            {
-              title: 'Forgot Password',
-              url: '/forgot-password',
-            },
-            {
-              title: 'OTP',
-              url: '/otp',
+              title: 'Нууц үг солих',
+              url: '/update-password',
+              icon: Key,
             },
           ],
-        },
-        {
-          title: 'Errors',
-          icon: Bug,
-          items: [
-            {
-              title: 'Unauthorized',
-              url: '/errors/unauthorized',
-              icon: Lock,
-            },
-            {
-              title: 'Forbidden',
-              url: '/errors/forbidden',
-              icon: UserX,
-            },
-            {
-              title: 'Not Found',
-              url: '/errors/not-found',
-              icon: FileX,
-            },
-            {
-              title: 'Internal Server Error',
-              url: '/errors/internal-server-error',
-              icon: ServerOff,
-            },
-            {
-              title: 'Maintenance Error',
-              url: '/errors/maintenance-error',
-              icon: Construction,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: 'Other',
-      items: [
-        {
-          title: 'Settings',
-          icon: Settings,
-          items: [
-            {
-              title: 'Profile',
-              url: '/settings',
-              icon: UserCog,
-            },
-            {
-              title: 'Account',
-              url: '/settings/account',
-              icon: Wrench,
-            },
-            {
-              title: 'Appearance',
-              url: '/settings/appearance',
-              icon: Palette,
-            },
-            {
-              title: 'Notifications',
-              url: '/settings/notifications',
-              icon: Bell,
-            },
-            {
-              title: 'Display',
-              url: '/settings/display',
-              icon: Monitor,
-            },
-          ],
-        },
-        {
-          title: 'Help Center',
-          url: '/help-center',
-          icon: HelpCircle,
         },
       ],
     },

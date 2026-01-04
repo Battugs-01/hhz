@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedUpdatePasswordRouteImport } from './routes/_authenticated/update-password'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
@@ -18,35 +19,28 @@ import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
-import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedMapIndexRouteImport } from './routes/_authenticated/map/index'
+import { Route as AuthenticatedLoansIndexRouteImport } from './routes/_authenticated/loans/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
+import { Route as AuthenticatedBranchesIndexRouteImport } from './routes/_authenticated/branches/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as AuthenticatedLoansImportRouteImport } from './routes/_authenticated/loans/import'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
-import { Route as AuthenticatedTakeActionTakeActionListIndexRouteImport } from './routes/_authenticated/take-action/take-action-list/index'
-import { Route as AuthenticatedStakeUserStakeListIndexRouteImport } from './routes/_authenticated/stake/user-stake-list/index'
-import { Route as AuthenticatedStakeStatisticsIndexRouteImport } from './routes/_authenticated/stake/statistics/index'
-import { Route as AuthenticatedStakeContractIndexRouteImport } from './routes/_authenticated/stake/contract/index'
-import { Route as AuthenticatedStakeAssetIndexRouteImport } from './routes/_authenticated/stake/asset/index'
-import { Route as AuthenticatedCryptoWithdrawalIndexRouteImport } from './routes/_authenticated/crypto/withdrawal/index'
-import { Route as AuthenticatedCryptoWalletAddressIndexRouteImport } from './routes/_authenticated/crypto/wallet-address/index'
-import { Route as AuthenticatedCryptoDepositIndexRouteImport } from './routes/_authenticated/crypto/deposit/index'
-import { Route as AuthenticatedCryptoCoinsIndexRouteImport } from './routes/_authenticated/crypto/coins/index'
-import { Route as AuthenticatedBankWithdrawalIndexRouteImport } from './routes/_authenticated/bank/withdrawal/index'
-import { Route as AuthenticatedBankWalletsIndexRouteImport } from './routes/_authenticated/bank/wallets/index'
-import { Route as AuthenticatedBankExchangeTxnIndexRouteImport } from './routes/_authenticated/bank/exchange-txn/index'
-import { Route as AuthenticatedBankDepositIndexRouteImport } from './routes/_authenticated/bank/deposit/index'
-import { Route as AuthenticatedAdditionalNewsIndexRouteImport } from './routes/_authenticated/additional/news/index'
-import { Route as AuthenticateduserManagementUserInformationIndexRouteImport } from './routes/_authenticated/(user-management)/user-information/index'
-import { Route as AuthenticateduserManagementUserInformationIdRouteImport } from './routes/_authenticated/(user-management)/user-information/$id'
+import { Route as AuthenticatedBranchesBranchIdRouteImport } from './routes/_authenticated/branches/$branchId'
+import { Route as AuthenticatedLoansStatusIndexRouteImport } from './routes/_authenticated/loans/status/index'
+import { Route as AuthenticateduserManagementEconomistsIndexRouteImport } from './routes/_authenticated/(user-management)/economists/index'
+import { Route as AuthenticateduserManagementCustomersIndexRouteImport } from './routes/_authenticated/(user-management)/customers/index'
+import { Route as AuthenticateduserManagementAdminsIndexRouteImport } from './routes/_authenticated/(user-management)/admins/index'
+import { Route as AuthenticatedjudgeJudgeCloseStatusIndexRouteImport } from './routes/_authenticated/(judge)/judge-close-status/index'
 
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
@@ -57,6 +51,12 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedUpdatePasswordRoute =
+  AuthenticatedUpdatePasswordRouteImport.update({
+    id: '/update-password',
+    path: '/update-password',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const errors503Route = errors503RouteImport.update({
   id: '/(errors)/503',
   path: '/503',
@@ -92,11 +92,6 @@ const authSignInRoute = authSignInRouteImport.update({
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authOtpRoute = authOtpRouteImport.update({
-  id: '/(auth)/otp',
-  path: '/otp',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   id: '/(auth)/forgot-password',
   path: '/forgot-password',
@@ -119,6 +114,16 @@ const AuthenticatedSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedMapIndexRoute = AuthenticatedMapIndexRouteImport.update({
+  id: '/map/',
+  path: '/map/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedLoansIndexRoute = AuthenticatedLoansIndexRouteImport.update({
+  id: '/loans/',
+  path: '/loans/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexRouteImport.update({
     id: '/help-center/',
@@ -130,6 +135,12 @@ const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
   path: '/chats/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedBranchesIndexRoute =
+  AuthenticatedBranchesIndexRouteImport.update({
+    id: '/branches/',
+    path: '/branches/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
   id: '/apps/',
   path: '/apps/',
@@ -159,113 +170,58 @@ const AuthenticatedSettingsAccountRoute =
     path: '/account',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedLoansImportRoute =
+  AuthenticatedLoansImportRouteImport.update({
+    id: '/loans/import',
+    path: '/loans/import',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedTakeActionTakeActionListIndexRoute =
-  AuthenticatedTakeActionTakeActionListIndexRouteImport.update({
-    id: '/take-action/take-action-list/',
-    path: '/take-action/take-action-list/',
+const AuthenticatedBranchesBranchIdRoute =
+  AuthenticatedBranchesBranchIdRouteImport.update({
+    id: '/branches/$branchId',
+    path: '/branches/$branchId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedStakeUserStakeListIndexRoute =
-  AuthenticatedStakeUserStakeListIndexRouteImport.update({
-    id: '/stake/user-stake-list/',
-    path: '/stake/user-stake-list/',
+const AuthenticatedLoansStatusIndexRoute =
+  AuthenticatedLoansStatusIndexRouteImport.update({
+    id: '/loans/status/',
+    path: '/loans/status/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedStakeStatisticsIndexRoute =
-  AuthenticatedStakeStatisticsIndexRouteImport.update({
-    id: '/stake/statistics/',
-    path: '/stake/statistics/',
+const AuthenticateduserManagementEconomistsIndexRoute =
+  AuthenticateduserManagementEconomistsIndexRouteImport.update({
+    id: '/(user-management)/economists/',
+    path: '/economists/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedStakeContractIndexRoute =
-  AuthenticatedStakeContractIndexRouteImport.update({
-    id: '/stake/contract/',
-    path: '/stake/contract/',
+const AuthenticateduserManagementCustomersIndexRoute =
+  AuthenticateduserManagementCustomersIndexRouteImport.update({
+    id: '/(user-management)/customers/',
+    path: '/customers/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedStakeAssetIndexRoute =
-  AuthenticatedStakeAssetIndexRouteImport.update({
-    id: '/stake/asset/',
-    path: '/stake/asset/',
+const AuthenticateduserManagementAdminsIndexRoute =
+  AuthenticateduserManagementAdminsIndexRouteImport.update({
+    id: '/(user-management)/admins/',
+    path: '/admins/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedCryptoWithdrawalIndexRoute =
-  AuthenticatedCryptoWithdrawalIndexRouteImport.update({
-    id: '/crypto/withdrawal/',
-    path: '/crypto/withdrawal/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedCryptoWalletAddressIndexRoute =
-  AuthenticatedCryptoWalletAddressIndexRouteImport.update({
-    id: '/crypto/wallet-address/',
-    path: '/crypto/wallet-address/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedCryptoDepositIndexRoute =
-  AuthenticatedCryptoDepositIndexRouteImport.update({
-    id: '/crypto/deposit/',
-    path: '/crypto/deposit/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedCryptoCoinsIndexRoute =
-  AuthenticatedCryptoCoinsIndexRouteImport.update({
-    id: '/crypto/coins/',
-    path: '/crypto/coins/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedBankWithdrawalIndexRoute =
-  AuthenticatedBankWithdrawalIndexRouteImport.update({
-    id: '/bank/withdrawal/',
-    path: '/bank/withdrawal/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedBankWalletsIndexRoute =
-  AuthenticatedBankWalletsIndexRouteImport.update({
-    id: '/bank/wallets/',
-    path: '/bank/wallets/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedBankExchangeTxnIndexRoute =
-  AuthenticatedBankExchangeTxnIndexRouteImport.update({
-    id: '/bank/exchange-txn/',
-    path: '/bank/exchange-txn/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedBankDepositIndexRoute =
-  AuthenticatedBankDepositIndexRouteImport.update({
-    id: '/bank/deposit/',
-    path: '/bank/deposit/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedAdditionalNewsIndexRoute =
-  AuthenticatedAdditionalNewsIndexRouteImport.update({
-    id: '/additional/news/',
-    path: '/additional/news/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticateduserManagementUserInformationIndexRoute =
-  AuthenticateduserManagementUserInformationIndexRouteImport.update({
-    id: '/(user-management)/user-information/',
-    path: '/user-information/',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticateduserManagementUserInformationIdRoute =
-  AuthenticateduserManagementUserInformationIdRouteImport.update({
-    id: '/(user-management)/user-information/$id',
-    path: '/user-information/$id',
+const AuthenticatedjudgeJudgeCloseStatusIndexRoute =
+  AuthenticatedjudgeJudgeCloseStatusIndexRouteImport.update({
+    id: '/(judge)/judge-close-status/',
+    path: '/judge-close-status/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
-  '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/401': typeof errors401Route
@@ -273,37 +229,31 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/update-password': typeof AuthenticatedUpdatePasswordRoute
   '/': typeof AuthenticatedIndexRoute
+  '/branches/$branchId': typeof AuthenticatedBranchesBranchIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/loans/import': typeof AuthenticatedLoansImportRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
+  '/branches': typeof AuthenticatedBranchesIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/loans': typeof AuthenticatedLoansIndexRoute
+  '/map': typeof AuthenticatedMapIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
-  '/user-information/$id': typeof AuthenticateduserManagementUserInformationIdRoute
-  '/user-information': typeof AuthenticateduserManagementUserInformationIndexRoute
-  '/additional/news': typeof AuthenticatedAdditionalNewsIndexRoute
-  '/bank/deposit': typeof AuthenticatedBankDepositIndexRoute
-  '/bank/exchange-txn': typeof AuthenticatedBankExchangeTxnIndexRoute
-  '/bank/wallets': typeof AuthenticatedBankWalletsIndexRoute
-  '/bank/withdrawal': typeof AuthenticatedBankWithdrawalIndexRoute
-  '/crypto/coins': typeof AuthenticatedCryptoCoinsIndexRoute
-  '/crypto/deposit': typeof AuthenticatedCryptoDepositIndexRoute
-  '/crypto/wallet-address': typeof AuthenticatedCryptoWalletAddressIndexRoute
-  '/crypto/withdrawal': typeof AuthenticatedCryptoWithdrawalIndexRoute
-  '/stake/asset': typeof AuthenticatedStakeAssetIndexRoute
-  '/stake/contract': typeof AuthenticatedStakeContractIndexRoute
-  '/stake/statistics': typeof AuthenticatedStakeStatisticsIndexRoute
-  '/stake/user-stake-list': typeof AuthenticatedStakeUserStakeListIndexRoute
-  '/take-action/take-action-list': typeof AuthenticatedTakeActionTakeActionListIndexRoute
+  '/judge-close-status': typeof AuthenticatedjudgeJudgeCloseStatusIndexRoute
+  '/admins': typeof AuthenticateduserManagementAdminsIndexRoute
+  '/customers': typeof AuthenticateduserManagementCustomersIndexRoute
+  '/economists': typeof AuthenticateduserManagementEconomistsIndexRoute
+  '/loans/status': typeof AuthenticatedLoansStatusIndexRoute
 }
 export interface FileRoutesByTo {
   '/forgot-password': typeof authForgotPasswordRoute
-  '/otp': typeof authOtpRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/401': typeof errors401Route
@@ -311,40 +261,34 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/update-password': typeof AuthenticatedUpdatePasswordRoute
   '/': typeof AuthenticatedIndexRoute
+  '/branches/$branchId': typeof AuthenticatedBranchesBranchIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/loans/import': typeof AuthenticatedLoansImportRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
+  '/branches': typeof AuthenticatedBranchesIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/loans': typeof AuthenticatedLoansIndexRoute
+  '/map': typeof AuthenticatedMapIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
-  '/user-information/$id': typeof AuthenticateduserManagementUserInformationIdRoute
-  '/user-information': typeof AuthenticateduserManagementUserInformationIndexRoute
-  '/additional/news': typeof AuthenticatedAdditionalNewsIndexRoute
-  '/bank/deposit': typeof AuthenticatedBankDepositIndexRoute
-  '/bank/exchange-txn': typeof AuthenticatedBankExchangeTxnIndexRoute
-  '/bank/wallets': typeof AuthenticatedBankWalletsIndexRoute
-  '/bank/withdrawal': typeof AuthenticatedBankWithdrawalIndexRoute
-  '/crypto/coins': typeof AuthenticatedCryptoCoinsIndexRoute
-  '/crypto/deposit': typeof AuthenticatedCryptoDepositIndexRoute
-  '/crypto/wallet-address': typeof AuthenticatedCryptoWalletAddressIndexRoute
-  '/crypto/withdrawal': typeof AuthenticatedCryptoWithdrawalIndexRoute
-  '/stake/asset': typeof AuthenticatedStakeAssetIndexRoute
-  '/stake/contract': typeof AuthenticatedStakeContractIndexRoute
-  '/stake/statistics': typeof AuthenticatedStakeStatisticsIndexRoute
-  '/stake/user-stake-list': typeof AuthenticatedStakeUserStakeListIndexRoute
-  '/take-action/take-action-list': typeof AuthenticatedTakeActionTakeActionListIndexRoute
+  '/judge-close-status': typeof AuthenticatedjudgeJudgeCloseStatusIndexRoute
+  '/admins': typeof AuthenticateduserManagementAdminsIndexRoute
+  '/customers': typeof AuthenticateduserManagementCustomersIndexRoute
+  '/economists': typeof AuthenticateduserManagementEconomistsIndexRoute
+  '/loans/status': typeof AuthenticatedLoansStatusIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
-  '/(auth)/otp': typeof authOtpRoute
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/(errors)/401': typeof errors401Route
@@ -352,40 +296,34 @@ export interface FileRoutesById {
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
+  '/_authenticated/update-password': typeof AuthenticatedUpdatePasswordRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/branches/$branchId': typeof AuthenticatedBranchesBranchIdRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/loans/import': typeof AuthenticatedLoansImportRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
+  '/_authenticated/branches/': typeof AuthenticatedBranchesIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/loans/': typeof AuthenticatedLoansIndexRoute
+  '/_authenticated/map/': typeof AuthenticatedMapIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
-  '/_authenticated/(user-management)/user-information/$id': typeof AuthenticateduserManagementUserInformationIdRoute
-  '/_authenticated/(user-management)/user-information/': typeof AuthenticateduserManagementUserInformationIndexRoute
-  '/_authenticated/additional/news/': typeof AuthenticatedAdditionalNewsIndexRoute
-  '/_authenticated/bank/deposit/': typeof AuthenticatedBankDepositIndexRoute
-  '/_authenticated/bank/exchange-txn/': typeof AuthenticatedBankExchangeTxnIndexRoute
-  '/_authenticated/bank/wallets/': typeof AuthenticatedBankWalletsIndexRoute
-  '/_authenticated/bank/withdrawal/': typeof AuthenticatedBankWithdrawalIndexRoute
-  '/_authenticated/crypto/coins/': typeof AuthenticatedCryptoCoinsIndexRoute
-  '/_authenticated/crypto/deposit/': typeof AuthenticatedCryptoDepositIndexRoute
-  '/_authenticated/crypto/wallet-address/': typeof AuthenticatedCryptoWalletAddressIndexRoute
-  '/_authenticated/crypto/withdrawal/': typeof AuthenticatedCryptoWithdrawalIndexRoute
-  '/_authenticated/stake/asset/': typeof AuthenticatedStakeAssetIndexRoute
-  '/_authenticated/stake/contract/': typeof AuthenticatedStakeContractIndexRoute
-  '/_authenticated/stake/statistics/': typeof AuthenticatedStakeStatisticsIndexRoute
-  '/_authenticated/stake/user-stake-list/': typeof AuthenticatedStakeUserStakeListIndexRoute
-  '/_authenticated/take-action/take-action-list/': typeof AuthenticatedTakeActionTakeActionListIndexRoute
+  '/_authenticated/(judge)/judge-close-status/': typeof AuthenticatedjudgeJudgeCloseStatusIndexRoute
+  '/_authenticated/(user-management)/admins/': typeof AuthenticateduserManagementAdminsIndexRoute
+  '/_authenticated/(user-management)/customers/': typeof AuthenticateduserManagementCustomersIndexRoute
+  '/_authenticated/(user-management)/economists/': typeof AuthenticateduserManagementEconomistsIndexRoute
+  '/_authenticated/loans/status/': typeof AuthenticatedLoansStatusIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/settings'
     | '/forgot-password'
-    | '/otp'
     | '/sign-in'
     | '/sign-up'
     | '/401'
@@ -393,37 +331,31 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/update-password'
     | '/'
+    | '/branches/$branchId'
     | '/errors/$error'
+    | '/loans/import'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
     | '/apps'
+    | '/branches'
     | '/chats'
     | '/help-center'
+    | '/loans'
+    | '/map'
     | '/settings/'
     | '/tasks'
-    | '/user-information/$id'
-    | '/user-information'
-    | '/additional/news'
-    | '/bank/deposit'
-    | '/bank/exchange-txn'
-    | '/bank/wallets'
-    | '/bank/withdrawal'
-    | '/crypto/coins'
-    | '/crypto/deposit'
-    | '/crypto/wallet-address'
-    | '/crypto/withdrawal'
-    | '/stake/asset'
-    | '/stake/contract'
-    | '/stake/statistics'
-    | '/stake/user-stake-list'
-    | '/take-action/take-action-list'
+    | '/judge-close-status'
+    | '/admins'
+    | '/customers'
+    | '/economists'
+    | '/loans/status'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/forgot-password'
-    | '/otp'
     | '/sign-in'
     | '/sign-up'
     | '/401'
@@ -431,39 +363,33 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/update-password'
     | '/'
+    | '/branches/$branchId'
     | '/errors/$error'
+    | '/loans/import'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
     | '/settings/notifications'
     | '/apps'
+    | '/branches'
     | '/chats'
     | '/help-center'
+    | '/loans'
+    | '/map'
     | '/settings'
     | '/tasks'
-    | '/user-information/$id'
-    | '/user-information'
-    | '/additional/news'
-    | '/bank/deposit'
-    | '/bank/exchange-txn'
-    | '/bank/wallets'
-    | '/bank/withdrawal'
-    | '/crypto/coins'
-    | '/crypto/deposit'
-    | '/crypto/wallet-address'
-    | '/crypto/withdrawal'
-    | '/stake/asset'
-    | '/stake/contract'
-    | '/stake/statistics'
-    | '/stake/user-stake-list'
-    | '/take-action/take-action-list'
+    | '/judge-close-status'
+    | '/admins'
+    | '/customers'
+    | '/economists'
+    | '/loans/status'
   id:
     | '__root__'
     | '/_authenticated'
     | '/_authenticated/settings'
     | '/(auth)/forgot-password'
-    | '/(auth)/otp'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/(errors)/401'
@@ -471,39 +397,33 @@ export interface FileRouteTypes {
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
+    | '/_authenticated/update-password'
     | '/_authenticated/'
+    | '/_authenticated/branches/$branchId'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/loans/import'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
     | '/_authenticated/apps/'
+    | '/_authenticated/branches/'
     | '/_authenticated/chats/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/loans/'
+    | '/_authenticated/map/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
-    | '/_authenticated/(user-management)/user-information/$id'
-    | '/_authenticated/(user-management)/user-information/'
-    | '/_authenticated/additional/news/'
-    | '/_authenticated/bank/deposit/'
-    | '/_authenticated/bank/exchange-txn/'
-    | '/_authenticated/bank/wallets/'
-    | '/_authenticated/bank/withdrawal/'
-    | '/_authenticated/crypto/coins/'
-    | '/_authenticated/crypto/deposit/'
-    | '/_authenticated/crypto/wallet-address/'
-    | '/_authenticated/crypto/withdrawal/'
-    | '/_authenticated/stake/asset/'
-    | '/_authenticated/stake/contract/'
-    | '/_authenticated/stake/statistics/'
-    | '/_authenticated/stake/user-stake-list/'
-    | '/_authenticated/take-action/take-action-list/'
+    | '/_authenticated/(judge)/judge-close-status/'
+    | '/_authenticated/(user-management)/admins/'
+    | '/_authenticated/(user-management)/customers/'
+    | '/_authenticated/(user-management)/economists/'
+    | '/_authenticated/loans/status/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   authForgotPasswordRoute: typeof authForgotPasswordRoute
-  authOtpRoute: typeof authOtpRoute
   authSignInRoute: typeof authSignInRoute
   authSignUpRoute: typeof authSignUpRoute
   errors401Route: typeof errors401Route
@@ -527,6 +447,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/update-password': {
+      id: '/_authenticated/update-password'
+      path: '/update-password'
+      fullPath: '/update-password'
+      preLoaderRoute: typeof AuthenticatedUpdatePasswordRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/(errors)/503': {
@@ -578,13 +505,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(auth)/otp': {
-      id: '/(auth)/otp'
-      path: '/otp'
-      fullPath: '/otp'
-      preLoaderRoute: typeof authOtpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(auth)/forgot-password': {
       id: '/(auth)/forgot-password'
       path: '/forgot-password'
@@ -613,6 +533,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/map/': {
+      id: '/_authenticated/map/'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof AuthenticatedMapIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/loans/': {
+      id: '/_authenticated/loans/'
+      path: '/loans'
+      fullPath: '/loans'
+      preLoaderRoute: typeof AuthenticatedLoansIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
       path: '/help-center'
@@ -625,6 +559,13 @@ declare module '@tanstack/react-router' {
       path: '/chats'
       fullPath: '/chats'
       preLoaderRoute: typeof AuthenticatedChatsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/branches/': {
+      id: '/_authenticated/branches/'
+      path: '/branches'
+      fullPath: '/branches'
+      preLoaderRoute: typeof AuthenticatedBranchesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/apps/': {
@@ -662,6 +603,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/loans/import': {
+      id: '/_authenticated/loans/import'
+      path: '/loans/import'
+      fullPath: '/loans/import'
+      preLoaderRoute: typeof AuthenticatedLoansImportRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -669,116 +617,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/take-action/take-action-list/': {
-      id: '/_authenticated/take-action/take-action-list/'
-      path: '/take-action/take-action-list'
-      fullPath: '/take-action/take-action-list'
-      preLoaderRoute: typeof AuthenticatedTakeActionTakeActionListIndexRouteImport
+    '/_authenticated/branches/$branchId': {
+      id: '/_authenticated/branches/$branchId'
+      path: '/branches/$branchId'
+      fullPath: '/branches/$branchId'
+      preLoaderRoute: typeof AuthenticatedBranchesBranchIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/stake/user-stake-list/': {
-      id: '/_authenticated/stake/user-stake-list/'
-      path: '/stake/user-stake-list'
-      fullPath: '/stake/user-stake-list'
-      preLoaderRoute: typeof AuthenticatedStakeUserStakeListIndexRouteImport
+    '/_authenticated/loans/status/': {
+      id: '/_authenticated/loans/status/'
+      path: '/loans/status'
+      fullPath: '/loans/status'
+      preLoaderRoute: typeof AuthenticatedLoansStatusIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/stake/statistics/': {
-      id: '/_authenticated/stake/statistics/'
-      path: '/stake/statistics'
-      fullPath: '/stake/statistics'
-      preLoaderRoute: typeof AuthenticatedStakeStatisticsIndexRouteImport
+    '/_authenticated/(user-management)/economists/': {
+      id: '/_authenticated/(user-management)/economists/'
+      path: '/economists'
+      fullPath: '/economists'
+      preLoaderRoute: typeof AuthenticateduserManagementEconomistsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/stake/contract/': {
-      id: '/_authenticated/stake/contract/'
-      path: '/stake/contract'
-      fullPath: '/stake/contract'
-      preLoaderRoute: typeof AuthenticatedStakeContractIndexRouteImport
+    '/_authenticated/(user-management)/customers/': {
+      id: '/_authenticated/(user-management)/customers/'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof AuthenticateduserManagementCustomersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/stake/asset/': {
-      id: '/_authenticated/stake/asset/'
-      path: '/stake/asset'
-      fullPath: '/stake/asset'
-      preLoaderRoute: typeof AuthenticatedStakeAssetIndexRouteImport
+    '/_authenticated/(user-management)/admins/': {
+      id: '/_authenticated/(user-management)/admins/'
+      path: '/admins'
+      fullPath: '/admins'
+      preLoaderRoute: typeof AuthenticateduserManagementAdminsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/crypto/withdrawal/': {
-      id: '/_authenticated/crypto/withdrawal/'
-      path: '/crypto/withdrawal'
-      fullPath: '/crypto/withdrawal'
-      preLoaderRoute: typeof AuthenticatedCryptoWithdrawalIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/crypto/wallet-address/': {
-      id: '/_authenticated/crypto/wallet-address/'
-      path: '/crypto/wallet-address'
-      fullPath: '/crypto/wallet-address'
-      preLoaderRoute: typeof AuthenticatedCryptoWalletAddressIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/crypto/deposit/': {
-      id: '/_authenticated/crypto/deposit/'
-      path: '/crypto/deposit'
-      fullPath: '/crypto/deposit'
-      preLoaderRoute: typeof AuthenticatedCryptoDepositIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/crypto/coins/': {
-      id: '/_authenticated/crypto/coins/'
-      path: '/crypto/coins'
-      fullPath: '/crypto/coins'
-      preLoaderRoute: typeof AuthenticatedCryptoCoinsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/bank/withdrawal/': {
-      id: '/_authenticated/bank/withdrawal/'
-      path: '/bank/withdrawal'
-      fullPath: '/bank/withdrawal'
-      preLoaderRoute: typeof AuthenticatedBankWithdrawalIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/bank/wallets/': {
-      id: '/_authenticated/bank/wallets/'
-      path: '/bank/wallets'
-      fullPath: '/bank/wallets'
-      preLoaderRoute: typeof AuthenticatedBankWalletsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/bank/exchange-txn/': {
-      id: '/_authenticated/bank/exchange-txn/'
-      path: '/bank/exchange-txn'
-      fullPath: '/bank/exchange-txn'
-      preLoaderRoute: typeof AuthenticatedBankExchangeTxnIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/bank/deposit/': {
-      id: '/_authenticated/bank/deposit/'
-      path: '/bank/deposit'
-      fullPath: '/bank/deposit'
-      preLoaderRoute: typeof AuthenticatedBankDepositIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/additional/news/': {
-      id: '/_authenticated/additional/news/'
-      path: '/additional/news'
-      fullPath: '/additional/news'
-      preLoaderRoute: typeof AuthenticatedAdditionalNewsIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/(user-management)/user-information/': {
-      id: '/_authenticated/(user-management)/user-information/'
-      path: '/user-information'
-      fullPath: '/user-information'
-      preLoaderRoute: typeof AuthenticateduserManagementUserInformationIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/(user-management)/user-information/$id': {
-      id: '/_authenticated/(user-management)/user-information/$id'
-      path: '/user-information/$id'
-      fullPath: '/user-information/$id'
-      preLoaderRoute: typeof AuthenticateduserManagementUserInformationIdRouteImport
+    '/_authenticated/(judge)/judge-close-status/': {
+      id: '/_authenticated/(judge)/judge-close-status/'
+      path: '/judge-close-status'
+      fullPath: '/judge-close-status'
+      preLoaderRoute: typeof AuthenticatedjudgeJudgeCloseStatusIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -809,62 +687,48 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
+  AuthenticatedUpdatePasswordRoute: typeof AuthenticatedUpdatePasswordRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedBranchesBranchIdRoute: typeof AuthenticatedBranchesBranchIdRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedLoansImportRoute: typeof AuthenticatedLoansImportRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
+  AuthenticatedBranchesIndexRoute: typeof AuthenticatedBranchesIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedLoansIndexRoute: typeof AuthenticatedLoansIndexRoute
+  AuthenticatedMapIndexRoute: typeof AuthenticatedMapIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
-  AuthenticateduserManagementUserInformationIdRoute: typeof AuthenticateduserManagementUserInformationIdRoute
-  AuthenticateduserManagementUserInformationIndexRoute: typeof AuthenticateduserManagementUserInformationIndexRoute
-  AuthenticatedAdditionalNewsIndexRoute: typeof AuthenticatedAdditionalNewsIndexRoute
-  AuthenticatedBankDepositIndexRoute: typeof AuthenticatedBankDepositIndexRoute
-  AuthenticatedBankExchangeTxnIndexRoute: typeof AuthenticatedBankExchangeTxnIndexRoute
-  AuthenticatedBankWalletsIndexRoute: typeof AuthenticatedBankWalletsIndexRoute
-  AuthenticatedBankWithdrawalIndexRoute: typeof AuthenticatedBankWithdrawalIndexRoute
-  AuthenticatedCryptoCoinsIndexRoute: typeof AuthenticatedCryptoCoinsIndexRoute
-  AuthenticatedCryptoDepositIndexRoute: typeof AuthenticatedCryptoDepositIndexRoute
-  AuthenticatedCryptoWalletAddressIndexRoute: typeof AuthenticatedCryptoWalletAddressIndexRoute
-  AuthenticatedCryptoWithdrawalIndexRoute: typeof AuthenticatedCryptoWithdrawalIndexRoute
-  AuthenticatedStakeAssetIndexRoute: typeof AuthenticatedStakeAssetIndexRoute
-  AuthenticatedStakeContractIndexRoute: typeof AuthenticatedStakeContractIndexRoute
-  AuthenticatedStakeStatisticsIndexRoute: typeof AuthenticatedStakeStatisticsIndexRoute
-  AuthenticatedStakeUserStakeListIndexRoute: typeof AuthenticatedStakeUserStakeListIndexRoute
-  AuthenticatedTakeActionTakeActionListIndexRoute: typeof AuthenticatedTakeActionTakeActionListIndexRoute
+  AuthenticatedjudgeJudgeCloseStatusIndexRoute: typeof AuthenticatedjudgeJudgeCloseStatusIndexRoute
+  AuthenticateduserManagementAdminsIndexRoute: typeof AuthenticateduserManagementAdminsIndexRoute
+  AuthenticateduserManagementCustomersIndexRoute: typeof AuthenticateduserManagementCustomersIndexRoute
+  AuthenticateduserManagementEconomistsIndexRoute: typeof AuthenticateduserManagementEconomistsIndexRoute
+  AuthenticatedLoansStatusIndexRoute: typeof AuthenticatedLoansStatusIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
+  AuthenticatedUpdatePasswordRoute: AuthenticatedUpdatePasswordRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedBranchesBranchIdRoute: AuthenticatedBranchesBranchIdRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedLoansImportRoute: AuthenticatedLoansImportRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
+  AuthenticatedBranchesIndexRoute: AuthenticatedBranchesIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedLoansIndexRoute: AuthenticatedLoansIndexRoute,
+  AuthenticatedMapIndexRoute: AuthenticatedMapIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
-  AuthenticateduserManagementUserInformationIdRoute:
-    AuthenticateduserManagementUserInformationIdRoute,
-  AuthenticateduserManagementUserInformationIndexRoute:
-    AuthenticateduserManagementUserInformationIndexRoute,
-  AuthenticatedAdditionalNewsIndexRoute: AuthenticatedAdditionalNewsIndexRoute,
-  AuthenticatedBankDepositIndexRoute: AuthenticatedBankDepositIndexRoute,
-  AuthenticatedBankExchangeTxnIndexRoute:
-    AuthenticatedBankExchangeTxnIndexRoute,
-  AuthenticatedBankWalletsIndexRoute: AuthenticatedBankWalletsIndexRoute,
-  AuthenticatedBankWithdrawalIndexRoute: AuthenticatedBankWithdrawalIndexRoute,
-  AuthenticatedCryptoCoinsIndexRoute: AuthenticatedCryptoCoinsIndexRoute,
-  AuthenticatedCryptoDepositIndexRoute: AuthenticatedCryptoDepositIndexRoute,
-  AuthenticatedCryptoWalletAddressIndexRoute:
-    AuthenticatedCryptoWalletAddressIndexRoute,
-  AuthenticatedCryptoWithdrawalIndexRoute:
-    AuthenticatedCryptoWithdrawalIndexRoute,
-  AuthenticatedStakeAssetIndexRoute: AuthenticatedStakeAssetIndexRoute,
-  AuthenticatedStakeContractIndexRoute: AuthenticatedStakeContractIndexRoute,
-  AuthenticatedStakeStatisticsIndexRoute:
-    AuthenticatedStakeStatisticsIndexRoute,
-  AuthenticatedStakeUserStakeListIndexRoute:
-    AuthenticatedStakeUserStakeListIndexRoute,
-  AuthenticatedTakeActionTakeActionListIndexRoute:
-    AuthenticatedTakeActionTakeActionListIndexRoute,
+  AuthenticatedjudgeJudgeCloseStatusIndexRoute:
+    AuthenticatedjudgeJudgeCloseStatusIndexRoute,
+  AuthenticateduserManagementAdminsIndexRoute:
+    AuthenticateduserManagementAdminsIndexRoute,
+  AuthenticateduserManagementCustomersIndexRoute:
+    AuthenticateduserManagementCustomersIndexRoute,
+  AuthenticateduserManagementEconomistsIndexRoute:
+    AuthenticateduserManagementEconomistsIndexRoute,
+  AuthenticatedLoansStatusIndexRoute: AuthenticatedLoansStatusIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -873,7 +737,6 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   authForgotPasswordRoute: authForgotPasswordRoute,
-  authOtpRoute: authOtpRoute,
   authSignInRoute: authSignInRoute,
   authSignUpRoute: authSignUpRoute,
   errors401Route: errors401Route,

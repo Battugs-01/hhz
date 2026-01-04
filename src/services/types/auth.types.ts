@@ -1,54 +1,43 @@
-import type { BaseResponse } from './common.types'
-
 export interface LoginCredentials {
   email: string
   password: string
 }
 
 export interface AdminUser {
-  id: string
+  id: number
   email: string
-  adminGroupId: string
-  adminGroup: any
-  status: string
-  isEnabled: boolean
-  userCreateDate: string
-  password: string
-  two_factor_enabled: boolean
-  created_at: string
-  updated_at: string
+  firstName: string
+  lastName: string
+  role: string
 }
 
-export interface LoginResponseBody {
+export interface LoginResponseData {
   token: string
-  adminUser: AdminUser
+  admin: AdminUser
 }
 
-export interface MFAChallengeResponseBody {
-  challengeName: string
-  session: string
-  username: string
-  adminUser: AdminUser
+export interface LoginResponse {
+  success: boolean
+  message: string
+  data: LoginResponseData
+  code: number
 }
 
-export interface LoginResponse
-  extends BaseResponse<LoginResponseBody | MFAChallengeResponseBody> {}
-
-export interface VerifyOTPCredentials {
-  session: string
-  username: string
-  code: string
+export interface UserInfoResponse {
+  success: boolean
+  message: string
+  data: AdminUser
+  code: number
 }
 
-export interface VerifyOTPResponseBody {
-  accessToken: string
-  idToken: string // JWT token, middleware-д ашиглана
-  refreshToken: string
-  expiresIn: number
-  adminUser: AdminUser
+export interface UpdatePasswordRequest {
+  oldPassword: string
+  password: string
 }
 
-export interface VerifyOTPResponse
-  extends BaseResponse<VerifyOTPResponseBody> {}
-
-export interface UserInfoResponse extends BaseResponse<AdminUser> {}
+export interface UpdatePasswordResponse {
+  success: boolean
+  message: string
+  code: number
+  data: AdminUser
+}

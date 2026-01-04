@@ -69,8 +69,8 @@ export function FilterPanel({
   onClear,
   dateRange,
   onDateRangeChange,
-  title = 'Advanced Filters',
-  description = 'Filter by multiple criteria. All filters are combined with AND logic.',
+  title = 'Нарийвчилсан шүүлтүүр',
+  description = 'Олон шалгуураар шүүх. Бүх шүүлтүүр AND логикоор нэгтгэгдэнэ.',
 }: FilterPanelProps) {
   const [open, setOpen] = useState(false)
   const [localFilters, setLocalFilters] = useState<FilterValues>(search)
@@ -246,7 +246,7 @@ export function FilterPanel({
       <PopoverTrigger asChild>
         <Button variant='outline' size='sm' className='h-8 gap-2'>
           <Filter className='h-4 w-4' />
-          Filters
+          Шүүлтүүр
           {activeFiltersCount > 0 && (
             <Badge
               variant='secondary'
@@ -271,7 +271,7 @@ export function FilterPanel({
           {activeFiltersCount > 0 && (
             <div className='bg-muted mx-4 mt-4 flex flex-shrink-0 flex-wrap gap-2 rounded-md border p-3'>
               <span className='text-muted-foreground text-xs font-medium'>
-                Active filters:
+                Идэвхтэй шүүлтүүр:
               </span>
               {Object.entries(search).map(([key, value]) => {
                 if (!value || value === '') return null
@@ -327,10 +327,10 @@ export function FilterPanel({
 
           <div className='bg-popover flex flex-shrink-0 justify-end gap-2 border-t p-4 pt-3'>
             <Button variant='outline' size='sm' onClick={handleClear}>
-              Clear All
+              Цэвэрлэх
             </Button>
             <Button size='sm' onClick={handleApply}>
-              Apply
+              Хэрэглэх
             </Button>
           </div>
         </div>

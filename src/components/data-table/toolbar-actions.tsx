@@ -97,7 +97,7 @@ export function DataTableToolbarActions<TData = unknown>({
           className='h-8 gap-2'
         >
           <RotateCcw className='h-4 w-4' />
-          Refresh
+          Шинэчлэх
         </Button>
       )}
       {(onExport || (exportFileName && (table || tableId))) && (
@@ -109,7 +109,7 @@ export function DataTableToolbarActions<TData = unknown>({
           className='h-8 gap-2'
         >
           <Download className='h-4 w-4' />
-          Export
+          Татах
         </Button>
       )}
     </div>
