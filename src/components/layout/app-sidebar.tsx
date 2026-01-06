@@ -1,8 +1,3 @@
-import { useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { branchService } from '@/services'
-import { useAuthStore } from '@/stores/auth-store'
-import { useLayout } from '@/context/layout-provider'
 import {
   Sidebar,
   SidebarContent,
@@ -10,6 +5,11 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
+import { useLayout } from '@/context/layout-provider'
+import { branchService, loanService } from '@/services'
+import { useAuthStore } from '@/stores/auth-store'
+import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
 import { sidebarData } from './data/sidebar-data'
 import { NavGroup } from './nav-group'
 import { NavUser } from './nav-user'
@@ -39,7 +39,39 @@ export function AppSidebar() {
     retry: 1,
   })
 
-  // Build nav groups with dynamic branches
+  // Fetch districts for "Шүүх дээр" (status 1)
+  const { data: districtsAtCourtData } = useQuery({
+    queryKey: ['sidebar-districts-at-court'],
+    queryFn: async () => {
+      try {
+        const res = await loanService.getDistrictsWithJudgeLoans({ statusId: 1 })
+        return res?.body?.list || []
+      } catch (error) {
+        console.error('Failed to fetch districts (status 1) for sidebar:', error)
+        return []
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  })
+
+  // Fetch districts for "Шүүхийн шийдвэр" (status 4)
+  const { data: districtsDecisionData } = useQuery({
+    queryKey: ['sidebar-districts-decision'],
+    queryFn: async () => {
+      try {
+        const res = await loanService.getDistrictsWithJudgeLoans({ statusId: 4 })
+        return res?.body?.list || []
+      } catch (error) {
+        console.error('Failed to fetch districts (status 4) for sidebar:', error)
+        return []
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  })
+
+  // Build nav groups with dynamic branches and districts
   const navGroups = useMemo(() => {
     // Create branch items for loans
     const branchLoanItems =
@@ -52,7 +84,25 @@ export function AppSidebar() {
             }))
         : []
 
-    // Build new nav groups with branches injected into Зээл menu
+    // Create district items for "Шүүх дээр"
+    const districtAtCourtItems =
+      districtsAtCourtData && districtsAtCourtData.length > 0
+        ? districtsAtCourtData.map((district) => ({
+            title: `${district.districtMn.replace(' дүүрэг', '')} (${district.judgeLoanCount || 0})`,
+            url: `/district/${district.id}?statusId=1`,
+          }))
+        : []
+
+    // Create district items for "Шүүхийн шийдвэр"
+    const districtDecisionItems =
+      districtsDecisionData && districtsDecisionData.length > 0
+        ? districtsDecisionData.map((district) => ({
+            title: `${district.districtMn.replace(' дүүрэг', '')} (${district.judgeLoanCount || 0})`,
+            url: `/district/${district.id}?statusId=4`,
+          }))
+        : []
+
+    // Build new nav groups with dynamic menu injections
     return sidebarData.navGroups.map((group) => {
       if (group.title !== 'Ерөнхий') {
         return group
@@ -61,26 +111,44 @@ export function AppSidebar() {
       return {
         ...group,
         items: group.items.map((item) => {
-          // Only modify Зээл menu
-          if (!('items' in item) || item.title !== 'Зээл') {
-            return item
+          // Injection for Зээл menu
+          if ('items' in item && item.title === 'Зээл') {
+            const staticItems = item.items || []
+            return {
+              ...item,
+              items: [
+                staticItems[0], // Бүх зээлүүд
+                ...branchLoanItems,
+                staticItems[1], // Зээл оруулах
+                staticItems[2], // Зээл статус
+              ],
+            }
           }
 
-          // Inject branches into Зээл submenu
-          const staticItems = item.items || []
-          return {
-            ...item,
-            items: [
-              staticItems[0], // Бүх зээлүүд
-              ...branchLoanItems,
-              staticItems[1], // Зээл оруулах
-              staticItems[2], // Зээл статус
-            ],
+          // Injection for Шүүх menu
+          if ('items' in item && item.title === 'Шүүх') {
+            const staticItems = item.items || []
+            return {
+              ...item,
+              items: [
+                {
+                  title: 'Шүүх дээр',
+                  items: districtAtCourtItems,
+                },
+                {
+                  title: 'Шүүхийн шийдвэр',
+                  items: districtDecisionItems,
+                },
+                ...staticItems,
+              ],
+            }
           }
+
+          return item
         }),
       }
     }) as NavGroupType[]
-  }, [branchesData])
+  }, [branchesData, districtsAtCourtData, districtsDecisionData])
 
   const userData = user
     ? {

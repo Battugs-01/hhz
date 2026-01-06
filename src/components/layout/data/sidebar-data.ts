@@ -1,35 +1,35 @@
 import {
   Briefcase,
   Building2,
+  Command,
   Gavel,
   HandCoins,
   Key,
-  LayoutDashboard,
   MapPin,
+  ScrollText,
   ShieldCheck,
   UserCog,
-  Users,
+  Users
 } from 'lucide-react'
-import { LogoImage } from '../logo-image'
 import { type SidebarData } from '../types'
 
 export const sidebarData: SidebarData = {
   teams: [
     {
-      name: 'Xmeta Admin Dashboard',
-      logo: LogoImage,
-      plan: 'Xmeta Admin Dashboard',
+      name: 'HHZ Admin Dashboard',
+      logo: Command,
+      plan: 'HHZ Dashboard',
     },
   ],
   navGroups: [
     {
       title: 'Ерөнхий',
       items: [
-        {
-          title: 'Хянах самбар',
-          url: '/',
-          icon: LayoutDashboard,
-        },
+        // {
+        //   title: 'Хянах самбар',
+        //   url: '/',
+        //   icon: LayoutDashboard,
+        // },
         {
           title: 'Газрын зураг',
           url: '/map',
@@ -56,6 +56,7 @@ export const sidebarData: SidebarData = {
             },
           ],
         },
+   
         {
           title: 'Салбар',
           url: '/branches',
@@ -89,6 +90,25 @@ export const sidebarData: SidebarData = {
               url: '/judge-close-status',
             },
           ],
+        },
+        {
+          title: 'Тайлан',
+          icon: ScrollText,
+          items: [
+            {
+              title: 'Зээлийн тайлан',
+              url: '/reports/loans',
+            },
+            {
+              title: 'Шүүхийн зээлийн тайлан',
+              url: '/reports/judge-loans',
+            },
+          ],
+        },
+        {
+          title: 'Лог бүртгэл',
+          url: '/operation-logs',
+          icon: ScrollText,
         },
       ],
     },

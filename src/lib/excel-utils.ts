@@ -69,7 +69,7 @@ export function parseExcelToCustomerLoans(
             loanType: String(row[14] || ''),
             loanId: String(row[15] || ''),
             loanDate: Number(row[16]) || 0,
-            status: String(row[17] || ''),
+            status: String(row[17] || 'Хэвийн'),
             payAmount: Number(row[18]) || 0,
             district: String(row[19] || ''),
             khoroo: String(row[20] || ''),
@@ -77,7 +77,16 @@ export function parseExcelToCustomerLoans(
             workLocation: String(row[22] || ''),
             currentLocation: String(row[23] || ''),
             additionalLocation: String(row[24] || ''),
-            economistId: Number(row[25]) || 0,
+            economistId: (() => {
+              const val = String(row[25] || '')
+              // If it's just a number, parse it
+              if (!isNaN(Number(val))) return Number(val) || 1
+              
+              // If format is like "Зээлийн мэргэжилтэн 7", extract the last number
+              const parts = val.trim().split(/\s+/)
+              const lastPart = parts[parts.length - 1]
+              return Number(lastPart) || 1
+            })(),
           }))
 
         resolve(customerLoans)

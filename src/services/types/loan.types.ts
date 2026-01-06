@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { Admin } from '..'
+import type { Admin } from '..'
 import type { BaseResponse } from './common.types'
 
 // Loan schema - API response-д тохирсон
@@ -49,6 +49,10 @@ export const loanCustomerSchema = z.object({
   additionalLocation: z.string().optional(),
   currentLocation: z.string().optional(),
   workLocation: z.string().optional(),
+  locationValid: z.boolean().nullable().optional(),
+  currentValid: z.boolean().nullable().optional(),
+  workValid: z.boolean().nullable().optional(),
+  additionalValid: z.boolean().nullable().optional(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   createdBy: z.number().optional(),
@@ -62,9 +66,24 @@ export interface LoanListRequest {
   pageSize?: number
   query?: string
   branchId?: number
+  economistId?: number
   statusId?: number
   start_day?: string
   end_day?: string
+  // New filter fields
+  loanId?: string
+  registerNumber?: string
+  phoneNumber?: string
+  loanAmount?: string
+  loanAmount_operator?: string
+  closePayAmount?: string
+  closePayAmount_operator?: string
+  payAmount?: string
+  payAmount_operator?: string
+  payInterest?: string
+  payInterest_operator?: string
+  overdueDay?: string
+  overdueDay_operator?: string
 }
 
 // District type
@@ -74,6 +93,7 @@ export interface District {
   districtEn?: string
   shortMn?: string
   shortEn?: string
+  judgeLoanCount?: number
   createdAt?: string
   updatedAt?: string
 }
@@ -84,7 +104,7 @@ export interface DistrictListBody {
   items: number
 }
 
-export interface DistrictListResponse extends BaseResponse<DistrictListBody> {}
+export type DistrictListResponse = BaseResponse<DistrictListBody>
 
 // Update customer and loan request
 export interface UpdateCustomerAndLoanRequest {
@@ -95,6 +115,10 @@ export interface UpdateCustomerAndLoanRequest {
   currentLocation?: string
   workLocation?: string
   additionalLocation?: string
+  locationValid?: boolean
+  currentValid?: boolean
+  workValid?: boolean
+  additionalValid?: boolean
   statusId: number
 }
 
@@ -119,15 +143,36 @@ export interface CreateJudgeLoanRequest {
   responsibleEmployee: string
 }
 
+// Update judge loan request
+export interface UpdateJudgeLoanRequest {
+  id: number
+  districtId?: number
+  judge?: string
+  judgeAssistant?: string
+  judgeAssistantPhoneNumber?: string
+  code?: string
+  invoiceNumber?: string
+  invoiceDate?: string
+  ordinance?: string
+  ordinanceAmount?: number
+  stampFeeAmount?: number
+  refundStampFeeAmount?: number
+  description?: string
+  closeStatusId?: number
+  invoicedDate?: string
+  requestedActionPage?: string
+  responsibleEmployee?: string
+}
+
 // Response types
 export interface LoanListBody {
   list: Loan[]
   items: number
 }
 
-export interface LoanListResponse extends BaseResponse<LoanListBody> {}
+export type LoanListResponse = BaseResponse<LoanListBody>
 
-export interface LoanResponse extends BaseResponse<Loan> {}
+export type LoanResponse = BaseResponse<Loan>
 
 // Loan summary types
 export interface LoanSummary {
@@ -150,8 +195,22 @@ export interface LoanSummary {
   }
 }
 
-export interface LoanSummaryRequest {
+export interface LoanSummaryRequest extends LoanListRequest {
   branchId?: number
+}
+
+export interface JudgeDashboardBody {
+  totalJudgeLoans: number
+  activeJudge: number
+  averageOverdueDay: number
+  totalAmount: number
+}
+
+export interface JudgeDashboardResponse {
+  success: boolean
+  message: string
+  data: JudgeDashboardBody | null
+  code: number
 }
 
 // Summary API returns 'data' instead of 'body'
@@ -195,6 +254,129 @@ export interface LoanNoteListBody {
   items: number
 }
 
-export interface LoanNoteResponse extends BaseResponse<LoanNote> {}
+export type LoanNoteResponse = BaseResponse<LoanNote>
 
-export interface LoanNoteListResponse extends BaseResponse<LoanNoteListBody> {}
+export type LoanNoteListResponse = BaseResponse<LoanNoteListBody>
+// Judge Loan Note types
+export interface JudgeLoanNote {
+  id: number
+  judgeLoanId: number
+  customerId: number
+  note: string
+  createdBy: number
+  createdByAdmin?: Admin
+  createdAt: string
+  updatedAt: string
+}
+
+export interface CreateJudgeLoanNoteRequest {
+  judgeLoanId: number
+  customerId: number
+  note: string
+}
+
+export interface JudgeLoanNoteListRequest {
+  judgeLoanId: number
+  current?: number
+  pageSize?: number
+}
+
+export interface JudgeLoanNoteListBody {
+  list: JudgeLoanNote[]
+  items: number
+}
+
+export type JudgeLoanNoteListResponse = BaseResponse<JudgeLoanNoteListBody>
+
+// Judge Loan schema
+export const judgeLoanSchema = z.object({
+  id: z.number(),
+  loanId: z.number(),
+  districtId: z.number(),
+  judge: z.string(),
+  judgeAssistant: z.string(),
+  judgeAssistantPhoneNumber: z.string().optional(),
+  code: z.string(),
+  invoiceNumber: z.string(),
+  invoiceDate: z.string().optional(),
+  ordinance: z.string().optional(),
+  ordinanceAmount: z.number().optional().catch(0),
+  stampFeeAmount: z.number().optional().catch(0),
+  refundStampFeeAmount: z.number().optional().catch(0),
+  description: z.string().optional(),
+  closeStatusId: z.number(),
+  invoicedDate: z.string().optional(),
+  requestedActionPage: z.string().optional(),
+  responsibleEmployee: z.string().optional(),
+  createdAt: z.coerce.date(),
+  loan: loanSchema,
+  district: z.object({
+    id: z.number(),
+    districtMn: z.string(),
+    districtEn: z.string().optional(),
+  }),
+  closeStatus: z.object({
+    id: z.number(),
+    status: z.string(),
+  }),
+})
+
+export type JudgeLoan = z.infer<typeof judgeLoanSchema>
+
+export interface JudgeLoanListRequest {
+  districtId?: number
+  closeStatusId?: number
+  current?: number
+  pageSize?: number
+  query?: string
+  sortDate?: {
+    startDate?: string
+    endDate?: string
+  }
+  // String filters
+  loanId?: string
+  registerNumber?: string
+  phoneNumber?: string
+  judge?: string
+  judgeAssistant?: string
+  judgeAssistantPhoneNumber?: string
+  code?: string
+  invoiceNumber?: string
+  requestedActionPage?: string
+  responsibleEmployee?: string
+  // Numeric filters with operators
+  loanAmount?: string
+  loanAmount_operator?: string
+  closePayAmount?: string
+  closePayAmount_operator?: string
+  payAmount?: string
+  payAmount_operator?: string
+  payInterest?: string
+  payInterest_operator?: string
+  overdueDay?: string
+  overdueDay_operator?: string
+  ordinanceAmount?: number
+  ordinanceAmount_operator?: string
+  stampFeeAmount?: number
+  stampFeeAmount_operator?: string
+  refundStampFeeAmount?: number
+  refundStampFeeAmount_operator?: string
+}
+
+export interface JudgeLoanListBody {
+  list: JudgeLoan[]
+  items: number
+}
+
+
+export type JudgeLoanListResponse = BaseResponse<JudgeLoanListBody>
+
+export interface Locs {
+  lat: number
+  lng: number
+}
+
+export interface GpsLocs {
+  loc: Locs
+  label: string
+}

@@ -191,14 +191,77 @@ export const LOAN_UPDATE_FORM_FIELDS: FormFieldConfig<LoanUpdateForm>[] = [
   },
 ]
 
-export const FILTER_KEYS = ['statusId'] as const
+export const FILTER_KEYS = [
+  'statusId',
+  'loanId',
+  'registerNumber',
+  'phoneNumber',
+  'loanAmount',
+  'loanAmount_operator',
+  'closePayAmount',
+  'closePayAmount_operator',
+  'payAmount',
+  'payAmount_operator',
+  'payInterest',
+  'payInterest_operator',
+  'overdueDay',
+  'overdueDay_operator',
+] as const
 
 export const LOAN_FILTER_FIELDS = [
+  {
+    key: 'loanId',
+    label: 'Зээлийн ID',
+    type: 'text' as const,
+    placeholder: 'Зээлийн ID-аар хайх...',
+  },
+  {
+    key: 'registerNumber',
+    label: 'Регистр',
+    type: 'text' as const,
+    placeholder: 'Регистрийн дугаар...',
+  },
+  {
+    key: 'phoneNumber',
+    label: 'Утас',
+    type: 'text' as const,
+    placeholder: 'Утасны дугаар...',
+  },
   {
     key: 'statusId',
     label: 'Төлөв',
     type: 'select' as const,
     placeholder: 'Төлөв сонгох...',
+  },
+  {
+    key: 'loanAmount',
+    label: 'Олгосон зээл',
+    type: 'number-comparison' as const,
+    placeholder: 'Дүн оруулах...',
+  },
+  {
+    key: 'closePayAmount',
+    label: 'Хаах дүн',
+    type: 'number-comparison' as const,
+    placeholder: 'Дүн оруулах...',
+  },
+  {
+    key: 'payAmount',
+    label: 'Төлөх дүн',
+    type: 'number-comparison' as const,
+    placeholder: 'Дүн оруулах...',
+  },
+  {
+    key: 'payInterest',
+    label: 'Хүү',
+    type: 'number-comparison' as const,
+    placeholder: 'Хүү оруулах...',
+  },
+  {
+    key: 'overdueDay',
+    label: 'Хэтэрсэн хоног',
+    type: 'number-comparison' as const,
+    placeholder: 'Хоног оруулах...',
   },
   {
     key: 'dateRange',

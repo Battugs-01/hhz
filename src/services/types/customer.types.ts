@@ -18,6 +18,10 @@ export const customerSchema = z.object({
   currentLocation: z.string().optional(),
   workLocation: z.string().optional(),
   additionalLocation: z.string().optional(),
+  locationValid: z.boolean().optional(),
+  currentValid: z.boolean().optional(),
+  workValid: z.boolean().optional(),
+  additionalValid: z.boolean().optional(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
@@ -61,6 +65,10 @@ export interface UpdateCustomerRequest {
   currentLocation?: string
   workLocation?: string
   additionalLocation?: string
+  locationValid?: boolean
+  currentValid?: boolean
+  workValid?: boolean
+  additionalValid?: boolean
 }
 
 // Update customer response

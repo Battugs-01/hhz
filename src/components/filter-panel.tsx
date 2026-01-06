@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { Filter, X } from 'lucide-react'
+import { DateRangePicker } from '@/components/date-range-picker'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,16 +14,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { DateRangePicker } from '@/components/date-range-picker'
+import { Filter, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 const BOOLEAN_OPTIONS = [
   { label: '✓ True', value: 'true' },
   { label: '✗ False', value: 'false' },
 ] as const
 
+const COMPARISON_OPERATORS = [
+  { label: '= Тэнцүү', value: 'eq' },
+  { label: '> Их', value: 'gt' },
+  { label: '< Бага', value: 'lt' },
+  { label: '≥ Их/тэнцүү', value: 'gte' },
+  { label: '≤ Бага/тэнцүү', value: 'lte' },
+] as const
+
 export type FilterFieldType =
   | 'text'
   | 'number'
+  | 'number-comparison'
   | 'select'
   | 'boolean'
   | 'date-range'
@@ -92,11 +101,37 @@ export function FilterPanel({
       }
     })
 
+    // Clear operator when value is cleared for number-comparison fields
+    if (!value && !key.endsWith('_operator')) {
+      const operatorKey = `${key}_operator`
+      if (newFilters[operatorKey] !== undefined) {
+        newFilters[operatorKey] = undefined
+      }
+    }
+
     setLocalFilters(newFilters)
   }
 
   const handleApply = () => {
-    onFilterChange(localFilters)
+    // Set default operator 'eq' for number-comparison fields that have value but no operator
+    const filtersWithDefaults = { ...localFilters }
+    fields.forEach((field) => {
+      if (field.type === 'number-comparison') {
+        const valueKey = field.key
+        const operatorKey = `${field.key}_operator`
+        const hasValue =
+          filtersWithDefaults[valueKey] && filtersWithDefaults[valueKey] !== ''
+        const hasOperator =
+          filtersWithDefaults[operatorKey] &&
+          filtersWithDefaults[operatorKey] !== ''
+
+        if (hasValue && !hasOperator) {
+          filtersWithDefaults[operatorKey] = 'eq'
+        }
+      }
+    })
+
+    onFilterChange(filtersWithDefaults)
     if (onDateRangeChange) {
       onDateRangeChange(localDateRange)
     }
@@ -122,8 +157,10 @@ export function FilterPanel({
   }, [dateRange])
 
   const activeFiltersCount =
-    Object.values(search).filter((v) => v !== undefined && v !== '').length +
-    (dateRange?.start_day || dateRange?.end_day ? 1 : 0)
+    Object.entries(search).filter(
+      ([key, value]) =>
+        value !== undefined && value !== '' && !key.endsWith('_operator')
+    ).length + (dateRange?.start_day || dateRange?.end_day ? 1 : 0)
 
   // Filter fields based on their showWhen conditions
   const visibleFields = fields.filter((field) => {
@@ -141,8 +178,8 @@ export function FilterPanel({
     switch (field.type) {
       case 'text':
         return (
-          <div className='space-y-2' key={field.key}>
-            <label className='text-sm font-medium'>{field.label}</label>
+          <div className='space-y-1.5' key={field.key}>
+            <label className='text-xs font-medium'>{field.label}</label>
             <Input
               placeholder={
                 field.placeholder || `Enter ${field.label.toLowerCase()}...`
@@ -155,8 +192,8 @@ export function FilterPanel({
 
       case 'number':
         return (
-          <div className='space-y-2' key={field.key}>
-            <label className='text-sm font-medium'>{field.label}</label>
+          <div className='space-y-1.5' key={field.key}>
+            <label className='text-xs font-medium'>{field.label}</label>
             <Input
               type='number'
               placeholder={
@@ -168,10 +205,49 @@ export function FilterPanel({
           </div>
         )
 
+      case 'number-comparison': {
+        const operatorKey = `${field.key}_operator`
+        const valueKey = field.key
+        const hasValue = localFilters[valueKey] && localFilters[valueKey] !== ''
+        return (
+          <div className='space-y-1.5' key={field.key}>
+            <label className='text-xs font-medium'>{field.label}</label>
+            <div className='flex gap-2'>
+              {hasValue && (
+                <Select
+                  value={localFilters[operatorKey] || 'eq'}
+                  onValueChange={(value) =>
+                    handleFilterChange(operatorKey, value)
+                  }
+                >
+                  <SelectTrigger className='w-[110px]'>
+                    <SelectValue placeholder='Харьц' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COMPARISON_OPERATORS.map((op) => (
+                      <SelectItem key={op.value} value={op.value}>
+                        {op.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+              <Input
+                type='number'
+                placeholder={field.placeholder || 'Утга оруулах...'}
+                value={localFilters[valueKey] || ''}
+                onChange={(e) => handleFilterChange(valueKey, e.target.value)}
+                className='flex-1'
+              />
+            </div>
+          </div>
+        )
+      }
+
       case 'select':
         return (
-          <div className='space-y-2' key={field.key}>
-            <label className='text-sm font-medium'>{field.label}</label>
+          <div className='space-y-1.5' key={field.key}>
+            <label className='text-xs font-medium'>{field.label}</label>
             <Select
               value={localFilters[field.key] || ''}
               onValueChange={(value) => handleFilterChange(field.key, value)}
@@ -197,8 +273,8 @@ export function FilterPanel({
 
       case 'boolean':
         return (
-          <div className='space-y-2' key={field.key}>
-            <label className='text-sm font-medium'>{field.label}</label>
+          <div className='space-y-1.5' key={field.key}>
+            <label className='text-xs font-medium'>{field.label}</label>
             <Select
               value={localFilters[field.key] || ''}
               onValueChange={(value) => handleFilterChange(field.key, value)}
@@ -225,8 +301,8 @@ export function FilterPanel({
       case 'date-range':
         if (!onDateRangeChange) return null
         return (
-          <div className='space-y-2' key={field.key}>
-            <label className='text-sm font-medium'>{field.label}</label>
+          <div className='space-y-1.5' key={field.key}>
+            <label className='text-xs font-medium'>{field.label}</label>
             <DateRangePicker
               value={localDateRange}
               onChange={setLocalDateRange}
@@ -257,24 +333,31 @@ export function FilterPanel({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-96 p-0' align='start'>
-        <div className='flex max-h-[80vh] flex-col'>
-          <div className='flex-shrink-0 space-y-1 p-4 pb-3'>
-            <h4 className='text-sm font-semibold'>{title}</h4>
-            <p className='text-muted-foreground text-xs'>{description}</p>
-          </div>
+      <PopoverContent
+        className='flex w-96 flex-col p-0 overflow-hidden'
+        align='start'
+        collisionPadding={10}
+        style={{
+          maxHeight: 'var(--radix-popover-content-available-height)',
+        }}
+      >
+        <div className='flex-shrink-0 space-y-1 border-b p-3'>
+          <h4 className='text-sm font-semibold'>{title}</h4>
+          <p className='text-muted-foreground text-xs'>{description}</p>
+        </div>
 
-          <div className='min-h-0 flex-1 space-y-4 overflow-y-auto px-4'>
+          <div className='min-h-0 flex-1 space-y-2.5 overflow-y-auto p-3 pb-2'>
             {visibleFields.map((field) => renderField(field))}
           </div>
 
           {activeFiltersCount > 0 && (
-            <div className='bg-muted mx-4 mt-4 flex flex-shrink-0 flex-wrap gap-2 rounded-md border p-3'>
+            <div className='bg-muted mx-3 mb-3 flex max-h-24 flex-shrink-0 flex-wrap gap-2 overflow-y-auto rounded-md border p-2'>
               <span className='text-muted-foreground text-xs font-medium'>
-                Идэвхтэй шүүлтүүр:
+                Идэвхтэй:
               </span>
               {Object.entries(search).map(([key, value]) => {
-                if (!value || value === '') return null
+                if (!value || value === '' || key.endsWith('_operator'))
+                  return null
                 const field = fields.find((f) => f.key === key)
                 return (
                   <Badge key={key} variant='secondary' className='gap-1'>
@@ -325,7 +408,7 @@ export function FilterPanel({
             </div>
           )}
 
-          <div className='bg-popover flex flex-shrink-0 justify-end gap-2 border-t p-4 pt-3'>
+          <div className='bg-popover flex flex-shrink-0 justify-end gap-2 border-t p-3'>
             <Button variant='outline' size='sm' onClick={handleClear}>
               Цэвэрлэх
             </Button>
@@ -333,7 +416,6 @@ export function FilterPanel({
               Хэрэглэх
             </Button>
           </div>
-        </div>
       </PopoverContent>
     </Popover>
   )

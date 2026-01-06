@@ -3,6 +3,7 @@ import type { FilterField } from '@/components/filter-panel'
 export const LOAN_STATUS_OPTIONS = [
   { label: 'Хэвийн (Normal)', value: 'normal' },
   { label: 'Хугацаа хэтэрсэн (Overdue)', value: 'overdue' },
+  { label: 'Эргэлзээтэй', value: 'doubtful' },
   { label: 'Шүүх дээр (On Judge)', value: 'on_judge' },
   { label: 'Шүүхийн шийдвэр (On Judge Finish)', value: 'on_judge_finish' },
   { label: 'Шүүхрүү шилжүүлэх (To Judge)', value: 'to_judge' },
@@ -12,6 +13,7 @@ export const LOAN_STATUS_OPTIONS = [
 export const LOAN_STATUS_LABELS: Record<string, string> = {
   normal: 'Хэвийн',
   overdue: 'Хугацаа хэтэрсэн',
+  doubtful: 'Эргэлзээтэй',
   on_judge: 'Шүүх дээр',
   on_judge_finish: 'Шүүхийн шийдвэр',
   to_judge: 'Шүүхрүү шилжүүлэх',

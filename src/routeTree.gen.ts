@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedUpdatePasswordRouteImport } from './routes/_authenticated/update-password'
+import { Route as AuthenticatedOperationLogsRouteImport } from './routes/_authenticated/operation-logs'
 import { Route as errors503RouteImport } from './routes/(errors)/503'
 import { Route as errors500RouteImport } from './routes/(errors)/500'
 import { Route as errors404RouteImport } from './routes/(errors)/404'
@@ -33,8 +34,11 @@ import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as AuthenticatedReportsLoansRouteImport } from './routes/_authenticated/reports/loans'
+import { Route as AuthenticatedReportsJudgeLoansRouteImport } from './routes/_authenticated/reports/judge-loans'
 import { Route as AuthenticatedLoansImportRouteImport } from './routes/_authenticated/loans/import'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedDistrictDistrictIdRouteImport } from './routes/_authenticated/district/$districtId'
 import { Route as AuthenticatedBranchesBranchIdRouteImport } from './routes/_authenticated/branches/$branchId'
 import { Route as AuthenticatedLoansStatusIndexRouteImport } from './routes/_authenticated/loans/status/index'
 import { Route as AuthenticateduserManagementEconomistsIndexRouteImport } from './routes/_authenticated/(user-management)/economists/index'
@@ -55,6 +59,12 @@ const AuthenticatedUpdatePasswordRoute =
   AuthenticatedUpdatePasswordRouteImport.update({
     id: '/update-password',
     path: '/update-password',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOperationLogsRoute =
+  AuthenticatedOperationLogsRouteImport.update({
+    id: '/operation-logs',
+    path: '/operation-logs',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const errors503Route = errors503RouteImport.update({
@@ -170,6 +180,18 @@ const AuthenticatedSettingsAccountRoute =
     path: '/account',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedReportsLoansRoute =
+  AuthenticatedReportsLoansRouteImport.update({
+    id: '/reports/loans',
+    path: '/reports/loans',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReportsJudgeLoansRoute =
+  AuthenticatedReportsJudgeLoansRouteImport.update({
+    id: '/reports/judge-loans',
+    path: '/reports/judge-loans',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedLoansImportRoute =
   AuthenticatedLoansImportRouteImport.update({
     id: '/loans/import',
@@ -180,6 +202,12 @@ const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
     id: '/errors/$error',
     path: '/errors/$error',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDistrictDistrictIdRoute =
+  AuthenticatedDistrictDistrictIdRouteImport.update({
+    id: '/district/$districtId',
+    path: '/district/$districtId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedBranchesBranchIdRoute =
@@ -229,11 +257,15 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/operation-logs': typeof AuthenticatedOperationLogsRoute
   '/update-password': typeof AuthenticatedUpdatePasswordRoute
   '/': typeof AuthenticatedIndexRoute
   '/branches/$branchId': typeof AuthenticatedBranchesBranchIdRoute
+  '/district/$districtId': typeof AuthenticatedDistrictDistrictIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/loans/import': typeof AuthenticatedLoansImportRoute
+  '/reports/judge-loans': typeof AuthenticatedReportsJudgeLoansRoute
+  '/reports/loans': typeof AuthenticatedReportsLoansRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -261,11 +293,15 @@ export interface FileRoutesByTo {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
+  '/operation-logs': typeof AuthenticatedOperationLogsRoute
   '/update-password': typeof AuthenticatedUpdatePasswordRoute
   '/': typeof AuthenticatedIndexRoute
   '/branches/$branchId': typeof AuthenticatedBranchesBranchIdRoute
+  '/district/$districtId': typeof AuthenticatedDistrictDistrictIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/loans/import': typeof AuthenticatedLoansImportRoute
+  '/reports/judge-loans': typeof AuthenticatedReportsJudgeLoansRoute
+  '/reports/loans': typeof AuthenticatedReportsLoansRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -296,11 +332,15 @@ export interface FileRoutesById {
   '/(errors)/404': typeof errors404Route
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
+  '/_authenticated/operation-logs': typeof AuthenticatedOperationLogsRoute
   '/_authenticated/update-password': typeof AuthenticatedUpdatePasswordRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/branches/$branchId': typeof AuthenticatedBranchesBranchIdRoute
+  '/_authenticated/district/$districtId': typeof AuthenticatedDistrictDistrictIdRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/loans/import': typeof AuthenticatedLoansImportRoute
+  '/_authenticated/reports/judge-loans': typeof AuthenticatedReportsJudgeLoansRoute
+  '/_authenticated/reports/loans': typeof AuthenticatedReportsLoansRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
@@ -331,11 +371,15 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/operation-logs'
     | '/update-password'
     | '/'
     | '/branches/$branchId'
+    | '/district/$districtId'
     | '/errors/$error'
     | '/loans/import'
+    | '/reports/judge-loans'
+    | '/reports/loans'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -363,11 +407,15 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/operation-logs'
     | '/update-password'
     | '/'
     | '/branches/$branchId'
+    | '/district/$districtId'
     | '/errors/$error'
     | '/loans/import'
+    | '/reports/judge-loans'
+    | '/reports/loans'
     | '/settings/account'
     | '/settings/appearance'
     | '/settings/display'
@@ -397,11 +445,15 @@ export interface FileRouteTypes {
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
+    | '/_authenticated/operation-logs'
     | '/_authenticated/update-password'
     | '/_authenticated/'
     | '/_authenticated/branches/$branchId'
+    | '/_authenticated/district/$districtId'
     | '/_authenticated/errors/$error'
     | '/_authenticated/loans/import'
+    | '/_authenticated/reports/judge-loans'
+    | '/_authenticated/reports/loans'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/display'
@@ -454,6 +506,13 @@ declare module '@tanstack/react-router' {
       path: '/update-password'
       fullPath: '/update-password'
       preLoaderRoute: typeof AuthenticatedUpdatePasswordRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/operation-logs': {
+      id: '/_authenticated/operation-logs'
+      path: '/operation-logs'
+      fullPath: '/operation-logs'
+      preLoaderRoute: typeof AuthenticatedOperationLogsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/(errors)/503': {
@@ -603,6 +662,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/reports/loans': {
+      id: '/_authenticated/reports/loans'
+      path: '/reports/loans'
+      fullPath: '/reports/loans'
+      preLoaderRoute: typeof AuthenticatedReportsLoansRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reports/judge-loans': {
+      id: '/_authenticated/reports/judge-loans'
+      path: '/reports/judge-loans'
+      fullPath: '/reports/judge-loans'
+      preLoaderRoute: typeof AuthenticatedReportsJudgeLoansRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/loans/import': {
       id: '/_authenticated/loans/import'
       path: '/loans/import'
@@ -615,6 +688,13 @@ declare module '@tanstack/react-router' {
       path: '/errors/$error'
       fullPath: '/errors/$error'
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/district/$districtId': {
+      id: '/_authenticated/district/$districtId'
+      path: '/district/$districtId'
+      fullPath: '/district/$districtId'
+      preLoaderRoute: typeof AuthenticatedDistrictDistrictIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/branches/$branchId': {
@@ -687,11 +767,15 @@ const AuthenticatedSettingsRouteRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
+  AuthenticatedOperationLogsRoute: typeof AuthenticatedOperationLogsRoute
   AuthenticatedUpdatePasswordRoute: typeof AuthenticatedUpdatePasswordRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedBranchesBranchIdRoute: typeof AuthenticatedBranchesBranchIdRoute
+  AuthenticatedDistrictDistrictIdRoute: typeof AuthenticatedDistrictDistrictIdRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedLoansImportRoute: typeof AuthenticatedLoansImportRoute
+  AuthenticatedReportsJudgeLoansRoute: typeof AuthenticatedReportsJudgeLoansRoute
+  AuthenticatedReportsLoansRoute: typeof AuthenticatedReportsLoansRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedBranchesIndexRoute: typeof AuthenticatedBranchesIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
@@ -708,11 +792,15 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
+  AuthenticatedOperationLogsRoute: AuthenticatedOperationLogsRoute,
   AuthenticatedUpdatePasswordRoute: AuthenticatedUpdatePasswordRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedBranchesBranchIdRoute: AuthenticatedBranchesBranchIdRoute,
+  AuthenticatedDistrictDistrictIdRoute: AuthenticatedDistrictDistrictIdRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedLoansImportRoute: AuthenticatedLoansImportRoute,
+  AuthenticatedReportsJudgeLoansRoute: AuthenticatedReportsJudgeLoansRoute,
+  AuthenticatedReportsLoansRoute: AuthenticatedReportsLoansRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedBranchesIndexRoute: AuthenticatedBranchesIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,

@@ -1,33 +1,22 @@
-import { useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { getRouteApi } from '@tanstack/react-router'
-import type { Loan } from '@/services'
-import { loanService } from '@/services'
-import { AlertTriangle, Banknote, Calendar, DollarSign } from 'lucide-react'
-import { useDrawer } from '@/context/drawer-provider'
-import { useFilterParams } from '@/hooks/use-filter-params'
-import { StatCard } from '@/components/ui/stat-card'
 import { BaseTable, TableHeader } from '@/components/data-table'
 import { Main } from '@/components/layout/main'
+import { StatCard } from '@/components/ui/stat-card'
+import { useDrawer } from '@/context/drawer-provider'
 import { createLoanColumns } from '@/features/branches/components/loan-columns'
+import { useFilterParams } from '@/hooks/use-filter-params'
+import { formatCurrency } from '@/lib/format-utils'
+import type { Loan } from '@/services'
+import { loanService } from '@/services'
+import { useQuery } from '@tanstack/react-query'
+import { getRouteApi } from '@tanstack/react-router'
+import { AlertTriangle, Banknote, Calendar, DollarSign } from 'lucide-react'
+import { useMemo } from 'react'
 import { QUERY_KEYS, TABLE_CONFIG } from './components/constants'
 import { LoanDialogs } from './components/dialogs'
-import { LoanDetailContent } from './components/loan-detail-content'
+import { LoanDetailContent } from './components/loan-detail'
 import { LoanToolbarActions } from './components/toolbar-actions'
 
 const route = getRouteApi('/_authenticated/loans/')
-
-// Format currency helper
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('mn-MN', {
-    style: 'currency',
-    currency: 'MNT',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  })
-    .format(amount)
-    .replace('MNT', '₮')
-}
 
 export function AllLoansPage() {
   const search = route.useSearch()
@@ -57,11 +46,22 @@ export function AllLoansPage() {
   })
 
   // Fetch summary statistics (no branchId = all branches)
+  const summaryParams = useMemo(() => {
+    const { current, pageSize, ...rest } = params
+    return {
+      ...rest,
+      statusId:
+        rest.statusId && !isNaN(Number(rest.statusId))
+          ? Number(rest.statusId)
+          : rest.statusId,
+    }
+  }, [params])
+
   const { data: summary, isLoading: isSummaryLoading } = useQuery({
-    queryKey: ['all-loans-summary'],
+    queryKey: ['all-loans-summary', summaryParams],
     queryFn: async () => {
       try {
-        const res = await loanService.getSummary({})
+        const res = await loanService.getSummary(summaryParams as any)
         return res?.data || null
       } catch (error) {
         console.error('Failed to fetch summary:', error)
@@ -81,7 +81,14 @@ export function AllLoansPage() {
     queryKey: [QUERY_KEYS.LOAN_LIST, params],
     queryFn: async () => {
       try {
-        const res = await loanService.listLoans(params)
+        const queryParams = {
+          ...params,
+          statusId:
+            params.statusId && !isNaN(Number(params.statusId))
+              ? Number(params.statusId)
+              : params.statusId,
+        }
+        const res = await loanService.listLoans(queryParams as any)
         return {
           items: res?.body?.list || [],
           total: res?.body?.items || 0,

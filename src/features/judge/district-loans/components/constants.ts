@@ -1,0 +1,137 @@
+export const QUERY_KEYS = {
+  JUDGE_LOAN_LIST: 'judge-loan-list',
+} as const
+
+export const TABLE_CONFIG = {
+  ID: 'judge-loan-table',
+  DEFAULT_PAGE_SIZE: 20,
+  DEFAULT_PAGE: 1,
+  SEARCH_KEY: 'query',
+  SEARCH_PLACEHOLDER: 'Зээлийн дугаар, харилцагчийн нэр...',
+} as const
+
+export const FILTER_KEYS = [
+  'closeStatusId',
+  'loanId',
+  'registerNumber',
+  'phoneNumber',
+  'judge',
+  'judgeAssistant',
+  'judgeAssistantPhoneNumber',
+  'code',
+  'invoiceNumber',
+  'requestedActionPage',
+  'responsibleEmployee',
+  'loanAmount',
+  'loanAmount_operator',
+  'closePayAmount',
+  'closePayAmount_operator',
+  'payAmount',
+  'payAmount_operator',
+  'payInterest',
+  'payInterest_operator',
+  'overdueDay',
+  'overdueDay_operator',
+  'ordinanceAmount',
+  'ordinanceAmount_operator',
+  'stampFeeAmount',
+  'stampFeeAmount_operator',
+  'refundStampFeeAmount',
+  'refundStampFeeAmount_operator',
+  'start_day',
+  'end_day',
+  'query',
+] as const
+
+export const JUDGE_LOAN_FILTER_FIELDS = [
+  {
+    key: 'loanId',
+    label: 'Зээлийн ID',
+    type: 'text' as const,
+    placeholder: 'Зээлийн ID-аар хайх...',
+  },
+  {
+    key: 'registerNumber',
+    label: 'Регистр',
+    type: 'text' as const,
+    placeholder: 'Регистрийн дугаар...',
+  },
+  {
+    key: 'phoneNumber',
+    label: 'Утас',
+    type: 'text' as const,
+    placeholder: 'Утасны дугаар...',
+  },
+  {
+    key: 'judge',
+    label: 'Шүүгч',
+    type: 'text' as const,
+    placeholder: 'Шүүгчийн нэр...',
+  },
+  {
+    key: 'judgeAssistant',
+    label: 'Шүүгчийн туслах',
+    type: 'text' as const,
+    placeholder: 'Туслахын нэр...',
+  },
+  {
+    key: 'code',
+    label: 'Шүүхийн код',
+    type: 'text' as const,
+    placeholder: 'Кодоор хайх...',
+  },
+  {
+    key: 'invoiceNumber',
+    label: 'Нэхэмжлэлийн №',
+    type: 'text' as const,
+    placeholder: 'Нэхэмжлэлийн дугаар...',
+  },
+  {
+    key: 'closeStatusId',
+    label: 'Шүүхийн төлөв',
+    type: 'select' as const,
+    placeholder: 'Төлөв сонгох...',
+  },
+  {
+    key: 'loanAmount',
+    label: 'Олгосон зээл',
+    type: 'number-comparison' as const,
+    placeholder: 'Дүн оруулах...',
+  },
+  {
+    key: 'ordinanceAmount',
+    label: 'Шийдвэрлэсэн дүн',
+    type: 'number-comparison' as const,
+    placeholder: 'Дүн оруулах...',
+  },
+  {
+    key: 'stampFeeAmount',
+    label: 'Тэмдэгтийн хураамж',
+    type: 'number-comparison' as const,
+    placeholder: 'Дүн оруулах...',
+  },
+  {
+    key: 'refundStampFeeAmount',
+    label: 'Буцаан олголт',
+    type: 'number-comparison' as const,
+    placeholder: 'Дүн оруулах...',
+  },
+  {
+    key: 'payAmount',
+    label: 'Төлөх дүн',
+    type: 'number-comparison' as const,
+    placeholder: 'Дүн оруулах...',
+  },
+  {
+    key: 'overdueDay',
+    label: 'Хэтэрсэн хоног',
+    type: 'number-comparison' as const,
+    placeholder: 'Хоног оруулах...',
+  },
+  {
+    key: 'dateRange',
+    label: 'Огнооны хүрээ',
+    type: 'date-range' as const,
+    placeholder: 'Огноогоор шүүх',
+  },
+] as const

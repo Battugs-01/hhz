@@ -1,20 +1,21 @@
 export { adminService } from './api/admin.service'
 export { authService } from './api/auth.service'
-export { bankService } from './api/bank.service'
 export { branchService } from './api/branch.service'
 export { apiClient } from './api/client'
-export { cryptoService } from './api/crypto.service'
 export { customerLoanService } from './api/customer-loan.service'
 export { customerService } from './api/customer.service'
 export { economistService } from './api/economist.service'
 export { judgeCloseStatusService } from './api/judge-close-status.service'
-export { kycService } from './api/kyc.service'
 export { loanStatusService } from './api/loan-status.service'
 export { loanService } from './api/loan.service'
+export { operationLogService } from './api/operation-log.service'
+export { reportService } from './api/report.service'
+
+export type * from './types/report.types'
 
 export type { BaseResponse, PaginationResponse } from './types/common.types'
 
-export { USER_ROLES, adminListSchema, adminSchema } from './types/admin.types'
+export { adminListSchema, adminSchema, USER_ROLES } from './types/admin.types'
 export type {
   Admin,
   AdminList,
@@ -23,7 +24,7 @@ export type {
   AdminRole,
   CreateAdminRequest,
   DeleteAdminResponse,
-  UpdateAdminRequest,
+  UpdateAdminRequest
 } from './types/admin.types'
 
 export type {
@@ -32,7 +33,7 @@ export type {
   LoginResponse,
   UpdatePasswordRequest,
   UpdatePasswordResponse,
-  UserInfoResponse,
+  UserInfoResponse
 } from './types/auth.types'
 
 export { branchListSchema, branchSchema } from './types/branch.types'
@@ -44,7 +45,7 @@ export type {
   BranchResponse,
   CreateBranchRequest,
   DeleteBranchResponse,
-  UpdateBranchRequest,
+  UpdateBranchRequest
 } from './types/branch.types'
 
 export { customerListSchema, customerSchema } from './types/customer.types'
@@ -55,14 +56,14 @@ export type {
   CustomerListResponse,
   CustomerResponse,
   UpdateCustomerRequest,
-  UpdateCustomerResponse,
+  UpdateCustomerResponse
 } from './types/customer.types'
 
 export { customerLoanItemSchema } from './types/customer-loan.types'
 export type {
   CreateCustomerAndLoansRequest,
   CreateCustomerAndLoansResponse,
-  CustomerLoanItem,
+  CustomerLoanItem
 } from './types/customer-loan.types'
 
 export { economistListSchema, economistSchema } from './types/economist.types'
@@ -74,12 +75,12 @@ export type {
   EconomistListRequest,
   EconomistListResponse,
   EconomistResponse,
-  UpdateEconomistRequest,
+  UpdateEconomistRequest
 } from './types/economist.types'
 
 export {
   judgeCloseStatusListSchema,
-  judgeCloseStatusSchema,
+  judgeCloseStatusSchema
 } from './types/judge-close-status.types'
 export type {
   CreateJudgeCloseStatusRequest,
@@ -89,7 +90,7 @@ export type {
   JudgeCloseStatusListRequest,
   JudgeCloseStatusListResponse,
   JudgeCloseStatusResponse,
-  UpdateJudgeCloseStatusRequest,
+  UpdateJudgeCloseStatusRequest
 } from './types/judge-close-status.types'
 
 export { loanStatusSchema } from './types/loan-status.types'
@@ -99,20 +100,24 @@ export type {
   LoanStatusListRequest,
   LoanStatusListResponse,
   LoanStatusResponse,
-  UpdateLoanStatusRequest,
+  UpdateLoanStatusRequest
 } from './types/loan-status.types'
 
 export {
   loanCustomerSchema,
   loanListSchema,
-  loanSchema,
+  loanSchema
 } from './types/loan.types'
 export type {
+  CreateJudgeLoanNoteRequest,
   CreateJudgeLoanRequest,
   CreateLoanNoteRequest,
-  District,
-  DistrictListBody,
-  DistrictListResponse,
+  District, GpsLocs, JudgeLoan,
+  JudgeLoanListRequest,
+  JudgeLoanListResponse,
+  JudgeLoanNote,
+  JudgeLoanNoteListRequest,
+  JudgeLoanNoteListResponse,
   Loan,
   LoanCustomer,
   LoanList,
@@ -124,86 +129,14 @@ export type {
   LoanNoteListResponse,
   LoanNoteResponse,
   LoanResponse,
-  LoanSummary,
-  LoanSummaryRequest,
-  LoanSummaryResponse,
-  UpdateCustomerAndLoanRequest,
+  LoanSummary, Locs,
+  UpdateCustomerAndLoanRequest
 } from './types/loan.types'
 
-export { KycInfoTypeEnum, userListSchema, userSchema } from './types/kyc.types'
-export type {
-  MetaData,
-  Referral,
-  User,
-  UserList,
-  UserListRequest,
-  UserListResponse,
-  UserListType,
-  UserRole,
-  UserStatus,
-} from './types/kyc.types'
 
-export { depositListSchema, depositSchema } from './types/bank.types'
 export type {
-  Deposit,
-  DepositList,
-  DepositListRequest,
-  DepositListResponse,
-  DepositStatus,
-} from './types/bank.types'
-
-export { withdrawalListSchema, withdrawalSchema } from './types/bank.types'
-export type {
-  Withdrawal,
-  WithdrawalList,
-  WithdrawalListRequest,
-  WithdrawalListResponse,
-  WithdrawalStatus,
-} from './types/bank.types'
-
-export { walletListSchema, walletSchema } from './types/bank.types'
-export type {
-  Wallet,
-  WalletList,
-  WalletListRequest,
-  WalletListResponse,
-} from './types/bank.types'
-
-export { exchangeTxnListSchema, exchangeTxnSchema } from './types/bank.types'
-export type {
-  ExchangeTxn,
-  ExchangeTxnList,
-  ExchangeTxnListRequest,
-  ExchangeTxnListResponse,
-} from './types/bank.types'
-
-export {
-  coinListSchema,
-  coinSchema,
-  cryptoDepositListSchema,
-  cryptoDepositSchema,
-  cryptoWithdrawalListSchema,
-  cryptoWithdrawalSchema,
-  walletAddressListSchema,
-  walletAddressSchema,
-} from './types/crypto.types'
-export type {
-  Coin,
-  CoinList,
-  CoinListParams,
-  CoinListResponse,
-  CoinResponse,
-  CryptoDeposit,
-  CryptoDepositList,
-  CryptoDepositListRequest,
-  CryptoDepositListResponse,
-  CryptoWithdrawal,
-  CryptoWithdrawalList,
-  CryptoWithdrawalListRequest,
-  CryptoWithdrawalListResponse,
-  Network,
-  WalletAddress,
-  WalletAddressList,
-  WalletAddressListRequest,
-  WalletAddressListResponse,
-} from './types/crypto.types'
+  OperationLog,
+  OperationLogListBody,
+  OperationLogListRequest,
+  OperationLogListResponse
+} from './types/operation-log.types'

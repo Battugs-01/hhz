@@ -1,6 +1,6 @@
-import { maskValue } from '@/lib/utils'
-import { Badge } from '@/components/ui/badge'
 import { CopyButton } from '@/components/copy-button'
+import { Badge } from '@/components/ui/badge'
+import { maskValue } from '@/lib/utils'
 
 export type DetailFieldVariant =
   | 'success'

@@ -1,9 +1,8 @@
-import { useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import type { Branch, LoanStatus } from '@/services'
-import { branchService, loanStatusService } from '@/services'
-import type { NavigateFn } from '@/hooks/use-table-url-state'
 import { FilterToolbarActions } from '@/components/filter-toolbar-actions'
+import type { NavigateFn } from '@/hooks/use-table-url-state'
+import { branchService, LoanStatus, loanStatusService } from '@/services'
+import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
 import { FILTER_KEYS, LOAN_FILTER_FIELDS, TABLE_CONFIG } from './constants'
 
 type LoanToolbarActionsProps = {
@@ -59,15 +58,7 @@ export function LoanToolbarActions({
   // Build filter fields with dynamic options
   const filterFields = useMemo(() => {
     return LOAN_FILTER_FIELDS.map((field) => {
-      if (field.key === 'branchId' && branches) {
-        return {
-          ...field,
-          options: branches.map((branch: Branch) => ({
-            label: branch.branch,
-            value: String(branch.id),
-          })),
-        }
-      }
+
       if (field.key === 'statusId' && loanStatuses) {
         return {
           ...field,

@@ -1,4 +1,10 @@
-import type { District, JudgeCloseStatus, Loan, LoanStatus } from '@/services'
+import type {
+  District,
+  JudgeCloseStatus,
+  JudgeLoan,
+  Loan,
+  LoanStatus,
+} from '@/services'
 
 export interface JudgeInfo {
   district: string
@@ -31,6 +37,8 @@ export interface LoanUpdateDialogProps {
   onClose: () => void
   onSuccess?: () => void
   data: Loan | null
+  judgeLoanId?: number
+  judgeLoan?: JudgeLoan
 }
 
 export interface InfoTabProps {

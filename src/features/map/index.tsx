@@ -1,8 +1,16 @@
-import { useMemo, useState } from 'react'
+import { FilterToolbarActions } from '@/components/filter-toolbar-actions'
+import { Main } from '@/components/layout/main'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { StatCard } from '@/components/ui/stat-card'
+import {
+  branchService,
+  economistService,
+  loanService,
+  loanStatusService,
+} from '@/services'
 import { useQuery } from '@tanstack/react-query'
 import { getRouteApi } from '@tanstack/react-router'
-import type { Loan } from '@/services'
-import { loanService } from '@/services'
 import 'leaflet/dist/leaflet.css'
 import {
   AlertTriangle,
@@ -11,20 +19,13 @@ import {
   Filter,
   MapPin,
   RefreshCw,
-  Search,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { useMemo } from 'react'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { StatCard } from '@/components/ui/stat-card'
-import { Main } from '@/components/layout/main'
+  FILTER_KEYS,
+  LOAN_FILTER_FIELDS,
+  TABLE_CONFIG,
+} from '../loans/list/components/constants'
 import { MapContainer } from './components/map-container'
 
 const route = getRouteApi('/_authenticated/map/')
@@ -44,22 +45,25 @@ const formatCurrency = (amount: number) => {
 export function MapPage() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
-  const [selectedWorker, setSelectedWorker] = useState(search.worker || 'all')
-  const [selectedBranch, setSelectedBranch] = useState(search.branch || 'all')
-  const [searchTerm, setSearchTerm] = useState(search.search || '')
 
-  // Fetch all loans
+  // Fetch all loans with current filters
   const {
     data: loansData,
     isLoading,
     refetch: refetchLoans,
   } = useQuery({
-    queryKey: ['map-loans'],
+    queryKey: ['map-loans', search],
     queryFn: async () => {
       try {
+        const params: any = { ...search }
+        if (params.branchId) params.branchId = Number(params.branchId)
+        if (params.economistId) params.economistId = Number(params.economistId)
+        if (params.statusId) params.statusId = Number(params.statusId)
+
         const res = await loanService.listLoans({
           current: 1,
-          pageSize: 10000, // Get all loans
+          pageSize: 10000, // Get all matching loans for map
+          ...params,
         })
         return {
           items: res?.body?.list || [],
@@ -71,60 +75,108 @@ export function MapPage() {
       }
     },
     retry: 1,
-    staleTime: 60000, // 1 minute
+    staleTime: 60000,
   })
 
-  // Filter locations
-  const filteredLocations = useMemo(() => {
-    if (!loansData?.items) return []
+  // Fetch branches for filter options
+  const { data: branches } = useQuery({
+    queryKey: ['branches-for-filter'],
+    queryFn: async () => {
+      const res = await branchService.listBranches({ current: 1, pageSize: 100 })
+      return res?.body?.list || []
+    },
+    staleTime: 300000,
+  })
 
-    return loansData.items.filter((loan: Loan) => {
-      // Worker filter
-      const matchesWorker =
-        selectedWorker === 'all' || loan.economistId === Number(selectedWorker)
+  // Fetch economists for filter options
+  const { data: economists } = useQuery({
+    queryKey: ['economists-for-filter'],
+    queryFn: async () => {
+      const res = await economistService.listEconomists({
+        current: 1,
+        pageSize: 100,
+      })
+      return res?.body?.list || []
+    },
+    staleTime: 300000,
+  })
 
-      // Branch filter
-      const matchesBranch =
-        selectedBranch === 'all' || loan.branchId === Number(selectedBranch)
+  // Fetch loan statuses for filter options
+  const { data: loanStatuses } = useQuery({
+    queryKey: ['loan-statuses'],
+    queryFn: async () => {
+      const res = await loanStatusService.listLoanStatuses({ pageSize: 100 })
+      return res?.body?.list || []
+    },
+    staleTime: 300000,
+  })
 
-      // Search filter
-      const matchesSearch =
-        searchTerm === '' ||
-        loan.registerNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        loan.loanId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        loan.customer?.phoneNumber
-          ?.toString()
-          .includes(searchTerm.toLowerCase()) ||
-        loan.customer?.firstName
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        loan.customer?.lastName
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase())
+  // Fetch worker GPS locations
+  const { data: gpsLocs } = useQuery({
+    queryKey: ['gps-locations'],
+    queryFn: () => loanService.getGpsLocations(),
+    refetchInterval: 30000, // Refresh every 30 seconds
+  })
 
-      return matchesWorker && matchesBranch && matchesSearch
+  // Build filter fields with dynamic options
+  const filterFields = useMemo(() => {
+    const fields = [
+      {
+        key: 'economistId',
+        label: 'Эдийн засагч',
+        type: 'select' as const,
+        placeholder: 'Эдийн засагч сонгох...',
+      },
+      ...LOAN_FILTER_FIELDS,
+    ]
+
+    return fields.map((field) => {
+      if (field.key === 'branchId' && branches) {
+        return {
+          ...field,
+          options: branches.map((b) => ({ label: b.branch, value: String(b.id) })),
+        }
+      }
+      if (field.key === 'statusId' && loanStatuses) {
+        return {
+          ...field,
+          options: loanStatuses.map((s) => ({
+            label: s.description,
+            value: String(s.id),
+          })),
+        }
+      }
+      if (field.key === 'economistId' && economists) {
+        return {
+          ...field,
+          options: economists.map((e) => ({
+            label: e.name,
+            value: String(e.id),
+          })),
+        }
+      }
+      return field
     })
-  }, [loansData?.items, selectedWorker, selectedBranch, searchTerm])
+  }, [branches, loanStatuses, economists])
 
   // Calculate statistics
   const validLocations = useMemo(() => {
-    return filteredLocations.filter((loan) => {
-      const hasLocation =
-        loan.customer?.location && loan.customer.location.trim() !== ''
-      return hasLocation
+    if (!loansData?.items) return 0
+    return loansData.items.filter((loan) => {
+      const customer = loan.customer
+      return customer?.location?.trim()
     }).length
-  }, [filteredLocations])
+  }, [loansData?.items])
 
   const totalAmount = useMemo(() => {
-    return filteredLocations.reduce(
-      (sum, loan) => sum + (loan.loanAmount || 0),
-      0
+    return (
+      loansData?.items.reduce((sum, loan) => sum + (loan.loanAmount || 0), 0) || 0
     )
-  }, [filteredLocations])
+  }, [loansData?.items])
 
   const overdueLoans = useMemo(() => {
-    return filteredLocations.filter((loan) => loan.overdueDay > 30).length
-  }, [filteredLocations])
+    return loansData?.items.filter((loan) => loan.overdueDay > 30).length || 0
+  }, [loansData?.items])
 
   return (
     <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
@@ -147,7 +199,7 @@ export function MapPage() {
         <StatCard
           icon={MapPin}
           label='Нийт зээл'
-          value={filteredLocations.length}
+          value={loansData?.total || 0}
           isLoading={isLoading}
         />
         <StatCard
@@ -188,63 +240,15 @@ export function MapPage() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className='flex flex-col gap-4 sm:flex-row sm:items-end'>
-            <div className='flex-1'>
-              <label className='mb-2 block text-sm font-medium'>
-                Эдийн засагч
-              </label>
-              <Select
-                value={selectedWorker}
-                onValueChange={(value) => {
-                  setSelectedWorker(value)
-                  navigate({ search: { ...search, worker: value } })
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder='Бүх эдийн засагч' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='all'>Бүх эдийн засагч</SelectItem>
-                  {/* TODO: Fetch and display economists */}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className='flex-1'>
-              <label className='mb-2 block text-sm font-medium'>Салбар</label>
-              <Select
-                value={selectedBranch}
-                onValueChange={(value) => {
-                  setSelectedBranch(value)
-                  navigate({ search: { ...search, branch: value } })
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder='Бүх салбар' />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value='all'>Бүх салбар</SelectItem>
-                  {/* TODO: Fetch and display branches */}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className='flex-1'>
-              <label className='mb-2 block text-sm font-medium'>Хайх</label>
-              <div className='relative'>
-                <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2' />
-                <Input
-                  placeholder='Зээл хайх...'
-                  value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value)
-                    navigate({ search: { ...search, search: e.target.value } })
-                  }}
-                  className='pl-10'
-                />
-              </div>
-            </div>
-          </div>
+          <FilterToolbarActions
+            fields={filterFields}
+            search={search}
+            navigate={navigate}
+            filterKeys={[...FILTER_KEYS, 'economistId']}
+            onRefresh={refetchLoans}
+            tableId={TABLE_CONFIG.ID}
+            exportFileName={TABLE_CONFIG.EXPORT_FILE_NAME}
+          />
         </CardContent>
       </Card>
 
@@ -257,7 +261,12 @@ export function MapPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className='p-0'>
-          <MapContainer loans={filteredLocations} isLoading={isLoading} />
+          <MapContainer 
+            loans={loansData?.items || []} 
+            gpsLocs={gpsLocs || []}
+            isLoading={isLoading} 
+            onRefresh={refetchLoans}
+          />
         </CardContent>
       </Card>
     </Main>

@@ -1,11 +1,11 @@
-import { useMemo } from 'react'
-import { loanStatusService, type LoanStatus } from '@/services'
-import { toast } from 'sonner'
-import type { StandardDialogProps } from '@/lib/dialog-types'
 import {
   ConfigFormDialog,
   type FormFieldConfig,
 } from '@/components/ui/config-form-dialog'
+import type { StandardDialogProps } from '@/lib/dialog-types'
+import { loanStatusService, type LoanStatus } from '@/services'
+import { useMemo } from 'react'
+import { toast } from 'sonner'
 import { LOAN_STATUS_OPTIONS } from './constants'
 import { loanStatusFormSchema, type LoanStatusForm } from './schemas'
 

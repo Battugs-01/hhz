@@ -1,13 +1,4 @@
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
-import { Link, useNavigate } from '@tanstack/react-router'
-import { authService } from '@/services'
-import { Loader2, LogIn } from 'lucide-react'
-import { toast } from 'sonner'
-import { useAuthStore } from '@/stores/auth-store'
-import { cn } from '@/lib/utils'
+import { PasswordInput } from '@/components/password-input'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -18,7 +9,16 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/password-input'
+import { cn } from '@/lib/utils'
+import { authService } from '@/services'
+import { useAuthStore } from '@/stores/auth-store'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { Loader2, LogIn } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
 const formSchema = z.object({
   email: z.email({
@@ -60,7 +60,7 @@ export function UserAuthForm({
           setUser(data.data.admin)
         }
 
-        navigate({ to: redirectTo || '/', replace: true })
+        navigate({ to: redirectTo || '/map', replace: true })
         toast.success(data.message || 'Амжилттай нэвтэрлээ')
       } else {
         toast.error('Token авах боломжгүй байна')

@@ -1,12 +1,3 @@
-import { useMemo, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import {
-  judgeCloseStatusService,
-  loanService,
-  loanStatusService,
-} from '@/services'
-import { Banknote } from 'lucide-react'
-import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -18,7 +9,17 @@ import {
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  judgeCloseStatusService,
+  loanService,
+  loanStatusService,
+} from '@/services'
+import { useQuery } from '@tanstack/react-query'
+import { Banknote } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { InfoTab } from './info-tab'
+import { JudgeNotesTab } from './judge-notes-tab'
 import { LocationTab } from './location-tab'
 import { NotesTab } from './notes-tab'
 import { StatusTab } from './status-tab'
@@ -48,6 +49,8 @@ export function LoanUpdateDialog({
   onClose,
   onSuccess,
   data,
+  judgeLoanId,
+  judgeLoan,
 }: LoanUpdateDialogProps) {
   const [selectedStatus, setSelectedStatus] = useState<string>('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -114,16 +117,83 @@ export function LoanUpdateDialog({
     retry: 1,
   })
 
-  // Set initial values when dialog opens
+  // Fetch existing judge loan details if updating
+  useQuery({
+    queryKey: ['judge-loan-detail', judgeLoanId],
+    queryFn: async () => {
+      if (!judgeLoanId) return null
+      // If we already have the data passed as prop, return it immediately
+      if (judgeLoan && judgeLoan.id === judgeLoanId) {
+        return null; 
+      }
+      
+      try {
+        const res = await loanService.getJudgeLoan(judgeLoanId)
+        if (res.success && res.body) {
+          const jl = res.body
+          setJudgeInfo({
+            district: jl.districtId.toString(),
+            judge: jl.judge,
+            judgeAssistant: jl.judgeAssistant,
+            judgeAssistantPhoneNumber: jl.judgeAssistantPhoneNumber || '',
+            code: jl.code,
+            invoiceNumber: jl.invoiceNumber,
+            invoiceDate: jl.invoiceDate || '',
+            ordinance: jl.ordinance || '',
+            ordinanceAmount: jl.ordinanceAmount || 0,
+            stampFeeAmount: jl.stampFeeAmount || 0,
+            refundStampFeeAmount: jl.refundStampFeeAmount || 0,
+            closeStatusId: jl.closeStatusId.toString(),
+            description: jl.description || '',
+            responsibleEmployee: jl.responsibleEmployee || '',
+            invoicedDate: jl.invoicedDate || '',
+            requestedActionPage: jl.requestedActionPage || '',
+          })
+          return jl
+        }
+        return null
+      } catch (error) {
+        console.error('Failed to fetch judge loan details:', error)
+        return null
+      }
+    },
+    enabled: !!judgeLoanId && open && !judgeLoan, // Disable query if judgeLoan prop is provided
+  })
+
+  // Set initial values when dialog opens (including judge info from prop)
   useMemo(() => {
-    if (data && open) {
-      setSelectedStatus(data.statusId.toString())
-      setLocation(data.customer?.location || '')
-      setCurrentLocation(data.customer?.currentLocation || '')
-      setWorkLocation(data.customer?.workLocation || '')
-      setAdditionalLocation(data.customer?.additionalLocation || '')
+    if (open) {
+      if (data) {
+        setSelectedStatus(data.statusId.toString())
+        setLocation(data.customer?.location || '')
+        setCurrentLocation(data.customer?.currentLocation || '')
+        setWorkLocation(data.customer?.workLocation || '')
+        setAdditionalLocation(data.customer?.additionalLocation || '')
+      }
+      
+      // Initialize judge info from prop if available
+      if (judgeLoan) {
+        setJudgeInfo({
+          district: judgeLoan.districtId.toString(),
+          judge: judgeLoan.judge,
+          judgeAssistant: judgeLoan.judgeAssistant,
+          judgeAssistantPhoneNumber: judgeLoan.judgeAssistantPhoneNumber || '',
+          code: judgeLoan.code,
+          invoiceNumber: judgeLoan.invoiceNumber,
+          invoiceDate: judgeLoan.invoiceDate || '',
+          ordinance: judgeLoan.ordinance || '',
+          ordinanceAmount: judgeLoan.ordinanceAmount || 0,
+          stampFeeAmount: judgeLoan.stampFeeAmount || 0,
+          refundStampFeeAmount: judgeLoan.refundStampFeeAmount || 0,
+          closeStatusId: judgeLoan.closeStatusId.toString(),
+          description: judgeLoan.description || '',
+          responsibleEmployee: judgeLoan.responsibleEmployee || '',
+          invoicedDate: judgeLoan.invoicedDate || '',
+          requestedActionPage: judgeLoan.requestedActionPage || '',
+        })
+      }
     }
-  }, [data, open])
+  }, [data, judgeLoan, open])
 
   // Check if should show judge fields (when selecting status 1 or 4)
   const shouldShowJudgeFields = selectedStatus === '1' || selectedStatus === '4'
@@ -145,27 +215,53 @@ export function LoanUpdateDialog({
         statusId: Number(selectedStatus),
       })
 
-      // 2. If status is 1 or 4, create judge loan via POST /judge/loan/create
-      if (selectedStatus === '1' || selectedStatus === '4') {
-        await loanService.createJudgeLoan({
-          loanId: data.id,
-          districtId: Number(judgeInfo.district),
-          judge: judgeInfo.judge,
-          judgeAssistant: judgeInfo.judgeAssistant,
-          judgeAssistantPhoneNumber: judgeInfo.judgeAssistantPhoneNumber,
-          code: judgeInfo.code,
-          invoiceNumber: judgeInfo.invoiceNumber,
-          invoiceDate: judgeInfo.invoiceDate,
-          ordinance: judgeInfo.ordinance,
-          ordinanceAmount: judgeInfo.ordinanceAmount,
-          stampFeeAmount: judgeInfo.stampFeeAmount,
-          refundStampFeeAmount: judgeInfo.refundStampFeeAmount,
-          description: judgeInfo.description,
-          closeStatusId: Number(judgeInfo.closeStatusId) || 1,
-          invoicedDate: judgeInfo.invoicedDate,
-          requestedActionPage: judgeInfo.requestedActionPage,
-          responsibleEmployee: judgeInfo.responsibleEmployee,
-        })
+      const isJudgeStatus = selectedStatus === '1' || selectedStatus === '4'
+      const statusChanged = selectedStatus !== data.statusId.toString()
+
+      if (isJudgeStatus) {
+        if (judgeLoanId) {
+          // Update existing judge loan
+          await loanService.updateJudgeLoan({
+            id: judgeLoanId,
+            districtId: Number(judgeInfo.district),
+            judge: judgeInfo.judge,
+            judgeAssistant: judgeInfo.judgeAssistant,
+            judgeAssistantPhoneNumber: judgeInfo.judgeAssistantPhoneNumber,
+            code: judgeInfo.code,
+            invoiceNumber: judgeInfo.invoiceNumber,
+            invoiceDate: judgeInfo.invoiceDate,
+            ordinance: judgeInfo.ordinance,
+            ordinanceAmount: judgeInfo.ordinanceAmount,
+            stampFeeAmount: judgeInfo.stampFeeAmount,
+            refundStampFeeAmount: judgeInfo.refundStampFeeAmount,
+            description: judgeInfo.description,
+            closeStatusId: Number(judgeInfo.closeStatusId) || 1,
+            invoicedDate: judgeInfo.invoicedDate,
+            requestedActionPage: judgeInfo.requestedActionPage,
+            responsibleEmployee: judgeInfo.responsibleEmployee,
+          })
+        } else if (statusChanged) {
+          // Create new judge loan only if status changed to judge status
+          await loanService.createJudgeLoan({
+            loanId: data.id,
+            districtId: Number(judgeInfo.district),
+            judge: judgeInfo.judge,
+            judgeAssistant: judgeInfo.judgeAssistant,
+            judgeAssistantPhoneNumber: judgeInfo.judgeAssistantPhoneNumber,
+            code: judgeInfo.code,
+            invoiceNumber: judgeInfo.invoiceNumber,
+            invoiceDate: judgeInfo.invoiceDate,
+            ordinance: judgeInfo.ordinance,
+            ordinanceAmount: judgeInfo.ordinanceAmount,
+            stampFeeAmount: judgeInfo.stampFeeAmount,
+            refundStampFeeAmount: judgeInfo.refundStampFeeAmount,
+            description: judgeInfo.description,
+            closeStatusId: Number(judgeInfo.closeStatusId) || 1,
+            invoicedDate: judgeInfo.invoicedDate,
+            requestedActionPage: judgeInfo.requestedActionPage,
+            responsibleEmployee: judgeInfo.responsibleEmployee,
+          })
+        }
       }
 
       toast.success('Зээлийн мэдээлэл амжилттай өөрчлөгдлөө')
@@ -186,7 +282,7 @@ export function LoanUpdateDialog({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className='max-w-3xl p-0'>
+      <DialogContent className='sm:max-w-6xl p-0'>
         <DialogHeader className='border-b px-6 py-4'>
           <DialogTitle className='flex items-center gap-2'>
             <Banknote className='h-5 w-5' />
@@ -198,11 +294,39 @@ export function LoanUpdateDialog({
         </DialogHeader>
 
         <Tabs defaultValue='info' className='w-full'>
-          <TabsList className='mx-6 mt-4 grid w-auto grid-cols-4'>
-            <TabsTrigger value='info'>Мэдээлэл</TabsTrigger>
-            <TabsTrigger value='location'>Байршил</TabsTrigger>
-            <TabsTrigger value='notes'>Тэмдэглэл</TabsTrigger>
-            <TabsTrigger value='status'>Төлөв засах</TabsTrigger>
+          <TabsList className='mx-6 mt-4 flex h-auto flex-wrap justify-start gap-2 bg-transparent p-0'>
+            <TabsTrigger
+              value='info'
+              className='data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border'
+            >
+              Мэдээлэл
+            </TabsTrigger>
+            <TabsTrigger
+              value='location'
+              className='data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border'
+            >
+              Байршил
+            </TabsTrigger>
+            <TabsTrigger
+              value='notes'
+              className='data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border'
+            >
+              Тэмдэглэл
+            </TabsTrigger>
+            {judgeLoanId && (
+              <TabsTrigger
+                value='judge-notes'
+                className='data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border'
+              >
+                Шүүхийн тэмдэглэл
+              </TabsTrigger>
+            )}
+            <TabsTrigger
+              value='status'
+              className='data-[state=active]:bg-primary data-[state=active]:text-primary-foreground border'
+            >
+              Төлөв засах
+            </TabsTrigger>
           </TabsList>
 
           <ScrollArea className='h-[400px]'>
@@ -219,6 +343,12 @@ export function LoanUpdateDialog({
               setAdditionalLocation={setAdditionalLocation}
             />
             <NotesTab loanId={data.id} customerId={data.customerId} />
+            {judgeLoanId && (
+              <JudgeNotesTab
+                judgeLoanId={judgeLoanId}
+                customerId={data.customerId}
+              />
+            )}
             <StatusTab
               data={data}
               selectedStatus={selectedStatus}

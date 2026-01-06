@@ -1,16 +1,16 @@
-import { type ColumnDef, type Row } from '@tanstack/react-table'
-import { type Loan } from '@/services'
-import { MapPin } from 'lucide-react'
+import { CopyButton } from '@/components/copy-button'
+import { DataTableColumnHeader } from '@/components/data-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { CopyButton } from '@/components/copy-button'
-import { DataTableColumnHeader } from '@/components/data-table'
+import { type Loan } from '@/services'
+import { type ColumnDef, type Row } from '@tanstack/react-table'
+import { MapPin } from 'lucide-react'
 
 // Format currency helper
 const formatCurrency = (amount: number) => {
@@ -39,12 +39,14 @@ const getOverdueVariant = (
   days: number
 ): 'default' | 'secondary' | 'destructive' | 'outline' => {
   if (days === 0) return 'default'
+  if (days === 0) return 'default'
   if (days <= 30) return 'secondary'
   if (days <= 60) return 'outline'
   return 'destructive'
 }
 
 const getOverdueLabel = (days: number): string => {
+  if (days === 0) return 'Хэвийн'
   if (days === 0) return 'Хэвийн'
   if (days <= 30) return 'Анхаарал'
   if (days <= 60) return 'Муу зээл'

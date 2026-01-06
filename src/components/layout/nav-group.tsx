@@ -1,6 +1,3 @@
-import { type ReactNode } from 'react'
-import { Link, useLocation } from '@tanstack/react-router'
-import { ChevronRight } from 'lucide-react'
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,6 +14,9 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { Link, useLocation } from '@tanstack/react-router'
+import { ChevronRight } from 'lucide-react'
+import { type ReactNode } from 'react'
 import { Badge } from '../ui/badge'
 import {
   DropdownMenu,
@@ -73,7 +73,7 @@ function SidebarMenuLink({ item, href }: { item: NavLink; href: string }) {
       >
         <Link to={item.url} onClick={() => setOpenMobile(false)}>
           {item.icon && <item.icon />}
-          <span>{item.title}</span>
+          <span className='truncate whitespace-nowrap'>{item.title}</span>
           {item.badge && <NavBadge>{item.badge}</NavBadge>}
         </Link>
       </SidebarMenuButton>
@@ -99,7 +99,7 @@ function SidebarMenuCollapsible({
         <CollapsibleTrigger asChild>
           <SidebarMenuButton tooltip={item.title}>
             {item.icon && <item.icon />}
-            <span>{item.title}</span>
+            <span className='truncate whitespace-nowrap'>{item.title}</span>
             {item.badge && <NavBadge>{item.badge}</NavBadge>}
             <ChevronRight className='ms-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90 rtl:rotate-180' />
           </SidebarMenuButton>
@@ -107,22 +107,77 @@ function SidebarMenuCollapsible({
         <CollapsibleContent className='CollapsibleContent'>
           <SidebarMenuSub>
             {item.items.map((subItem) => (
-              <SidebarMenuSubItem key={subItem.title}>
+              <SidebarMenuSubItem key={subItem.url}>
+                {subItem.items ? (
+                  <SidebarMenuSubCollapsible item={subItem} href={href} />
+                ) : (
+                  <SidebarMenuSubButton
+                    asChild
+                    isActive={checkIsActive(href, subItem)}
+                  >
+                    <Link to={subItem.url} onClick={() => setOpenMobile(false)}>
+                      {subItem.icon && <subItem.icon />}
+                      <span className='truncate whitespace-nowrap'>
+                        {subItem.title}
+                      </span>
+                      {subItem.badge && <NavBadge>{subItem.badge}</NavBadge>}
+                    </Link>
+                  </SidebarMenuSubButton>
+                )}
+              </SidebarMenuSubItem>
+            ))}
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </SidebarMenuItem>
+    </Collapsible>
+  )
+}
+
+function SidebarMenuSubCollapsible({
+  item,
+  href,
+}: {
+  item: NavCollapsible
+  href: string
+}) {
+  const { setOpenMobile } = useSidebar()
+  return (
+    <Collapsible
+      defaultOpen={checkIsActive(href, item, true)}
+      className='group/sub-collapsible'
+    >
+      <CollapsibleTrigger asChild>
+        <SidebarMenuSubButton>
+          {item.icon && <item.icon />}
+          <span className='truncate whitespace-nowrap'>{item.title}</span>
+          {item.badge && <NavBadge>{item.badge}</NavBadge>}
+          <ChevronRight className='ms-auto transition-transform duration-200 group-data-[state=open]/sub-collapsible:rotate-90 rtl:rotate-180' />
+        </SidebarMenuSubButton>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <SidebarMenuSub>
+            {item.items.map((subItem) => (
+              <SidebarMenuSubItem key={subItem.url}>
+              {subItem.items ? (
+                <SidebarMenuSubCollapsible item={subItem} href={href} />
+              ) : (
                 <SidebarMenuSubButton
                   asChild
                   isActive={checkIsActive(href, subItem)}
                 >
                   <Link to={subItem.url} onClick={() => setOpenMobile(false)}>
                     {subItem.icon && <subItem.icon />}
-                    <span>{subItem.title}</span>
+                    <span className='truncate whitespace-nowrap'>
+                      {subItem.title}
+                    </span>
                     {subItem.badge && <NavBadge>{subItem.badge}</NavBadge>}
                   </Link>
                 </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            ))}
-          </SidebarMenuSub>
-        </CollapsibleContent>
-      </SidebarMenuItem>
+              )}
+            </SidebarMenuSubItem>
+          ))}
+        </SidebarMenuSub>
+      </CollapsibleContent>
     </Collapsible>
   )
 }
@@ -153,20 +208,52 @@ function SidebarMenuCollapsedDropdown({
             {item.title} {item.badge ? `(${item.badge})` : ''}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {item.items.map((sub) => (
-            <DropdownMenuItem key={`${sub.title}-${sub.url}`} asChild>
-              <Link
-                to={sub.url}
-                className={`${checkIsActive(href, sub) ? 'bg-secondary' : ''}`}
-              >
-                {sub.icon && <sub.icon />}
-                <span className='max-w-52 text-wrap'>{sub.title}</span>
-                {sub.badge && (
-                  <span className='ms-auto text-xs'>{sub.badge}</span>
-                )}
-              </Link>
-            </DropdownMenuItem>
-          ))}
+          {item.items.map((sub) => {
+            if (sub.items) {
+              return (
+                <div key={sub.title} className='flex flex-col gap-1'>
+                  <DropdownMenuLabel className='px-2 py-1.5 text-xs font-semibold text-muted-foreground'>
+                    {sub.title}
+                  </DropdownMenuLabel>
+                  {sub.items.map((innerSub) => (
+                    <DropdownMenuItem
+                      key={`${innerSub.title}-${innerSub.url}`}
+                      asChild
+                    >
+                      <Link
+                        to={innerSub.url}
+                        className={`${checkIsActive(href, innerSub) ? 'bg-secondary' : ''} pl-4`}
+                      >
+                        {innerSub.icon && <innerSub.icon />}
+                        <span className='max-w-52 text-wrap'>
+                          {innerSub.title}
+                        </span>
+                        {innerSub.badge && (
+                          <span className='ms-auto text-xs'>
+                            {innerSub.badge}
+                          </span>
+                        )}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
+              )
+            }
+            return (
+              <DropdownMenuItem key={`${sub.title}-${sub.url}`} asChild>
+                <Link
+                  to={sub.url}
+                  className={`${checkIsActive(href, sub) ? 'bg-secondary' : ''}`}
+                >
+                  {sub.icon && <sub.icon />}
+                  <span className='max-w-52 text-wrap'>{sub.title}</span>
+                  {sub.badge && (
+                    <span className='ms-auto text-xs'>{sub.badge}</span>
+                  )}
+                </Link>
+              </DropdownMenuItem>
+            )
+          })}
         </DropdownMenuContent>
       </DropdownMenu>
     </SidebarMenuItem>

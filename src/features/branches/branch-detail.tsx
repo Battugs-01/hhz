@@ -1,35 +1,24 @@
-import { useMemo } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { getRouteApi } from '@tanstack/react-router'
-import type { Loan } from '@/services'
-import { loanService } from '@/services'
-import { AlertTriangle, Banknote, Calendar, DollarSign } from 'lucide-react'
-import { useDrawer } from '@/context/drawer-provider'
-import { useFilterParams } from '@/hooks/use-filter-params'
+import { BaseTable, TableHeader } from '@/components/data-table'
+import { Main } from '@/components/layout/main'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { StatCard } from '@/components/ui/stat-card'
-import { BaseTable, TableHeader } from '@/components/data-table'
-import { Main } from '@/components/layout/main'
+import { useDrawer } from '@/context/drawer-provider'
+import { useFilterParams } from '@/hooks/use-filter-params'
+import { formatCurrency } from '@/lib/format-utils'
+import type { Loan } from '@/services'
+import { loanService } from '@/services'
+import { useQuery } from '@tanstack/react-query'
+import { getRouteApi } from '@tanstack/react-router'
+import { AlertTriangle, Banknote, Calendar, DollarSign } from 'lucide-react'
+import { useMemo } from 'react'
 import { LoanDialogs } from '../loans/list/components/dialogs'
-import { LoanDetailContent } from '../loans/list/components/loan-detail-content'
+import { LoanDetailContent } from '../loans/list/components/loan-detail'
 import { BranchDetailToolbarActions } from './components/branch-detail-toolbar-actions'
 import { LOAN_QUERY_KEYS, LOAN_TABLE_CONFIG } from './components/constants'
 import { createLoanColumns } from './components/loan-columns'
 
 const route = getRouteApi('/_authenticated/branches/$branchId')
-
-// Format currency helper
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('mn-MN', {
-    style: 'currency',
-    currency: 'MNT',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  })
-    .format(amount)
-    .replace('MNT', '₮')
-}
 
 export function BranchDetail() {
   const { branchId: branchIdParam } = route.useParams()

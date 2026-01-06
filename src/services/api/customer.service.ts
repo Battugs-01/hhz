@@ -35,8 +35,8 @@ export const customerService = {
     id: number,
     data: UpdateCustomerRequest
   ): Promise<UpdateCustomerResponse> => {
-    const response = await apiClient.patch<UpdateCustomerResponse>(
-      `/customers/${id}`,
+    const response = await apiClient.put<UpdateCustomerResponse>(
+      `/customers/update/${id}`,
       data
     )
     return response.data
