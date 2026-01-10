@@ -109,7 +109,7 @@ export function LoanImportTable({ data, onRemove }: LoanImportTableProps) {
                 <TableCell className='max-w-[150px] truncate text-xs'>{loan.workLocation || '-'}</TableCell>
                 <TableCell className='max-w-[150px] truncate text-xs'>{loan.currentLocation || '-'}</TableCell>
                 <TableCell className='max-w-[150px] truncate text-xs'>{loan.additionalLocation || '-'}</TableCell>
-                <TableCell className='text-center font-mono text-xs'>{loan.economistId ?? '-'}</TableCell>
+                <TableCell className='text-center font-mono text-xs'>{loan.economist ?? '-'}</TableCell>
                 <TableCell>
                   <Button
                     variant='ghost'

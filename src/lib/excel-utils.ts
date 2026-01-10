@@ -77,16 +77,7 @@ export function parseExcelToCustomerLoans(
             workLocation: String(row[22] || ''),
             currentLocation: String(row[23] || ''),
             additionalLocation: String(row[24] || ''),
-            economistId: (() => {
-              const val = String(row[25] || '')
-              // If it's just a number, parse it
-              if (!isNaN(Number(val))) return Number(val) || 1
-              
-              // If format is like "Зээлийн мэргэжилтэн 7", extract the last number
-              const parts = val.trim().split(/\s+/)
-              const lastPart = parts[parts.length - 1]
-              return Number(lastPart) || 1
-            })(),
+            economist: String(row[25] || 'Зээлийн мэргэжилтэн 1'),
           }))
 
         resolve(customerLoans)
@@ -135,7 +126,7 @@ export function generateExcelTemplate() {
       '47.91234567890123 106.9123456789012', // Ажлын хаяг (уртраг өргөрөг)
       '47.92345678901234 106.9234567890123', // Одоо амьдарч байгаа хаяг (уртраг өргөрөг)
       '47.94567890123456 106.9456789012345', // Нэмэлт хаяг (уртраг өргөрөг)
-      1, // Эдийн засагчийн ID
+      'Зээлийн мэргэжилтэн 1', // Эдийн засагчийн ID
     ],
   ]
 
@@ -180,7 +171,7 @@ export function exportToExcel(data: CustomerLoanItem[], filename: string) {
     item.workLocation,
     item.currentLocation,
     item.additionalLocation,
-    item.economistId,
+    item.economist,
   ])
 
   const ws = XLSX.utils.aoa_to_sheet([EXCEL_HEADERS, ...exportData])
