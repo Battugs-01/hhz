@@ -78,6 +78,29 @@ export function MapPage() {
     staleTime: 60000,
   })
 
+  // Fetch summary statistics with current filters
+  const { data: summary, isLoading: isSummaryLoading } = useQuery({
+    queryKey: ['map-summary', search],
+    queryFn: async () => {
+      try {
+        const params: any = { ...search }
+        if (params.branchId) params.branchId = Number(params.branchId)
+        if (params.economistId) params.economistId = Number(params.economistId)
+        if (params.statusId && !isNaN(Number(params.statusId))) {
+          params.statusId = Number(params.statusId)
+        }
+        
+        const res = await loanService.getSummary(params as any)
+        return res?.data || null
+      } catch (error) {
+        console.error('Failed to fetch summary:', error)
+        return null
+      }
+    },
+    retry: 1,
+    staleTime: 60000,
+  })
+
   // Fetch branches for filter options
   const { data: branches } = useQuery({
     queryKey: ['branches-for-filter'],
@@ -159,25 +182,6 @@ export function MapPage() {
     })
   }, [branches, loanStatuses, economists])
 
-  // Calculate statistics
-  const validLocations = useMemo(() => {
-    if (!loansData?.items) return 0
-    return loansData.items.filter((loan) => {
-      const customer = loan.customer
-      return customer?.location?.trim()
-    }).length
-  }, [loansData?.items])
-
-  const totalAmount = useMemo(() => {
-    return (
-      loansData?.items.reduce((sum, loan) => sum + (loan.loanAmount || 0), 0) || 0
-    )
-  }, [loansData?.items])
-
-  const overdueLoans = useMemo(() => {
-    return loansData?.items.filter((loan) => loan.overdueDay > 30).length || 0
-  }, [loansData?.items])
-
   return (
     <Main className='flex flex-1 flex-col gap-4 sm:gap-6'>
       {/* Header */}
@@ -199,35 +203,35 @@ export function MapPage() {
         <StatCard
           icon={MapPin}
           label='Нийт зээл'
-          value={loansData?.total || 0}
-          isLoading={isLoading}
+          value={summary?.totalLoans ?? 0}
+          isLoading={isSummaryLoading}
         />
         <StatCard
           icon={AlertTriangle}
-          label='Хаягтай зээл'
-          value={validLocations}
+          label='Хэтэрсэн'
+          value={summary?.overdueLoans ?? 0}
           iconBgClass='bg-orange-500/10'
           iconClass='text-orange-500'
           valueClass='text-orange-500'
-          isLoading={isLoading}
+          isLoading={isSummaryLoading}
         />
         <StatCard
           icon={DollarSign}
           label='Нийт дүн'
-          value={formatCurrency(totalAmount)}
+          value={formatCurrency(summary?.totalLoanAmount ?? 0)}
           iconBgClass='bg-green-500/10'
           iconClass='text-green-500'
-          isLoading={isLoading}
+          isLoading={isSummaryLoading}
           skeletonWidth='w-24'
         />
         <StatCard
           icon={Calendar}
-          label='Хэтэрсэн (30+)'
-          value={overdueLoans}
+          label='Онцгой хэтэрсэн'
+          value={summary?.severelyOverdueLoans ?? 0}
           iconBgClass='bg-red-500/10'
           iconClass='text-red-500'
           valueClass='text-red-500'
-          isLoading={isLoading}
+          isLoading={isSummaryLoading}
         />
       </div>
 
