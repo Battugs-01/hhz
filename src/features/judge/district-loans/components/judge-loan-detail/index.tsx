@@ -77,6 +77,7 @@ export function JudgeLoanDetailContent({ record }: JudgeLoanDetailContentProps) 
                 customerId: data.customerId,
                 note: data.note,
                 isNear: data.isNear || false,
+                fileId: data.fileId,
               })
             }}
             showIsNear={true}
@@ -102,6 +103,7 @@ export function JudgeLoanDetailContent({ record }: JudgeLoanDetailContentProps) 
                 judgeLoanId: data.id,
                 customerId: data.customerId,
                 note: data.note,
+                fileId: data.fileId,
               })
             }}
             showIsNear={false}

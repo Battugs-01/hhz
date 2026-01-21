@@ -1,11 +1,13 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { formatCurrency } from '@/lib/format-utils'
 import type { Loan, UpdateCustomerRequest } from '@/services'
-import { customerService, loanService } from '@/services'
+import { customerService, fileService, loanService } from '@/services'
 import L from 'leaflet'
-import { CheckCircle, Edit, ExternalLink, Save, XCircle } from 'lucide-react'
+import { CheckCircle, Edit, ExternalLink, Save, Upload, X, XCircle } from 'lucide-react'
 import { useState } from 'react'
 import { Marker, Popup } from 'react-leaflet'
 import { toast } from 'sonner'
@@ -26,10 +28,27 @@ interface LoanMapMarkerProps {
 export function LoanMapMarker({ marker, userLocation, onRefresh, onEdit }: LoanMapMarkerProps) {
   const [note, setNote] = useState('')
   const [isSavingNote, setIsSavingNote] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const m = marker
   const l = m.loan
   const status = getOverdueStatus(l.overdueDay)
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error('Файлын хэмжээ 10MB-аас бага байх ёстой')
+        return
+      }
+      setSelectedFile(file)
+    }
+  }
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null)
+  }
 
   const handleSaveNote = async () => {
     if (!note.trim()) return
@@ -44,14 +63,33 @@ export function LoanMapMarker({ marker, userLocation, onRefresh, onEdit }: LoanM
     }
 
     try {
+      let uploadedFileId: number | undefined
+
+      // Upload file if selected
+      if (selectedFile) {
+        setIsUploading(true)
+        try {
+          const uploadResult = await fileService.uploadFile(selectedFile)
+          uploadedFileId = uploadResult.data.id
+        } catch (error) {
+          toast.error('Файл upload хийхэд алдаа гарлаа')
+          setIsUploading(false)
+          setIsSavingNote(false)
+          return
+        }
+        setIsUploading(false)
+      }
+
       await loanService.createLoanNote({
         loanId: l.id,
         customerId: l.customerId,
         note: note,
         isNear,
+        fileId: uploadedFileId,
       })
       toast.success('Тэмдэглэл хадгалагдлаа')
       setNote('')
+      setSelectedFile(null)
     } catch (error) {
       toast.error((error as Error).message || 'Тэмдэглэл хадгалахад алдаа гарлаа')
     } finally {
@@ -132,9 +170,42 @@ export function LoanMapMarker({ marker, userLocation, onRefresh, onEdit }: LoanM
               value={note}
               onChange={(e) => setNote(e.target.value)}
             />
+            
+            {/* File upload section */}
+            <div className='flex items-center flex-wrap gap-2'>
+              <Input
+                id='map-file-upload'
+                type='file'
+                onChange={handleFileSelect}
+                className='hidden'
+                accept='image/*,.pdf,.doc,.docx'
+              />
+              <Label
+                htmlFor='map-file-upload'
+                className='inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-md border border-input bg-background px-3 py-1.5 text-[11px] font-medium transition-colors hover:bg-accent hover:text-accent-foreground'
+              >
+                <Upload className='h-3.5 w-3.5' />
+                <span>Файл хавсаргах</span>
+              </Label>
+              {selectedFile && (
+                <div className='flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/5 px-2.5 py-1.5'>
+                  <span className='text-[11px] font-medium text-primary'>
+                    {selectedFile.name.length > 20 ? selectedFile.name.substring(0, 20) + '...' : selectedFile.name}
+                  </span>
+                  <button
+                    type='button'
+                    onClick={handleRemoveFile}
+                    className='rounded-sm text-primary/70 transition-colors hover:text-primary'
+                  >
+                    <X className='h-3.5 w-3.5' />
+                  </button>
+                </div>
+              )}
+            </div>
+
             <div className='flex gap-2'>
               <Button size='sm' className='flex-1 h-8 text-[11px]' onClick={handleSaveNote} disabled={isSavingNote}>
-                <Save className='w-3 h-3 mr-1' /> {isSavingNote ? '...' : 'Хадгалах'}
+                <Save className='w-3 h-3 mr-1' /> {isUploading ? 'Upload...' : isSavingNote ? '...' : 'Хадгалах'}
               </Button>
               <Button 
                 size='sm' 

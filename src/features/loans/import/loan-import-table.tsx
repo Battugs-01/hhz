@@ -1,12 +1,12 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table'
 import type { CustomerLoanItem } from '@/services'
 import { Trash2 } from 'lucide-react'
@@ -49,6 +49,7 @@ export function LoanImportTable({ data, onRemove }: LoanImportTableProps) {
             <TableHead>Одоо амьдарч байгаа хаяг</TableHead>
             <TableHead>Нэмэлт хаяг</TableHead>
             <TableHead>Эдийн засагчийн ID</TableHead>
+            <TableHead>Сарын хүү</TableHead>
             <TableHead className='w-[80px]'>Үйлдэл</TableHead>
           </TableRow>
         </TableHeader>
@@ -56,7 +57,7 @@ export function LoanImportTable({ data, onRemove }: LoanImportTableProps) {
           {data.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={28}
+                colSpan={29}
                 className='text-muted-foreground text-center'
               >
                 Өгөгдөл байхгүй
@@ -110,6 +111,7 @@ export function LoanImportTable({ data, onRemove }: LoanImportTableProps) {
                 <TableCell className='max-w-[150px] truncate text-xs'>{loan.currentLocation || '-'}</TableCell>
                 <TableCell className='max-w-[150px] truncate text-xs'>{loan.additionalLocation || '-'}</TableCell>
                 <TableCell className='text-center font-mono text-xs'>{loan.economist ?? '-'}</TableCell>
+                <TableCell className='text-center font-medium'>{loan.interestRate ? `${loan.interestRate}%` : '-'}</TableCell>
                 <TableCell>
                   <Button
                     variant='ghost'

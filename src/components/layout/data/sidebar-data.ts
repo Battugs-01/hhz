@@ -1,15 +1,15 @@
 import {
-  Briefcase,
-  Building2,
-  Command,
-  Gavel,
-  HandCoins,
-  Key,
-  MapPin,
-  ScrollText,
-  ShieldCheck,
-  UserCog,
-  Users
+    Briefcase,
+    Building2,
+    Command,
+    Gavel,
+    HandCoins,
+    Key,
+    MapPin,
+    ScrollText,
+    ShieldCheck,
+    UserCog,
+    Users
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -102,6 +102,14 @@ export const sidebarData: SidebarData = {
             {
               title: 'Шүүхийн зээлийн тайлан',
               url: '/reports/judge-loans',
+            },
+            {
+              title: 'Зээлийн тэмдэглэл',
+              url: '/reports/loan-notes',
+            },
+            {
+              title: 'Шүүхийн зээлийн тэмдэглэл',
+              url: '/reports/judge-loan-notes',
             },
           ],
         },

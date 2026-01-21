@@ -301,6 +301,21 @@ export const createLoanColumns = ({
       enableSorting: true,
     },
     {
+      accessorKey: 'interestRate',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title='Сарын хүү' />
+      ),
+      cell: ({ row }: { row: Row<Loan> }) => {
+        const rate = row.getValue('interestRate') as number | undefined
+        return (
+          <span className='font-medium'>
+            {rate ? `${rate}%` : '-'}
+          </span>
+        )
+      },
+      enableSorting: true,
+    },
+    {
       accessorKey: 'closePayAmount',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title='Хаах дүн' />

@@ -35,7 +35,9 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedReportsLoansRouteImport } from './routes/_authenticated/reports/loans'
+import { Route as AuthenticatedReportsLoanNotesRouteImport } from './routes/_authenticated/reports/loan-notes'
 import { Route as AuthenticatedReportsJudgeLoansRouteImport } from './routes/_authenticated/reports/judge-loans'
+import { Route as AuthenticatedReportsJudgeLoanNotesRouteImport } from './routes/_authenticated/reports/judge-loan-notes'
 import { Route as AuthenticatedLoansImportRouteImport } from './routes/_authenticated/loans/import'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedDistrictDistrictIdRouteImport } from './routes/_authenticated/district/$districtId'
@@ -186,10 +188,22 @@ const AuthenticatedReportsLoansRoute =
     path: '/reports/loans',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedReportsLoanNotesRoute =
+  AuthenticatedReportsLoanNotesRouteImport.update({
+    id: '/reports/loan-notes',
+    path: '/reports/loan-notes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedReportsJudgeLoansRoute =
   AuthenticatedReportsJudgeLoansRouteImport.update({
     id: '/reports/judge-loans',
     path: '/reports/judge-loans',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReportsJudgeLoanNotesRoute =
+  AuthenticatedReportsJudgeLoanNotesRouteImport.update({
+    id: '/reports/judge-loan-notes',
+    path: '/reports/judge-loan-notes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedLoansImportRoute =
@@ -264,7 +278,9 @@ export interface FileRoutesByFullPath {
   '/district/$districtId': typeof AuthenticatedDistrictDistrictIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/loans/import': typeof AuthenticatedLoansImportRoute
+  '/reports/judge-loan-notes': typeof AuthenticatedReportsJudgeLoanNotesRoute
   '/reports/judge-loans': typeof AuthenticatedReportsJudgeLoansRoute
+  '/reports/loan-notes': typeof AuthenticatedReportsLoanNotesRoute
   '/reports/loans': typeof AuthenticatedReportsLoansRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -300,7 +316,9 @@ export interface FileRoutesByTo {
   '/district/$districtId': typeof AuthenticatedDistrictDistrictIdRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/loans/import': typeof AuthenticatedLoansImportRoute
+  '/reports/judge-loan-notes': typeof AuthenticatedReportsJudgeLoanNotesRoute
   '/reports/judge-loans': typeof AuthenticatedReportsJudgeLoansRoute
+  '/reports/loan-notes': typeof AuthenticatedReportsLoanNotesRoute
   '/reports/loans': typeof AuthenticatedReportsLoansRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -339,7 +357,9 @@ export interface FileRoutesById {
   '/_authenticated/district/$districtId': typeof AuthenticatedDistrictDistrictIdRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/loans/import': typeof AuthenticatedLoansImportRoute
+  '/_authenticated/reports/judge-loan-notes': typeof AuthenticatedReportsJudgeLoanNotesRoute
   '/_authenticated/reports/judge-loans': typeof AuthenticatedReportsJudgeLoansRoute
+  '/_authenticated/reports/loan-notes': typeof AuthenticatedReportsLoanNotesRoute
   '/_authenticated/reports/loans': typeof AuthenticatedReportsLoansRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
@@ -378,7 +398,9 @@ export interface FileRouteTypes {
     | '/district/$districtId'
     | '/errors/$error'
     | '/loans/import'
+    | '/reports/judge-loan-notes'
     | '/reports/judge-loans'
+    | '/reports/loan-notes'
     | '/reports/loans'
     | '/settings/account'
     | '/settings/appearance'
@@ -414,7 +436,9 @@ export interface FileRouteTypes {
     | '/district/$districtId'
     | '/errors/$error'
     | '/loans/import'
+    | '/reports/judge-loan-notes'
     | '/reports/judge-loans'
+    | '/reports/loan-notes'
     | '/reports/loans'
     | '/settings/account'
     | '/settings/appearance'
@@ -452,7 +476,9 @@ export interface FileRouteTypes {
     | '/_authenticated/district/$districtId'
     | '/_authenticated/errors/$error'
     | '/_authenticated/loans/import'
+    | '/_authenticated/reports/judge-loan-notes'
     | '/_authenticated/reports/judge-loans'
+    | '/_authenticated/reports/loan-notes'
     | '/_authenticated/reports/loans'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
@@ -669,11 +695,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportsLoansRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reports/loan-notes': {
+      id: '/_authenticated/reports/loan-notes'
+      path: '/reports/loan-notes'
+      fullPath: '/reports/loan-notes'
+      preLoaderRoute: typeof AuthenticatedReportsLoanNotesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/reports/judge-loans': {
       id: '/_authenticated/reports/judge-loans'
       path: '/reports/judge-loans'
       fullPath: '/reports/judge-loans'
       preLoaderRoute: typeof AuthenticatedReportsJudgeLoansRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reports/judge-loan-notes': {
+      id: '/_authenticated/reports/judge-loan-notes'
+      path: '/reports/judge-loan-notes'
+      fullPath: '/reports/judge-loan-notes'
+      preLoaderRoute: typeof AuthenticatedReportsJudgeLoanNotesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/loans/import': {
@@ -774,7 +814,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDistrictDistrictIdRoute: typeof AuthenticatedDistrictDistrictIdRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedLoansImportRoute: typeof AuthenticatedLoansImportRoute
+  AuthenticatedReportsJudgeLoanNotesRoute: typeof AuthenticatedReportsJudgeLoanNotesRoute
   AuthenticatedReportsJudgeLoansRoute: typeof AuthenticatedReportsJudgeLoansRoute
+  AuthenticatedReportsLoanNotesRoute: typeof AuthenticatedReportsLoanNotesRoute
   AuthenticatedReportsLoansRoute: typeof AuthenticatedReportsLoansRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedBranchesIndexRoute: typeof AuthenticatedBranchesIndexRoute
@@ -799,7 +841,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDistrictDistrictIdRoute: AuthenticatedDistrictDistrictIdRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedLoansImportRoute: AuthenticatedLoansImportRoute,
+  AuthenticatedReportsJudgeLoanNotesRoute:
+    AuthenticatedReportsJudgeLoanNotesRoute,
   AuthenticatedReportsJudgeLoansRoute: AuthenticatedReportsJudgeLoansRoute,
+  AuthenticatedReportsLoanNotesRoute: AuthenticatedReportsLoanNotesRoute,
   AuthenticatedReportsLoansRoute: AuthenticatedReportsLoansRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedBranchesIndexRoute: AuthenticatedBranchesIndexRoute,

@@ -28,6 +28,7 @@ export const customerLoanItemSchema = z.object({
   description: z.string().optional(),
   status: z.string(),
   economist: z.string().optional(),
+  interestRate: z.number().int().positive().optional(),
 })
 
 export type CustomerLoanItem = z.infer<typeof customerLoanItemSchema>

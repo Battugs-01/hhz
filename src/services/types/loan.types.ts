@@ -1,5 +1,4 @@
 import { z } from 'zod'
-import type { Admin } from '..'
 import type { BaseResponse } from './common.types'
 
 // Loan schema - API response-д тохирсон
@@ -25,6 +24,7 @@ export const loanSchema = z.object({
   updatedAt: z.coerce.date().optional(),
   createdBy: z.number().optional(),
   customer: z.lazy(() => loanCustomerSchema).optional(),
+  interestRate: z.number().int().positive().optional(),
 })
 
 export type Loan = z.infer<typeof loanSchema>
@@ -164,6 +164,24 @@ export interface UpdateJudgeLoanRequest {
   responsibleEmployee?: string
 }
 
+// Create loan note request
+export interface CreateLoanNoteRequest {
+  loanId: number
+  customerId: number
+  note: string
+  isNear?: boolean
+  fileId?: number
+}
+
+// Create judge loan note request
+export interface CreateJudgeLoanNoteRequest {
+  judgeLoanId: number
+  customerId: number
+  note: string
+  isNear?: boolean
+  fileId?: number
+}
+
 // Response types
 export interface LoanListBody {
   list: Loan[]
@@ -220,73 +238,6 @@ export interface LoanSummaryResponse {
   data: LoanSummary | null
   code: number
 }
-
-// Loan Note types
-export interface CreateLoanNoteRequest {
-  loanId: number
-  customerId: number
-  note: string
-  isNear: boolean
-}
-
-export interface LoanNoteListRequest {
-  loanId: number
-  customerId?: number
-  current?: number
-  pageSize?: number
-  query?: string
-}
-
-export interface LoanNote {
-  id: number
-  loanId: number
-  customerId: number
-  note: string
-  isNear: boolean
-  createdBy: number
-  createdByAdmin?: Admin
-  createdAt: string
-  updatedAt: string
-}
-
-export interface LoanNoteListBody {
-  list: LoanNote[]
-  items: number
-}
-
-export type LoanNoteResponse = BaseResponse<LoanNote>
-
-export type LoanNoteListResponse = BaseResponse<LoanNoteListBody>
-// Judge Loan Note types
-export interface JudgeLoanNote {
-  id: number
-  judgeLoanId: number
-  customerId: number
-  note: string
-  createdBy: number
-  createdByAdmin?: Admin
-  createdAt: string
-  updatedAt: string
-}
-
-export interface CreateJudgeLoanNoteRequest {
-  judgeLoanId: number
-  customerId: number
-  note: string
-}
-
-export interface JudgeLoanNoteListRequest {
-  judgeLoanId: number
-  current?: number
-  pageSize?: number
-}
-
-export interface JudgeLoanNoteListBody {
-  list: JudgeLoanNote[]
-  items: number
-}
-
-export type JudgeLoanNoteListResponse = BaseResponse<JudgeLoanNoteListBody>
 
 // Judge Loan schema
 export const judgeLoanSchema = z.object({

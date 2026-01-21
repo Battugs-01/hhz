@@ -23,6 +23,11 @@ export function LoanTab({ loan }: LoanTabProps) {
             value={<span className='text-green-600'>{formatCurrency(loan.loanAmount)}</span>}
           />
           <Separator />
+          <InfoRow
+            label='Сарын хүү'
+            value={loan.interestRate ? `${loan.interestRate}%` : '-'}
+          />
+          <Separator />
           <InfoRow label='Хаах дүн' value={formatCurrency(loan.closePayAmount)} />
           <Separator />
           <InfoRow

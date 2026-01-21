@@ -109,30 +109,26 @@ export {
   loanSchema
 } from './types/loan.types'
 export type {
-  CreateJudgeLoanNoteRequest,
   CreateJudgeLoanRequest,
-  CreateLoanNoteRequest,
   District, GpsLocs, JudgeLoan,
   JudgeLoanListRequest,
   JudgeLoanListResponse,
-  JudgeLoanNote,
-  JudgeLoanNoteListRequest,
-  JudgeLoanNoteListResponse,
   Loan,
   LoanCustomer,
   LoanList,
   LoanListRequest,
   LoanListResponse,
-  LoanNote,
-  LoanNoteListBody,
-  LoanNoteListRequest,
-  LoanNoteListResponse,
-  LoanNoteResponse,
   LoanResponse,
   LoanSummary, Locs,
   UpdateCustomerAndLoanRequest
 } from './types/loan.types'
 
+
+export { fileService } from './api/file.service'
+export type { UploadFileResponse, UploadFileResult } from './api/file.service'
+export { noteService } from './api/note.service'
+
+export type * from './types/note.types'
 
 export type {
   OperationLog,

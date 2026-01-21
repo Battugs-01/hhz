@@ -29,6 +29,7 @@ const EXCEL_HEADERS = [
   'Одоо амьдарч байгаа хаяг (уртраг өргөрөг)',
   'Нэмэлт хаяг (уртраг өргөрөг)',
   'Эдийн засагчийн ID',
+  'Сарын хүү',
 ]
 
 // Map Excel data to CustomerLoanItem
@@ -78,6 +79,7 @@ export function parseExcelToCustomerLoans(
             currentLocation: String(row[23] || ''),
             additionalLocation: String(row[24] || ''),
             economist: String(row[25] || 'Зээлийн мэргэжилтэн 1'),
+            interestRate: row[26] ? Number(row[26]) : undefined,
           }))
 
         resolve(customerLoans)
@@ -127,6 +129,7 @@ export function generateExcelTemplate() {
       '47.92345678901234 106.9234567890123', // Одоо амьдарч байгаа хаяг (уртраг өргөрөг)
       '47.94567890123456 106.9456789012345', // Нэмэлт хаяг (уртраг өргөрөг)
       'Зээлийн мэргэжилтэн 1', // Эдийн засагчийн ID
+      2, // Сарын хүү
     ],
   ]
 
@@ -172,6 +175,7 @@ export function exportToExcel(data: CustomerLoanItem[], filename: string) {
     item.currentLocation,
     item.additionalLocation,
     item.economist,
+    item.interestRate,
   ])
 
   const ws = XLSX.utils.aoa_to_sheet([EXCEL_HEADERS, ...exportData])

@@ -1,6 +1,6 @@
-import { useCallback } from 'react'
-import type { NavigateFn } from '@/hooks/use-table-url-state'
 import type { FilterValues } from '@/components/filter-panel'
+import type { NavigateFn } from '@/hooks/use-table-url-state'
+import { useCallback } from 'react'
 
 type UseFilterHandlersOptions = {
   navigate: NavigateFn

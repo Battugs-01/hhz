@@ -26,6 +26,7 @@ export function JudgeNotesTab({ judgeLoanId, customerId }: JudgeNotesTabProps) {
             judgeLoanId: data.id,
             customerId: data.customerId,
             note: data.note,
+            fileId: data.fileId,
           })
         }}
         showIsNear={false}

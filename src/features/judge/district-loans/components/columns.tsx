@@ -122,6 +122,20 @@ export const createJudgeLoanColumns = ({
     ),
   },
   {
+    accessorKey: 'loan.interestRate',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Сарын хүү' />
+    ),
+    cell: ({ row }) => {
+      const rate = row.original.loan.interestRate
+      return (
+        <span className='font-medium'>
+          {rate ? `${rate}%` : '-'}
+        </span>
+      )
+    },
+  },
+  {
     accessorKey: 'loan.payAmount',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Төлөх дүн' />

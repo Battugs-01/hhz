@@ -2,6 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { LoanUpdateDialog } from '@/features/loans/list/components/loan-update-dialog'
 import type { GpsLocs, Loan } from '@/services'
 import L from 'leaflet'
+import { Locate } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import {
   MapContainer as LeafletMapContainer,
@@ -39,6 +40,55 @@ function RecenterMap({ center }: { center: [number, number] }) {
     map.setView(center)
   }, [center, map])
   return null
+}
+
+function LocateMeControl({ 
+  onLocationFound 
+}: { 
+  onLocationFound: (latlng: [number, number]) => void 
+}) {
+  const map = useMap()
+  const [loading, setLoading] = useState(false)
+
+  const handleLocate = () => {
+    setLoading(true)
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const latlng: [number, number] = [pos.coords.latitude, pos.coords.longitude]
+          onLocationFound(latlng)
+          map.flyTo(latlng, 16)
+          setLoading(false)
+        },
+        (err) => {
+          console.error('Error getting location:', err)
+          setLoading(false)
+        },
+        { enableHighAccuracy: true }
+      )
+    } else {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className='leaflet-top leaflet-right' style={{ marginTop: '80px', marginRight: '10px' }}>
+      <div className='leaflet-control leaflet-bar'>
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+            handleLocate()
+          }}
+          className='bg-white p-2 hover:bg-gray-100 flex items-center justify-center transition-colors'
+          title='Миний байршил'
+          disabled={loading}
+          style={{ width: '34px', height: '34px', border: 'none', cursor: 'pointer' }}
+        >
+          <Locate className={`h-4 w-4 ${loading ? 'animate-pulse text-blue-500' : 'text-gray-700'}`} />
+        </button>
+      </div>
+    </div>
+  )
 }
 
 export function MapContainer({ loans, gpsLocs = [], isLoading, onRefresh }: MapContainerProps) {
@@ -109,6 +159,7 @@ export function MapContainer({ loans, gpsLocs = [], isLoading, onRefresh }: MapC
       >
         <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         <RecenterMap center={mapCenter} />
+        <LocateMeControl onLocationFound={setUserLocation} />
 
         {userLocation && <UserLocationMarker position={userLocation} />}
 

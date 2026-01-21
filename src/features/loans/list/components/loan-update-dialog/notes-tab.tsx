@@ -28,6 +28,7 @@ export function NotesTab({ loanId, customerId }: NotesTabProps) {
             customerId: data.customerId,
             note: data.note,
             isNear: data.isNear || false,
+            fileId: data.fileId,
           })
         }}
         showIsNear={true}

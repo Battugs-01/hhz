@@ -32,6 +32,11 @@ export function InfoTab({ loan }: InfoTabProps) {
           />
           <Separator />
           <InfoRow
+            label='Сарын хүү'
+            value={loan.interestRate ? `${loan.interestRate}%` : '-'}
+          />
+          <Separator />
+          <InfoRow
             label='Хаах дүн'
             value={formatCurrency(loan.closePayAmount)}
           />
