@@ -114,6 +114,7 @@ export function FilterPanel({
 
   const handleApply = () => {
     // Set default operator 'eq' for number-comparison fields that have value but no operator
+    // and convert number values to proper numeric types
     const filtersWithDefaults = { ...localFilters }
     fields.forEach((field) => {
       if (field.type === 'number-comparison') {
@@ -128,6 +129,25 @@ export function FilterPanel({
         if (hasValue && !hasOperator) {
           filtersWithDefaults[operatorKey] = 'eq'
         }
+
+        // Convert string to number for number-comparison fields
+        if (hasValue && filtersWithDefaults[valueKey]) {
+          const numValue = Number(filtersWithDefaults[valueKey])
+          if (!isNaN(numValue)) {
+            filtersWithDefaults[valueKey] = String(numValue)
+          }
+        }
+      } else if (field.type === 'number') {
+        // Also convert regular number fields
+        const valueKey = field.key
+        const hasValue =
+          filtersWithDefaults[valueKey] && filtersWithDefaults[valueKey] !== ''
+        if (hasValue && filtersWithDefaults[valueKey]) {
+          const numValue = Number(filtersWithDefaults[valueKey])
+          if (!isNaN(numValue)) {
+            filtersWithDefaults[valueKey] = String(numValue)
+          }
+        }
       }
     })
 
@@ -137,6 +157,7 @@ export function FilterPanel({
     }
     setOpen(false)
   }
+
 
   const handleClear = () => {
     const emptyFilters: FilterValues = {}
@@ -236,13 +257,17 @@ export function FilterPanel({
                 type='number'
                 placeholder={field.placeholder || 'Утга оруулах...'}
                 value={localFilters[valueKey] || ''}
-                onChange={(e) => handleFilterChange(valueKey, e.target.value)}
+                onChange={(e) => {
+                  const numValue = e.target.value === '' ? '' : e.target.value
+                  handleFilterChange(valueKey, numValue)
+                }}
                 className='flex-1'
               />
             </div>
           </div>
         )
       }
+
 
       case 'select':
         return (

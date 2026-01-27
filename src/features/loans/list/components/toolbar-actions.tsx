@@ -76,10 +76,14 @@ export function LoanToolbarActions({
     <FilterToolbarActions
       fields={filterFields}
       search={{
-        branchId:
-          typeof search.branchId === 'string' ? search.branchId : undefined,
-        statusId:
-          typeof search.statusId === 'string' ? search.statusId : undefined,
+        ...Object.fromEntries(
+          FILTER_KEYS.map(key => [
+            key, 
+            typeof search[key] === 'string' || typeof search[key] === 'number'
+              ? String(search[key])
+              : undefined
+          ])
+        ),
         start_day:
           typeof search.start_day === 'string' ? search.start_day : undefined,
         end_day:
@@ -93,4 +97,5 @@ export function LoanToolbarActions({
       exportFileName={TABLE_CONFIG.EXPORT_FILE_NAME}
     />
   )
+
 }

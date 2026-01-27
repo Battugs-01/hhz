@@ -59,87 +59,23 @@ export function DistrictLoansPage() {
   })
 
   const listParams = useMemo(
-    () => ({
-      ...params,
-      districtId: Number(districtId),
-      closeStatusId: search.closeStatusId
-        ? Number(search.closeStatusId)
-        : undefined,
-      loanId: search.loanId,
-      registerNumber: search.registerNumber,
-      phoneNumber: search.phoneNumber,
-      judge: search.judge,
-      judgeAssistant: search.judgeAssistant,
-      judgeAssistantPhoneNumber: search.judgeAssistantPhoneNumber,
-      code: search.code,
-      invoiceNumber: search.invoiceNumber,
-      requestedActionPage: search.requestedActionPage,
-      responsibleEmployee: search.responsibleEmployee,
-      loanAmount: search.loanAmount,
-      loanAmount_operator: search.loanAmount_operator,
-      closePayAmount: search.closePayAmount,
-      closePayAmount_operator: search.closePayAmount_operator,
-      payAmount: search.payAmount,
-      payAmount_operator: search.payAmount_operator,
-      payInterest: search.payInterest,
-      payInterest_operator: search.payInterest_operator,
-      overdueDay: search.overdueDay,
-      overdueDay_operator: search.overdueDay_operator,
-      ordinanceAmount: search.ordinanceAmount
-        ? Number(search.ordinanceAmount)
-        : undefined,
-      ordinanceAmount_operator: search.ordinanceAmount_operator,
-      stampFeeAmount: search.stampFeeAmount
-        ? Number(search.stampFeeAmount)
-        : undefined,
-      stampFeeAmount_operator: search.stampFeeAmount_operator,
-      refundStampFeeAmount: search.refundStampFeeAmount
-        ? Number(search.refundStampFeeAmount)
-        : undefined,
-      refundStampFeeAmount_operator: search.refundStampFeeAmount_operator,
-      sortDate:
-        search.start_day || search.end_day
-          ? {
-              startDate: search.start_day ? String(search.start_day) : undefined,
-              endDate: search.end_day ? String(search.end_day) : undefined,
-            }
-          : undefined,
-      query: search.query,
-    }),
-    [
-      params,
-      districtId,
-      search.closeStatusId,
-      search.loanId,
-      search.registerNumber,
-      search.phoneNumber,
-      search.judge,
-      search.judgeAssistant,
-      search.judgeAssistantPhoneNumber,
-      search.code,
-      search.invoiceNumber,
-      search.requestedActionPage,
-      search.responsibleEmployee,
-      search.loanAmount,
-      search.loanAmount_operator,
-      search.closePayAmount,
-      search.closePayAmount_operator,
-      search.payAmount,
-      search.payAmount_operator,
-      search.payInterest,
-      search.payInterest_operator,
-      search.overdueDay,
-      search.overdueDay_operator,
-      search.ordinanceAmount,
-      search.ordinanceAmount_operator,
-      search.stampFeeAmount,
-      search.stampFeeAmount_operator,
-      search.refundStampFeeAmount,
-      search.refundStampFeeAmount_operator,
-      search.start_day,
-      search.end_day,
-      search.query,
-    ]
+    () => {
+      const result: any = {
+        ...params,
+        districtId: Number(districtId),
+      }
+      
+      // Convert sortDate field names from start_day/end_day to startDate/endDate
+      if (result.sortDate) {
+        result.sortDate = {
+          startDate: result.sortDate.start_day,
+          endDate: result.sortDate.end_day,
+        }
+      }
+      
+      return result
+    },
+    [params, districtId, search.closeStatusId]
   )
 
   const { data, isLoading, refetch } = useQuery({

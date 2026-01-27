@@ -60,6 +60,29 @@ export function MapPage() {
         if (params.economistId) params.economistId = Number(params.economistId)
         if (params.statusId) params.statusId = Number(params.statusId)
 
+        // Convert number comparison fields and other numeric fields
+        Object.keys(params).forEach(key => {
+            // Check if it's an operator field match
+            const operatorKey = `${key}_operator`
+            const hasOperator = params[operatorKey] !== undefined
+            
+            const isOperatorKey = key.endsWith('_operator')
+            const isKnownNumericField = 
+               key === 'amount' ||
+               key === 'totalAmount' ||
+               key === 'usdtValuation' || 
+               key === 'loanAmount' || 
+               key === 'payAmount' ||
+               key === 'closePayAmount' ||
+               key === 'payInterest' || 
+               key === 'overdueDay'
+            
+            if (!isOperatorKey && (hasOperator || isKnownNumericField) && typeof params[key] === 'string') {
+               const num = Number(params[key])
+               if (!isNaN(num)) params[key] = num
+            }
+        })
+
         const res = await loanService.listLoans({
           current: 1,
           pageSize: 10000, // Get all matching loans for map
@@ -89,6 +112,29 @@ export function MapPage() {
         if (params.statusId && !isNaN(Number(params.statusId))) {
           params.statusId = Number(params.statusId)
         }
+        
+        // Convert number comparison fields and other numeric fields
+        Object.keys(params).forEach(key => {
+            // Check if it's an operator field match
+            const operatorKey = `${key}_operator`
+            const hasOperator = params[operatorKey] !== undefined
+            
+            const isOperatorKey = key.endsWith('_operator')
+            const isKnownNumericField = 
+               key === 'amount' ||
+               key === 'totalAmount' ||
+               key === 'usdtValuation' || 
+               key === 'loanAmount' || 
+               key === 'payAmount' ||
+               key === 'closePayAmount' ||
+               key === 'payInterest' || 
+               key === 'overdueDay'
+            
+            if (!isOperatorKey && (hasOperator || isKnownNumericField) && typeof params[key] === 'string') {
+               const num = Number(params[key])
+               if (!isNaN(num)) params[key] = num
+            }
+        })
         
         const res = await loanService.getSummary(params as any)
         return res?.data || null
@@ -246,7 +292,18 @@ export function MapPage() {
         <CardContent>
           <FilterToolbarActions
             fields={filterFields}
-            search={search}
+            search={{
+              ...Object.fromEntries(
+                [...FILTER_KEYS, 'economistId', 'branchId', 'statusId'].map(key => [
+                  key, 
+                  (search as any)[key] !== undefined
+                    ? String((search as any)[key])
+                    : undefined
+                ])
+              ),
+              start_day: typeof search.start_day === 'string' ? search.start_day : undefined,
+              end_day: typeof search.end_day === 'string' ? search.end_day : undefined,
+            }}
             navigate={navigate}
             filterKeys={[...FILTER_KEYS, 'economistId']}
             onRefresh={refetchLoans}

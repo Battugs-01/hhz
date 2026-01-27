@@ -48,13 +48,7 @@ export function AllLoansPage() {
   // Fetch summary statistics (no branchId = all branches)
   const summaryParams = useMemo(() => {
     const { current, pageSize, ...rest } = params
-    return {
-      ...rest,
-      statusId:
-        rest.statusId && !isNaN(Number(rest.statusId))
-          ? Number(rest.statusId)
-          : rest.statusId,
-    }
+    return rest
   }, [params])
 
   const { data: summary, isLoading: isSummaryLoading } = useQuery({
@@ -69,7 +63,6 @@ export function AllLoansPage() {
       }
     },
     retry: 1,
-    staleTime: 60000, // 1 minute
   })
 
   // Fetch all loans
@@ -81,13 +74,7 @@ export function AllLoansPage() {
     queryKey: [QUERY_KEYS.LOAN_LIST, params],
     queryFn: async () => {
       try {
-        const queryParams = {
-          ...params,
-          statusId:
-            params.statusId && !isNaN(Number(params.statusId))
-              ? Number(params.statusId)
-              : params.statusId,
-        }
+        const queryParams = { ...params }
         const res = await loanService.listLoans(queryParams as any)
         return {
           items: res?.body?.list || [],
@@ -99,7 +86,6 @@ export function AllLoansPage() {
       }
     },
     retry: 1,
-    staleTime: 30000, // 30 seconds
   })
 
   // Toolbar config

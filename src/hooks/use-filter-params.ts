@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
 import dayjs from 'dayjs'
+import { useMemo } from 'react'
 
 export interface FilterParamsOptions {
   /** Default огноо хугацаа (сар) */
@@ -91,12 +91,30 @@ export function useFilterParams(
           if (Array.isArray(value) && value.length === 0) {
             return
           }
-          if (
-            (key === 'amount' ||
-              key === 'totalAmount' ||
-              key === 'usdtValuation') &&
-            typeof value === 'string'
-          ) {
+          
+          // Convert number-comparison field values to numbers
+          // Check if this field has an operator (e.g., closePayAmount has closePayAmount_operator)
+          const operatorKey = `${key}_operator`
+          const hasOperator = search[operatorKey] !== undefined
+          
+          // Also check if this is an operator key itself, or a known numeric field
+          const isOperatorKey = key.endsWith('_operator')
+          const isKnownNumericField = 
+            key === 'amount' ||
+            key === 'totalAmount' ||
+            key === 'usdtValuation' ||
+            key === 'statusId' ||
+            key === 'branchId' ||
+            key === 'economistId' ||
+            key === 'closeStatusId' ||
+            key === 'districtId' ||
+            key === 'loanAmount' ||
+            key === 'payAmount' ||
+            key === 'closePayAmount' ||
+            key === 'payInterest' ||
+            key === 'overdueDay'
+          
+          if (!isOperatorKey && (hasOperator || isKnownNumericField) && typeof value === 'string') {
             const numValue = Number(value)
             result[key] = isNaN(numValue) ? value : numValue
           } else {
@@ -105,6 +123,8 @@ export function useFilterParams(
         }
       }
     })
+
+
 
     return result
   }, [search, searchKey, defaultPageSize, defaultMonths, defaultDates])

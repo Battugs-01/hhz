@@ -50,11 +50,19 @@ export function BranchDetail() {
   })
 
   // Fetch summary statistics
+  const summaryParams = useMemo(() => {
+    const { current, pageSize, ...rest } = params
+    return {
+      ...rest,
+      branchId,
+    }
+  }, [params, branchId])
+
   const { data: summary, isLoading: isSummaryLoading } = useQuery({
-    queryKey: ['branch-summary', branchId],
+    queryKey: ['branch-summary', summaryParams],
     queryFn: async () => {
       try {
-        const res = await loanService.getSummary({ branchId })
+        const res = await loanService.getSummary(summaryParams as any)
         return res?.data || null
       } catch (error) {
         console.error('Failed to fetch summary:', error)
@@ -63,7 +71,6 @@ export function BranchDetail() {
     },
     enabled: !isNaN(branchId),
     retry: 1,
-    staleTime: 60000, // 1 minute
   })
 
   // Fetch loans for this branch
@@ -90,7 +97,6 @@ export function BranchDetail() {
     },
     enabled: !isNaN(branchId),
     retry: 1,
-    staleTime: 30000, // 30 seconds
   })
 
   // Toolbar config for loans table
