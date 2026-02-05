@@ -3,10 +3,10 @@ import { DataTableColumnHeader } from '@/components/data-table'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { type Loan } from '@/services'
 import { type ColumnDef, type Row } from '@tanstack/react-table'
@@ -45,13 +45,6 @@ const getOverdueVariant = (
   return 'destructive'
 }
 
-const getOverdueLabel = (days: number): string => {
-  if (days === 0) return 'Хэвийн'
-  if (days === 0) return 'Хэвийн'
-  if (days <= 30) return 'Анхаарал'
-  if (days <= 60) return 'Муу зээл'
-  return 'Ноцтой'
-}
 
 // Location cell component
 const LocationCell = ({

@@ -10,19 +10,20 @@ import type {
   JudgeLoan,
   JudgeLoanListRequest,
   JudgeLoanListResponse,
-  JudgeLoanNoteListRequest,
-  JudgeLoanNoteListResponse,
   LoanListRequest,
   LoanListResponse,
-  LoanNoteListRequest,
-  LoanNoteListResponse,
-  LoanNoteResponse,
   LoanResponse,
   LoanSummaryRequest,
   LoanSummaryResponse,
   UpdateCustomerAndLoanRequest,
-  UpdateJudgeLoanRequest
+  UpdateJudgeLoanRequest,
 } from '../types/loan.types'
+import type {
+  JudgeLoanNoteListRequest,
+  JudgeLoanNoteListResponse,
+  LoanNoteListRequest,
+  LoanNoteListResponse
+} from '../types/note.types'
 import { apiClient } from './client'
 
 export const loanService = {
@@ -157,8 +158,8 @@ export const loanService = {
    */
   createLoanNote: async (
     data: CreateLoanNoteRequest
-  ): Promise<LoanNoteResponse> => {
-    const response = await apiClient.post<LoanNoteResponse>(
+  ): Promise<any> => {
+    const response = await apiClient.post<any>(
       '/loan-notes/create',
       data
     )

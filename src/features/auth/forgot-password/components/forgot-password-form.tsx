@@ -1,11 +1,3 @@
-import { useState } from 'react'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from '@tanstack/react-router'
-import { ArrowRight, Loader2 } from 'lucide-react'
-import { toast } from 'sonner'
-import { cn, sleep } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -16,6 +8,14 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { cn, sleep } from '@/lib/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from '@tanstack/react-router'
+import { ArrowRight, Loader2 } from 'lucide-react'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
 const formSchema = z.object({
   email: z.email({
@@ -47,7 +47,7 @@ export function ForgotPasswordForm({
       success: () => {
         setIsLoading(false)
         form.reset()
-        navigate({ to: '/otp' })
+        navigate({ to: '/sign-in' })
         return `Email sent to ${data.email}`
       },
       error: 'Error',

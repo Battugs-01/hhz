@@ -52,6 +52,7 @@ export interface LoanNoteListBody {
 }
 
 export type LoanNoteListResponse = BaseResponse<LoanNoteListBody>
+export type LoanNoteResponse = BaseResponse<LoanNote>
 
 export type JudgeLoanNote = {
   id: number
