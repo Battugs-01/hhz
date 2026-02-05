@@ -1,8 +1,8 @@
 import type {
-    JudgeLoanNoteListRequest,
-    JudgeLoanNoteListResponse,
-    LoanNoteListRequest,
-    LoanNoteListResponse,
+  JudgeLoanNoteListRequest,
+  JudgeLoanNoteListResponse,
+  LoanNoteListRequest,
+  LoanNoteListResponse,
 } from '../types/note.types'
 import { apiClient } from './client'
 

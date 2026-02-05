@@ -65,7 +65,7 @@ export function LoanStatusFormDialog({
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Failed to save loan status'
+       'Failed to save loan status'
       toast.error(errorMessage)
       throw error
     }

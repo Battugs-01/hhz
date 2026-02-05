@@ -1,14 +1,14 @@
-import { useMemo, useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import { economistService, type Economist } from '@/services'
-import { AlertTriangle } from 'lucide-react'
-import { toast } from 'sonner'
-import type { StandardDialogProps } from '@/lib/dialog-types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { BaseDialog } from '@/components/ui/base-dialog'
 import { ConfigFormDialog } from '@/components/ui/config-form-dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import type { StandardDialogProps } from '@/lib/dialog-types'
+import { economistService, type Economist } from '@/services'
+import { useMutation } from '@tanstack/react-query'
+import { AlertTriangle } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { ECONOMIST_FORM_FIELDS } from './constants'
 import { economistFormSchema, type EconomistForm } from './schemas'
 
@@ -59,9 +59,7 @@ function EconomistFormDialog({
       )
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Эдийн засагч хадгалахад алдаа гарлаа'
+        'Эдийн засагч хадгалахад алдаа гарлаа'
       toast.error(errorMessage)
       throw error
     }

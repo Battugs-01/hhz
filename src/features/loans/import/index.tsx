@@ -1,16 +1,4 @@
-import { useState } from 'react'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import {
-  branchService,
-  customerLoanService,
-  type CustomerLoanItem,
-} from '@/services'
-import { Download, Trash2, Upload } from 'lucide-react'
-import { toast } from 'sonner'
-import {
-  generateExcelTemplate,
-  parseExcelToCustomerLoans,
-} from '@/lib/excel-utils'
+import { Main } from '@/components/layout/main'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -27,7 +15,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Main } from '@/components/layout/main'
+import {
+  generateExcelTemplate,
+  parseExcelToCustomerLoans,
+} from '@/lib/excel-utils'
+import {
+  branchService,
+  customerLoanService,
+  type CustomerLoanItem,
+} from '@/services'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { Download, Trash2, Upload } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 import { LoanImportTable } from './loan-import-table'
 
 export function LoanImport() {
@@ -62,9 +62,9 @@ export function LoanImport() {
         toast.error(response.message || 'Failed to save loans')
       }
     },
-    onError: (error) => {
+    onError: () => {
       toast.error(
-        error instanceof Error ? error.message : 'Failed to save loans'
+       'Зээл хадгалхад алдаа гарлаа'
       )
     },
   })

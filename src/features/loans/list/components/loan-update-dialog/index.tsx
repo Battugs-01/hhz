@@ -269,9 +269,7 @@ export function LoanUpdateDialog({
       onClose()
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Мэдээлэл өөрчлөхөд алдаа гарлаа'
+         'Мэдээлэл өөрчлөхөд алдаа гарлаа'
       toast.error(errorMessage)
     } finally {
       setIsSubmitting(false)

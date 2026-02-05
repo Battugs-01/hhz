@@ -1,9 +1,5 @@
-import type React from 'react'
-import { useEffect, useRef, useState } from 'react'
-import { type z } from 'zod'
-import { useForm, type UseFormReturn } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { toast } from 'sonner'
+import { DatePicker } from '@/components/date-picker'
+import { PasswordInput } from '@/components/password-input'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
@@ -22,8 +18,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { DatePicker } from '@/components/date-picker'
-import { PasswordInput } from '@/components/password-input'
+import { zodResolver } from '@hookform/resolvers/zod'
+import type React from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useForm, type UseFormReturn } from 'react-hook-form'
+import { toast } from 'sonner'
+import { type z } from 'zod'
 import { DateTimePicker } from '../datetime-picker'
 import { ArrayField } from './array-field'
 import { BaseFormDialog } from './base-form-dialog'
@@ -195,9 +195,7 @@ export function ConfigFormDialog<TFormData extends Record<string, unknown>>({
             } catch (error) {
               setIsUploadingImage(false)
               toast.error(
-                error instanceof Error
-                  ? error.message
-                  : `Failed to upload ${imageField.label}`
+                 `Failed to upload ${imageField.label}`
               )
               throw error
             }

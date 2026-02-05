@@ -1,14 +1,14 @@
-import { useMemo, useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import { branchService, type Branch } from '@/services'
-import { AlertTriangle } from 'lucide-react'
-import { toast } from 'sonner'
-import type { StandardDialogProps } from '@/lib/dialog-types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { BaseDialog } from '@/components/ui/base-dialog'
 import { ConfigFormDialog } from '@/components/ui/config-form-dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import type { StandardDialogProps } from '@/lib/dialog-types'
+import { branchService, type Branch } from '@/services'
+import { useMutation } from '@tanstack/react-query'
+import { AlertTriangle } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { BRANCH_FORM_FIELDS } from './constants'
 import { branchFormSchema, type BranchForm } from './schemas'
 
@@ -53,9 +53,7 @@ function BranchFormDialog({
       )
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Салбар хадгалахад алдаа гарлаа'
+       'Салбар хадгалахад алдаа гарлаа'
       toast.error(errorMessage)
       throw error
     }

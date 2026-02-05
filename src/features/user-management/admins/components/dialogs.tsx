@@ -1,9 +1,3 @@
-import { useMemo, useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import { adminService, type Admin } from '@/services'
-import { AlertTriangle } from 'lucide-react'
-import { toast } from 'sonner'
-import type { StandardDialogProps } from '@/lib/dialog-types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { BaseDialog } from '@/components/ui/base-dialog'
 import {
@@ -12,6 +6,12 @@ import {
 } from '@/components/ui/config-form-dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import type { StandardDialogProps } from '@/lib/dialog-types'
+import { adminService, type Admin } from '@/services'
+import { useMutation } from '@tanstack/react-query'
+import { AlertTriangle } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { toast } from 'sonner'
 import { ADMIN_FORM_FIELDS } from './constants'
 import { adminFormSchema, type AdminForm } from './schemas'
 
@@ -109,7 +109,7 @@ function AdminFormDialog({
       )
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : 'Админ хадгалахад алдаа гарлаа'
+        'Админ хадгалахад алдаа гарлаа'
       toast.error(errorMessage)
       throw error
     }
